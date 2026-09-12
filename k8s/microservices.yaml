@@ -124,6 +124,9 @@ spec:
   - name: target-app
     port: 8000
     targetPort: 8000
+  - name: sidecar-api
+    port: 8080
+    targetPort: 8080
 
 ---
 # 2. PAYMENT SERVICE
@@ -187,6 +190,10 @@ spec:
   ports:
   - name: target-app
     port: 8000
+    targetPort: 8000
+  - name: sidecar-api
+    port: 8080
+    targetPort: 8080
 
 ---
 # 3. INVENTORY SERVICE
@@ -250,6 +257,10 @@ spec:
   ports:
   - name: target-app
     port: 8000
+    targetPort: 8000
+  - name: sidecar-api
+    port: 8080
+    targetPort: 8080
 
 ---
 # 4. USER SERVICE
@@ -313,6 +324,10 @@ spec:
   ports:
   - name: target-app
     port: 8000
+    targetPort: 8000
+  - name: sidecar-api
+    port: 8080
+    targetPort: 8080
 
 ---
 # 5. NOTIFICATION SERVICE
@@ -373,6 +388,10 @@ spec:
   ports:
   - name: target-app
     port: 8000
+    targetPort: 8000
+  - name: sidecar-api
+    port: 8080
+    targetPort: 8080
 
 ---
 # LOGSHIELD DASHBOARD
