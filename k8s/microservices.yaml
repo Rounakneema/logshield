@@ -1,0 +1,467 @@
+# LogShield Microservices Deployment
+# ==================================
+# This YAML deploys a 5-service microservice environment:
+#   1. auth-service
+#   2. payment-service
+#   3. inventory-service
+#   4. user-service
+#   5. notification-service
+#
+# It also deploys a traffic-generator pod to continuously hit these endpoints.
+# All services share a hostPath volume to aggregate data into a single LogShield Dashboard.
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: logshield-protected
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: logshield-sa
+  namespace: logshield-protected
+---
+# Shared PVC for Data Aggregation (Simulated via hostPath for simplicity on Minikube)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: logshield-pv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/tmp/logshield-data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: logshield-data-pvc
+  namespace: logshield-protected
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+# Macro template for a microservice
+# To keep this file concise, we deploy the same target-app but set different ENV vars for each.
+# In a real environment, these would be separate container images.
+
+# 1. AUTH SERVICE
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+  namespace: logshield-protected
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-service
+  template:
+    metadata:
+      labels:
+        app: auth-service
+    spec:
+      serviceAccountName: logshield-sa
+      containers:
+      - name: target-app
+        image: logshield-protected-app:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          value: "postgres://admin:MyP@ssw0rd123@auth-db:5432/prod"
+        volumeMounts:
+        - name: shared-logs
+          mountPath: /shared
+      - name: logshield-sidecar
+        image: logshield-sidecar:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: STATS_OUTPUT_PATH
+          value: "/data/stats_auth.json"
+        - name: RECENT_LOGS_PATH
+          value: "/data/recent_logs_auth.json"
+        volumeMounts:
+        - name: shared-logs
+          mountPath: /shared
+          readOnly: true
+        - name: logshield-data
+          mountPath: /data
+      volumes:
+      - name: shared-logs
+        emptyDir: {}
+      - name: logshield-data
+        persistentVolumeClaim:
+          claimName: logshield-data-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+  namespace: logshield-protected
+spec:
+  selector:
+    app: auth-service
+  ports:
+  - name: target-app
+    port: 8000
+    targetPort: 8000
+
+---
+# 2. PAYMENT SERVICE
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service
+  namespace: logshield-protected
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-service
+  template:
+    metadata:
+      labels:
+        app: payment-service
+    spec:
+      containers:
+      - name: target-app
+        image: logshield-protected-app:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: STRIPE_SECRET_KEY
+          value: "sk_live_paymentabc123456789"
+        volumeMounts:
+        - name: shared-logs
+          mountPath: /shared
+      - name: logshield-sidecar
+        image: logshield-sidecar:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: STATS_OUTPUT_PATH
+          value: "/data/stats_payment.json"
+        - name: RECENT_LOGS_PATH
+          value: "/data/recent_logs_payment.json"
+        volumeMounts:
+        - name: shared-logs
+          mountPath: /shared
+        - name: logshield-data
+          mountPath: /data
+      volumes:
+      - name: shared-logs
+        emptyDir: {}
+      - name: logshield-data
+        persistentVolumeClaim:
+          claimName: logshield-data-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-service
+  namespace: logshield-protected
+spec:
+  selector:
+    app: payment-service
+  ports:
+  - name: target-app
+    port: 8000
+
+---
+# 3. INVENTORY SERVICE
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-service
+  namespace: logshield-protected
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inventory-service
+  template:
+    metadata:
+      labels:
+        app: inventory-service
+    spec:
+      containers:
+      - name: target-app
+        image: logshield-protected-app:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI_INV"
+        volumeMounts:
+        - name: shared-logs
+          mountPath: /shared
+      - name: logshield-sidecar
+        image: logshield-sidecar:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: STATS_OUTPUT_PATH
+          value: "/data/stats_inventory.json"
+        - name: RECENT_LOGS_PATH
+          value: "/data/recent_logs_inventory.json"
+        volumeMounts:
+        - name: shared-logs
+          mountPath: /shared
+        - name: logshield-data
+          mountPath: /data
+      volumes:
+      - name: shared-logs
+        emptyDir: {}
+      - name: logshield-data
+        persistentVolumeClaim:
+          claimName: logshield-data-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inventory-service
+  namespace: logshield-protected
+spec:
+  selector:
+    app: inventory-service
+  ports:
+  - name: target-app
+    port: 8000
+
+---
+# 4. USER SERVICE
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  namespace: logshield-protected
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+      - name: target-app
+        image: logshield-protected-app:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: JWT_SECRET
+          value: "super-secret-jwt-signing-key-user-svc"
+        volumeMounts:
+        - name: shared-logs
+          mountPath: /shared
+      - name: logshield-sidecar
+        image: logshield-sidecar:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: STATS_OUTPUT_PATH
+          value: "/data/stats_user.json"
+        - name: RECENT_LOGS_PATH
+          value: "/data/recent_logs_user.json"
+        volumeMounts:
+        - name: shared-logs
+          mountPath: /shared
+        - name: logshield-data
+          mountPath: /data
+      volumes:
+      - name: shared-logs
+        emptyDir: {}
+      - name: logshield-data
+        persistentVolumeClaim:
+          claimName: logshield-data-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: logshield-protected
+spec:
+  selector:
+    app: user-service
+  ports:
+  - name: target-app
+    port: 8000
+
+---
+# 5. NOTIFICATION SERVICE
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+  namespace: logshield-protected
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+    spec:
+      containers:
+      - name: target-app
+        image: logshield-protected-app:latest
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: shared-logs
+          mountPath: /shared
+      - name: logshield-sidecar
+        image: logshield-sidecar:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: STATS_OUTPUT_PATH
+          value: "/data/stats_notification.json"
+        - name: RECENT_LOGS_PATH
+          value: "/data/recent_logs_notification.json"
+        volumeMounts:
+        - name: shared-logs
+          mountPath: /shared
+        - name: logshield-data
+          mountPath: /data
+      volumes:
+      - name: shared-logs
+        emptyDir: {}
+      - name: logshield-data
+        persistentVolumeClaim:
+          claimName: logshield-data-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+  namespace: logshield-protected
+spec:
+  selector:
+    app: notification-service
+  ports:
+  - name: target-app
+    port: 8000
+
+---
+# LOGSHIELD DASHBOARD
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logshield-dashboard
+  namespace: logshield-protected
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logshield-dashboard
+  template:
+    metadata:
+      labels:
+        app: logshield-dashboard
+    spec:
+      containers:
+      - name: dashboard
+        image: logshield-dashboard:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+        env:
+        # Dashboard reads API from ANY sidecar because they all share the logshield-data volume!
+        - name: SIDECAR_API_URL
+          value: "http://auth-service:8080/api/v1"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: logshield-dashboard
+  namespace: logshield-protected
+spec:
+  selector:
+    app: logshield-dashboard
+  ports:
+  - name: dashboard-ui
+    port: 3000
+    targetPort: 3000
+
+---
+# TRAFFIC GENERATOR
+# Hits the services in a loop to generate logs and leaks
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traffic-generator
+  namespace: logshield-protected
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traffic-generator
+  template:
+    metadata:
+      labels:
+        app: traffic-generator
+    spec:
+      containers:
+      - name: generator
+        image: alpine/curl
+        command:
+        - /bin/sh
+        - -c
+        - |
+          while true; do
+            # 1. AUTH SERVICE
+            curl -s http://auth-service:8000/orders/$RANDOM > /dev/null
+            curl -s http://auth-service:8000/auth?token=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9 > /dev/null
+            
+            # 2. PAYMENT SERVICE
+            curl -s http://payment-service:8000/orders/$RANDOM > /dev/null
+            curl -s http://payment-service:8000/process-payment > /dev/null
+            
+            # 3. INVENTORY SERVICE
+            curl -s http://inventory-service:8000/orders/$RANDOM > /dev/null
+            curl -s http://inventory-service:8000/health > /dev/null
+            
+            # 4. USER SERVICE
+            curl -s http://user-service:8000/orders/$RANDOM > /dev/null
+            # Let's hit auth on user-service as well to simulate a leak there
+            curl -s http://user-service:8000/auth?token=Bearer%20JWT123 > /dev/null
+            
+            # 5. NOTIFICATION SERVICE
+            curl -s http://notification-service:8000/orders/$RANDOM > /dev/null
+            curl -s http://notification-service:8000/debug > /dev/null
+            
+            sleep 1
+          done

@@ -1,0 +1,11 @@
+cryptography
+kubernetes
+fastapi
+uvicorn[standard]
+scipy
+scikit-learn
+prometheus_client
+pyahocorasick
+flask
+httpx
+pydantic

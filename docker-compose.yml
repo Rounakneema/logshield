@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  demo-app:
+    build:
+      context: .
+      dockerfile: demo-app/Dockerfile
+    container_name: logshield-demo-app
+    volumes:
+      - log-data:/shared
+    restart: unless-stopped
+
+  sidecar:
+    build:
+      context: .
+      dockerfile: sidecar/Dockerfile
+    container_name: logshield-sidecar
+    volumes:
+      - log-data:/shared
+      - sidecar-data:/data
+    depends_on:
+      - demo-app
+    restart: unless-stopped
+
+volumes:
+  log-data:
+  sidecar-data:

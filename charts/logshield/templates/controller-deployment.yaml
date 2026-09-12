@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logshield-controller
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: logshield-controller
+spec:
+  replicas: {{ .Values.controller.replicaCount }}
+  selector:
+    matchLabels:
+      app: logshield-controller
+  template:
+    metadata:
+      labels:
+        app: logshield-controller
+    spec:
+      containers:
+        - name: webhook
+          image: "{{ .Values.controller.image }}"
+          imagePullPolicy: {{ .Values.controller.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.webhook.targetPort }}
+          volumeMounts:
+            - name: webhook-certs
+              mountPath: /etc/webhook/certs
+              readOnly: true
+      volumes:
+        - name: webhook-certs
+          secret:
+            secretName: logshield-webhook-certs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.webhook.serviceName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: logshield-controller
+  ports:
+    - port: {{ .Values.webhook.port }}
+      targetPort: {{ .Values.webhook.targetPort }}

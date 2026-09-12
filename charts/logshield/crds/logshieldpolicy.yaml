@@ -1,0 +1,67 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: logshieldpolicies.logshield.io
+spec:
+  group: logshield.io
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                detection:
+                  type: object
+                  properties:
+                    threshold:
+                      type: integer
+                    flagThreshold:
+                      type: integer
+                features:
+                  type: object
+                  properties:
+                    entropy:
+                      type: boolean
+                    regex:
+                      type: boolean
+                    context:
+                      type: boolean
+                    encoding:
+                      type: boolean
+                    tokenStructure:
+                      type: boolean
+                    variableProximity:
+                      type: boolean
+                recovery:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                    ttl:
+                      type: string
+                lineage:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                action:
+                  type: object
+                  properties:
+                    highConfidence:
+                      type: string
+                    mediumConfidence:
+                      type: string
+                    lowConfidence:
+                      type: string
+  scope: Namespaced
+  names:
+    plural: logshieldpolicies
+    singular: logshieldpolicy
+    kind: LogShieldPolicy
+    shortNames:
+      - lsp

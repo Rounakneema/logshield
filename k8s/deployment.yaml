@@ -1,0 +1,132 @@
+# LogShield Kubernetes Deployment
+# ==================================
+# This YAML deploys a pod with TWO containers:
+#   1. target-app     — the application that accidentally leaks secrets
+#   2. logshield    — the sidecar that intercepts and sanitises logs
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logshield-protected
+  namespace: logshield-protected
+  labels:
+    app: logshield-protected
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logshield-protected
+  template:
+    metadata:
+      labels:
+        app: logshield-protected
+    spec:
+      serviceAccountName: logshield-sa   # has read-only access to Secrets
+
+      # ───── Container 1: The application ─────
+      containers:
+      - name: target-app
+        image: logshield-protected-app:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          value: "postgres://admin:MyP@ssw0rd123@db:5432/prod"
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI"
+        - name: JWT_SECRET
+          value: "super-secret-jwt-signing-key-do-not-share"
+        - name: STRIPE_SECRET_KEY
+          value: "sk_test_abcdefghijklmnopqrstuvwxyz"
+        volumeMounts:
+        - name: shared-logs
+          mountPath: /shared      # app writes logs here
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+
+      # ───── Container 2: LogShield sidecar ─────
+      - name: logshield-sidecar
+        image: logshield-sidecar:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: AUTHORIZED_ACTORS
+          value: "admin,security-team"
+        - name: LOG_INPUT_PATH
+          value: "/shared/app.log"
+        volumeMounts:
+        - name: shared-logs
+          mountPath: /shared          # reads app.log from here
+          readOnly: true              # sidecar never writes to the shared log
+        - name: sidecar-data
+          mountPath: /data            # vault, lineage, keys, stats
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1000
+
+      # ───── Container 3: Dashboard Frontend ─────
+      - name: logshield-dashboard
+        image: logshield-dashboard:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+        env:
+        - name: SIDECAR_API_URL
+          value: "http://127.0.0.1:8080/api/v1"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+
+      # ───── Volumes ─────
+      volumes:
+      - name: shared-logs
+        emptyDir: {}    # pod-local, never hits the network
+      - name: sidecar-data
+        emptyDir: {}    # private to the sidecar
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: logshield-protected
+  namespace: logshield-protected
+spec:
+  selector:
+    app: logshield-protected
+  ports:
+  - name: target-app
+    port: 8000
+    targetPort: 8000
+  - name: sidecar-api
+    port: 8080
+    targetPort: 8080
+  - name: dashboard-ui
+    port: 3000
+    targetPort: 3000

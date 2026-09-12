@@ -1,0 +1,37 @@
+{{- $altNames := list (printf "%s.%s" .Values.webhook.serviceName .Release.Namespace) (printf "%s.%s.svc" .Values.webhook.serviceName .Release.Namespace) -}}
+{{- $ca := genCA "logshield-webhook-ca" 3650 -}}
+{{- $cert := genSignedCert .Values.webhook.serviceName nil $altNames 3650 $ca -}}
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: logshield-webhook-certs
+  namespace: {{ .Release.Namespace }}
+type: Opaque
+data:
+  tls.crt: {{ b64enc $cert.Cert }}
+  tls.key: {{ b64enc $cert.Key }}
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: logshield-mutating-webhook
+webhooks:
+  - name: inject.logshield.io
+    clientConfig:
+      service:
+        name: {{ .Values.webhook.serviceName }}
+        namespace: {{ .Release.Namespace }}
+        path: "/mutate"
+      caBundle: {{ b64enc $ca.Cert }}
+    rules:
+      - operations: ["CREATE"]
+        apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]
+    failurePolicy: Ignore
+    sideEffects: None
+    admissionReviewVersions: ["v1", "v1beta1"]
+    namespaceSelector:
+      matchLabels:
+        logshield.io/enabled: "true"

@@ -1,0 +1,451 @@
+line,token,varname_score,regex_score,entropy_score,token_struct_score,context_score,encoding_score,label
+DEBUG File downloaded. ETag: ca90740adc4b9ee6f3383c643165e74b,ca90740adc4b9ee6f3383c643165e74b,0.3,0.85,1.0,0.0,0.0,0.8,0
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+DEBUG File downloaded. ETag: 39fb1e0de40c50fefcf0004573fbe661,39fb1e0de40c50fefcf0004573fbe661,0.3,0.85,0.7,0.0,0.0,0.8,0
+DEBUG User login request. password=P@ssw0rd123!288,P@ssw0rd123!288,1.0,0.7,1.0,1.0,1.0,0.0,1
+DEBUG File downloaded. ETag: a56e2b4b0edb0d127a4e3484ff6b3d7f,a56e2b4b0edb0d127a4e3484ff6b3d7f,0.3,0.85,1.0,0.0,0.0,0.8,0
+DEBUG File downloaded. ETag: 4ad984d170d266bb8b17e5b91dc83ef2,4ad984d170d266bb8b17e5b91dc83ef2,0.3,0.85,1.0,0.0,0.0,0.8,0
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+DEBUG User login request. password=Tr0ub4dor&3555,Tr0ub4dor&3555,1.0,0.7,0.7,1.0,1.0,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+ERROR Timeout waiting for service dependency_id=e7f066e7-47f6-4e2c-955f-f34894292cd8,e7f066e7-47f6-4e2c-955f-f34894292cd8,0.3,0.85,0.0,1.0,0.1,0.0,0
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+DEBUG File downloaded. ETag: db811d57619d4bb4e5702b53d835fecb,db811d57619d4bb4e5702b53d835fecb,0.3,0.85,1.0,0.0,0.0,0.8,0
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+DEBUG User login request. password=correcthorsebatterystaple403,correcthorsebatterystaple403,1.0,0.7,1.0,0.7,1.0,0.8,1
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+DEBUG File downloaded. ETag: aee9df7ff12a6964b74636c947c477d3,aee9df7ff12a6964b74636c947c477d3,0.3,0.85,1.0,0.0,0.0,0.8,0
+DEBUG File downloaded. ETag: 49e1427054ab15ec238dc6f5bbd67f29,49e1427054ab15ec238dc6f5bbd67f29,0.3,0.85,1.0,0.0,0.0,0.8,0
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+WARN  Invalid API key provided: api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,1.0,0.85,1.0,1.0,1.0,0.0,1
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+DEBUG File downloaded. ETag: 1c5e9c136389619513bbc1e663143ba0,1c5e9c136389619513bbc1e663143ba0,0.3,0.85,0.7,0.0,0.0,0.8,0
+INFO  Request processed successfully. trace_id=2d31ad03-70f5-4c70-bf76-6dd2df48b4ae,2d31ad03-70f5-4c70-bf76-6dd2df48b4ae,0.0,0.85,0.0,1.0,0.0,0.0,0
+DEBUG File downloaded. ETag: b84d09898c0117a29698f71693ec968c,b84d09898c0117a29698f71693ec968c,0.3,0.85,1.0,0.0,0.0,0.8,0
+DEBUG File downloaded. ETag: a426e48fd6c5660df857a5c274adc1fc,a426e48fd6c5660df857a5c274adc1fc,0.3,0.85,1.0,0.0,0.0,0.8,0
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+DEBUG User login request. password=correcthorsebatterystaple844,correcthorsebatterystaple844,1.0,0.7,1.0,0.7,1.0,0.8,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+INFO  Request processed successfully. trace_id=f49bec9c-110f-45c1-bab8-bf275019c944,f49bec9c-110f-45c1-bab8-bf275019c944,0.0,0.85,0.0,1.0,0.0,0.0,0
+DEBUG File downloaded. ETag: 8697dd2b33b60c7062c8a6af6726e1d9,8697dd2b33b60c7062c8a6af6726e1d9,0.3,0.85,1.0,0.0,0.0,0.8,0
+ERROR Timeout waiting for service dependency_id=e02aa4c3-7e4c-42ec-85e3-fba590a35d38,e02aa4c3-7e4c-42ec-85e3-fba590a35d38,0.3,0.85,0.0,1.0,0.1,0.0,0
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+DEBUG User login request. password=Sup3rS3cr3t#99648,Sup3rS3cr3t#99648,1.0,0.7,0.7,1.0,1.0,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+ERROR Timeout waiting for service dependency_id=5647074a-1647-4725-b849-3f828ab9b789,5647074a-1647-4725-b849-3f828ab9b789,0.3,0.85,0.0,1.0,0.1,0.0,0
+ERROR Timeout waiting for service dependency_id=ab2ee615-1ed4-44f8-ae96-eee54a221283,ab2ee615-1ed4-44f8-ae96-eee54a221283,0.3,0.85,0.0,1.0,0.1,0.0,0
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+ERROR Timeout waiting for service dependency_id=8e459a8b-ca7b-4435-bc25-49d12817a196,8e459a8b-ca7b-4435-bc25-49d12817a196,0.3,0.85,0.0,1.0,0.1,0.0,0
+INFO  Request processed successfully. trace_id=c5b53cb8-4ff4-4f7b-8f73-d8ba391bc1d9,c5b53cb8-4ff4-4f7b-8f73-d8ba391bc1d9,0.0,0.85,0.0,1.0,0.0,0.0,0
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+WARN  Invalid API key provided: api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,1.0,0.85,1.0,1.0,1.0,0.0,1
+DEBUG File downloaded. ETag: bff1090d9cc3b1fba57fb9da6e97de8a,bff1090d9cc3b1fba57fb9da6e97de8a,0.3,0.85,1.0,0.0,0.0,0.8,0
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+ERROR Timeout waiting for service dependency_id=1476a851-a9e5-46b1-b1e5-2c6077c26cfe,1476a851-a9e5-46b1-b1e5-2c6077c26cfe,0.3,0.85,0.0,1.0,0.1,0.0,0
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+DEBUG File downloaded. ETag: dadfbc13fcab969098c4f09fb8bc681f,dadfbc13fcab969098c4f09fb8bc681f,0.3,0.85,0.7,0.0,0.0,0.8,0
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+DEBUG User login request. password=Sup3rS3cr3t#99276,Sup3rS3cr3t#99276,1.0,0.7,0.7,1.0,1.0,0.0,1
+WARN  Invalid API key provided: api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,1.0,0.85,1.0,1.0,1.0,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+ERROR Timeout waiting for service dependency_id=4a49f374-b4e0-426d-a2f1-8d6aa07e872b,4a49f374-b4e0-426d-a2f1-8d6aa07e872b,0.3,0.85,0.0,1.0,0.1,0.0,0
+DEBUG File downloaded. ETag: 829821f64b311196783035c4440eefd7,829821f64b311196783035c4440eefd7,0.3,0.85,1.0,0.0,0.0,0.8,0
+ERROR Timeout waiting for service dependency_id=9f021790-d862-4532-90a0-0b8dcf77d4af,9f021790-d862-4532-90a0-0b8dcf77d4af,0.3,0.85,0.0,1.0,0.1,0.0,0
+DEBUG User login request. password=P@ssw0rd123!656,P@ssw0rd123!656,1.0,0.7,1.0,1.0,1.0,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+ERROR Timeout waiting for service dependency_id=b8cab475-5792-4bf4-ace5-18b725334547,b8cab475-5792-4bf4-ace5-18b725334547,0.3,0.85,0.0,1.0,0.1,0.0,0
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+ERROR Timeout waiting for service dependency_id=b93b72a1-a566-4a03-a4d4-178d8bc2cf71,b93b72a1-a566-4a03-a4d4-178d8bc2cf71,0.3,0.85,0.0,1.0,0.1,0.0,0
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+INFO  Request processed successfully. trace_id=71fdf5b5-9f4b-4e4e-b552-588a011bbda6,71fdf5b5-9f4b-4e4e-b552-588a011bbda6,0.0,0.85,0.0,1.0,0.0,0.0,0
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+DEBUG User login request. password=correcthorsebatterystaple609,correcthorsebatterystaple609,1.0,0.7,1.0,0.7,1.0,0.8,1
+INFO  Request processed successfully. trace_id=e27a98b8-6fe7-48ec-a262-5de0e06ea1a9,e27a98b8-6fe7-48ec-a262-5de0e06ea1a9,0.0,0.85,0.0,1.0,0.0,0.0,0
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+INFO  Request processed successfully. trace_id=018f34ff-ea17-4aa2-9563-bdee07505ff6,018f34ff-ea17-4aa2-9563-bdee07505ff6,0.0,0.85,0.0,1.0,0.0,0.0,0
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+DEBUG File downloaded. ETag: f942cf8d6fb119663c5ef70689b2d76c,f942cf8d6fb119663c5ef70689b2d76c,0.3,0.85,1.0,0.0,0.0,0.8,0
+WARN  Invalid API key provided: api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,1.0,0.85,1.0,1.0,1.0,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+DEBUG File downloaded. ETag: 3548a2e2896b069400938dcc75609000,3548a2e2896b069400938dcc75609000,0.3,0.85,1.0,0.0,0.0,0.8,0
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+ERROR Timeout waiting for service dependency_id=64e8e793-32f0-428d-ac1b-3bb2a2bbb7b0,64e8e793-32f0-428d-ac1b-3bb2a2bbb7b0,0.3,0.85,0.0,1.0,0.1,0.0,0
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+DEBUG User login request. password=Tr0ub4dor&3267,Tr0ub4dor&3267,1.0,0.7,1.0,1.0,1.0,0.0,1
+DEBUG File downloaded. ETag: 04e4c735bc279253ab3c535ffe6262e5,04e4c735bc279253ab3c535ffe6262e5,0.3,0.85,1.0,0.0,0.0,0.8,0
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+DEBUG File downloaded. ETag: 119cd734b25f0921e60d33a731e6c79c,119cd734b25f0921e60d33a731e6c79c,0.3,0.85,1.0,0.0,0.0,0.8,0
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+WARN  Invalid API key provided: api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,1.0,0.85,1.0,1.0,1.0,0.0,1
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+INFO  Request processed successfully. trace_id=8201344f-dadb-419b-8d17-c8b2d4b14e65,8201344f-dadb-419b-8d17-c8b2d4b14e65,0.0,0.85,0.0,1.0,0.0,0.0,0
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+INFO  Request processed successfully. trace_id=27ba9b42-c626-44f3-a70c-ed21af8a4852,27ba9b42-c626-44f3-a70c-ed21af8a4852,0.0,0.85,0.0,1.0,0.0,0.0,0
+ERROR Timeout waiting for service dependency_id=36101243-11a2-4790-ab3c-7272f2bd44fe,36101243-11a2-4790-ab3c-7272f2bd44fe,0.3,0.85,0.0,1.0,0.1,0.0,0
+ERROR Timeout waiting for service dependency_id=c693cb9a-1f93-4b9e-a5b2-c5e871e6839d,c693cb9a-1f93-4b9e-a5b2-c5e871e6839d,0.3,0.85,0.0,1.0,0.1,0.0,0
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+WARN  Invalid API key provided: api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,1.0,0.85,1.0,1.0,1.0,0.0,1
+DEBUG File downloaded. ETag: cd2d404fe853291605042ba1df4a4447,cd2d404fe853291605042ba1df4a4447,0.3,0.85,1.0,0.0,0.0,0.8,0
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+DEBUG User login request. password=Tr0ub4dor&3210,Tr0ub4dor&3210,1.0,0.7,1.0,1.0,1.0,0.0,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+ERROR Timeout waiting for service dependency_id=36217e79-6e2b-4298-aaa6-827ea2e48879,36217e79-6e2b-4298-aaa6-827ea2e48879,0.3,0.85,0.0,1.0,0.1,0.0,0
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+DEBUG User login request. password=Tr0ub4dor&3966,Tr0ub4dor&3966,1.0,0.7,1.0,1.0,1.0,0.0,1
+ERROR Timeout waiting for service dependency_id=9e4f3cad-f9b5-45d1-a35f-c4bdc64b52ae,9e4f3cad-f9b5-45d1-a35f-c4bdc64b52ae,0.3,0.85,0.0,1.0,0.1,0.0,0
+ERROR Timeout waiting for service dependency_id=d2ab96da-aaf7-4fe1-9451-3a5d55c3ca2e,d2ab96da-aaf7-4fe1-9451-3a5d55c3ca2e,0.3,0.85,0.0,1.0,0.1,0.0,0
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+INFO  Request processed successfully. trace_id=45c25f23-4fc3-4edc-8912-2733aef139bc,45c25f23-4fc3-4edc-8912-2733aef139bc,0.0,0.85,0.0,1.0,0.0,0.0,0
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+INFO  Request processed successfully. trace_id=3542d5c1-a6ea-419f-a98b-685eb323b3ec,3542d5c1-a6ea-419f-a98b-685eb323b3ec,0.0,0.85,0.0,1.0,0.0,0.0,0
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+INFO  Request processed successfully. trace_id=a81f8f27-c478-410b-af87-41a18cd740ac,a81f8f27-c478-410b-af87-41a18cd740ac,0.0,0.85,0.0,1.0,0.0,0.0,0
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+DEBUG User login request. password=P@ssw0rd123!799,P@ssw0rd123!799,1.0,0.7,1.0,1.0,1.0,0.0,1
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+INFO  Request processed successfully. trace_id=d3a3f9a9-ec7a-45a1-a14f-280d15528cd1,d3a3f9a9-ec7a-45a1-a14f-280d15528cd1,0.0,0.85,0.0,1.0,0.0,0.0,0
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+DEBUG User login request. password=Tr0ub4dor&3300,Tr0ub4dor&3300,1.0,0.7,0.7,1.0,1.0,0.0,1
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+ERROR Timeout waiting for service dependency_id=fc7454c5-f532-41cc-ac7b-dd110ae6e155,fc7454c5-f532-41cc-ac7b-dd110ae6e155,0.3,0.85,0.0,1.0,0.1,0.0,0
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+DEBUG File downloaded. ETag: 313d34258b63a1fd4b6d78b697314924,313d34258b63a1fd4b6d78b697314924,0.3,0.85,1.0,0.0,0.0,0.8,0
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+ERROR Timeout waiting for service dependency_id=099c0b0b-3ca8-4f14-aac7-e697f00f7370,099c0b0b-3ca8-4f14-aac7-e697f00f7370,0.3,0.85,0.0,1.0,0.1,0.0,0
+ERROR Timeout waiting for service dependency_id=93368c5b-4459-4828-8371-4b88e39b45db,93368c5b-4459-4828-8371-4b88e39b45db,0.3,0.85,0.0,1.0,0.1,0.0,0
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+INFO  Request processed successfully. trace_id=f9752cc5-2ce8-45a6-9374-e2ed32d55e7b,f9752cc5-2ce8-45a6-9374-e2ed32d55e7b,0.0,0.85,0.0,1.0,0.0,0.0,0
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+DEBUG User login request. password=Sup3rS3cr3t#99424,Sup3rS3cr3t#99424,1.0,0.7,0.7,1.0,1.0,0.0,1
+DEBUG User login request. password=Tr0ub4dor&3859,Tr0ub4dor&3859,1.0,0.7,1.0,1.0,1.0,0.0,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+DEBUG File downloaded. ETag: 6ca05b474c3b29ef8859e5b1edff39c0,6ca05b474c3b29ef8859e5b1edff39c0,0.3,0.85,1.0,0.0,0.0,0.8,0
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+DEBUG File downloaded. ETag: 8a4fb5804690914f2b5f653d756f34a5,8a4fb5804690914f2b5f653d756f34a5,0.3,0.85,1.0,0.0,0.0,0.8,0
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+DEBUG File downloaded. ETag: 3881e2528c467bfc1165eee6e7e8f7a4,3881e2528c467bfc1165eee6e7e8f7a4,0.3,0.85,1.0,0.0,0.0,0.8,0
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+DEBUG File downloaded. ETag: c84b51cbccec5599a62e71fda15a73ca,c84b51cbccec5599a62e71fda15a73ca,0.3,0.85,1.0,0.0,0.0,0.8,0
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+ERROR Timeout waiting for service dependency_id=80ed8e22-bfda-40f7-85ad-00fc56d2a54e,80ed8e22-bfda-40f7-85ad-00fc56d2a54e,0.3,0.85,0.0,1.0,0.1,0.0,0
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+WARN  Invalid API key provided: api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,1.0,0.85,1.0,1.0,1.0,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+ERROR Timeout waiting for service dependency_id=ebe75311-91c3-4c59-a8de-4d3320604f50,ebe75311-91c3-4c59-a8de-4d3320604f50,0.3,0.85,0.0,1.0,0.1,0.0,0
+WARN  Invalid API key provided: api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,1.0,0.85,1.0,1.0,1.0,0.0,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+ERROR Timeout waiting for service dependency_id=ab7f009a-229e-4f70-a75b-93805a63ad0b,ab7f009a-229e-4f70-a75b-93805a63ad0b,0.3,0.85,0.0,1.0,0.1,0.0,0
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+DEBUG File downloaded. ETag: b08d645d6c87cee7b620a0ed5356af53,b08d645d6c87cee7b620a0ed5356af53,0.3,0.85,1.0,0.0,0.0,0.8,0
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+DEBUG File downloaded. ETag: ff379dca46bb1863452f5f440ad08e4a,ff379dca46bb1863452f5f440ad08e4a,0.3,0.85,1.0,0.0,0.0,0.8,0
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+ERROR Timeout waiting for service dependency_id=fe9ea655-f5cd-4d7e-8aea-2a322dc7e0e2,fe9ea655-f5cd-4d7e-8aea-2a322dc7e0e2,0.3,0.85,0.0,1.0,0.1,0.0,0
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+ERROR Timeout waiting for service dependency_id=15f83b58-757d-4a5e-8e9c-f17cc0fd57b1,15f83b58-757d-4a5e-8e9c-f17cc0fd57b1,0.3,0.85,0.0,1.0,0.1,0.0,0
+DEBUG File downloaded. ETag: da8d797edf0c79b2f83c9f4b3c3a9bf5,da8d797edf0c79b2f83c9f4b3c3a9bf5,0.3,0.85,1.0,0.0,0.0,0.8,0
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+DEBUG File downloaded. ETag: 3edd3f6fd7a0aa2614bdc49c18ec23c2,3edd3f6fd7a0aa2614bdc49c18ec23c2,0.3,0.85,1.0,0.0,0.0,0.8,0
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+DEBUG User login request. password=correcthorsebatterystaple436,correcthorsebatterystaple436,1.0,0.7,1.0,0.7,1.0,0.8,1
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+WARN  Invalid API key provided: api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,1.0,0.85,1.0,1.0,1.0,0.0,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+DEBUG File downloaded. ETag: 389651592489877d7e2fa6573c37f57a,389651592489877d7e2fa6573c37f57a,0.3,0.85,1.0,0.0,0.0,0.8,0
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+DEBUG File downloaded. ETag: e78f9112abf3f5bd8e409f1c322a3e73,e78f9112abf3f5bd8e409f1c322a3e73,0.3,0.85,1.0,0.0,0.0,0.8,0
+INFO  Request processed successfully. trace_id=4fb3872d-74a8-4f52-a5e1-e8941677026e,4fb3872d-74a8-4f52-a5e1-e8941677026e,0.0,0.85,0.0,1.0,0.0,0.0,0
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+DEBUG User login request. password=correcthorsebatterystaple189,correcthorsebatterystaple189,1.0,0.7,1.0,0.7,1.0,0.8,1
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+ERROR Timeout waiting for service dependency_id=a9075dda-e1e0-4d07-b322-e2b6ce6a5720,a9075dda-e1e0-4d07-b322-e2b6ce6a5720,0.3,0.85,0.0,1.0,0.1,0.0,0
+ERROR Timeout waiting for service dependency_id=f5b6d27e-2f53-4207-ada0-35eb9f3fe639,f5b6d27e-2f53-4207-ada0-35eb9f3fe639,0.3,0.85,0.0,1.0,0.1,0.0,0
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+DEBUG File downloaded. ETag: 876c6edf8dff4e27be860e9f9e4665cd,876c6edf8dff4e27be860e9f9e4665cd,0.3,0.85,0.7,0.0,0.0,0.8,0
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+WARN  Invalid API key provided: api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,1.0,0.85,1.0,1.0,1.0,0.0,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+INFO  Request processed successfully. trace_id=e7e54929-522a-4795-a9f6-b21e9abe2992,e7e54929-522a-4795-a9f6-b21e9abe2992,0.0,0.85,0.0,1.0,0.0,0.0,0
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+DEBUG User login request. password=Sup3rS3cr3t#99484,Sup3rS3cr3t#99484,1.0,0.7,0.7,1.0,1.0,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+ERROR Timeout waiting for service dependency_id=c14eb630-cdf9-4f99-9bc4-42213c6ad708,c14eb630-cdf9-4f99-9bc4-42213c6ad708,0.3,0.85,0.0,1.0,0.1,0.0,0
+INFO  Request processed successfully. trace_id=7d83701d-bf06-4f87-b7ea-a3419669e505,7d83701d-bf06-4f87-b7ea-a3419669e505,0.0,0.85,0.0,1.0,0.0,0.0,0
+INFO  Request processed successfully. trace_id=0b56e788-595b-4c17-88ca-5102dc792258,0b56e788-595b-4c17-88ca-5102dc792258,0.0,0.85,0.0,1.0,0.0,0.0,0
+INFO  Request processed successfully. trace_id=206f9848-b3f7-4795-bd39-b62b7cb5016f,206f9848-b3f7-4795-bd39-b62b7cb5016f,0.0,0.85,0.0,1.0,0.0,0.0,0
+ERROR Timeout waiting for service dependency_id=72006161-b1b3-4b40-9ce5-96df7d04bad1,72006161-b1b3-4b40-9ce5-96df7d04bad1,0.3,0.85,0.0,1.0,0.1,0.0,0
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+INFO  Request processed successfully. trace_id=97f190b1-6a7d-4c3a-ac7a-1288c59d6b1f,97f190b1-6a7d-4c3a-ac7a-1288c59d6b1f,0.0,0.85,0.0,1.0,0.0,0.0,0
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+DEBUG File downloaded. ETag: 49ef08f055b611d4df73b027dccbea46,49ef08f055b611d4df73b027dccbea46,0.3,0.85,1.0,0.0,0.0,0.8,0
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+DEBUG File downloaded. ETag: 20b5597d9510ced517dda4843653e7bc,20b5597d9510ced517dda4843653e7bc,0.3,0.85,1.0,0.0,0.0,0.8,0
+WARN  Invalid API key provided: api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,1.0,0.85,1.0,1.0,1.0,0.0,1
+DEBUG User login request. password=Tr0ub4dor&3250,Tr0ub4dor&3250,1.0,0.7,1.0,1.0,1.0,0.0,1
+INFO  Request processed successfully. trace_id=673ca35e-be4a-4d15-bad7-f6e2e6d97d44,673ca35e-be4a-4d15-bad7-f6e2e6d97d44,0.0,0.85,0.0,1.0,0.0,0.0,0
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+DEBUG File downloaded. ETag: 399815240f7bc93d9f30cc39a9608aa1,399815240f7bc93d9f30cc39a9608aa1,0.3,0.85,1.0,0.0,0.0,0.8,0
+INFO  Request processed successfully. trace_id=8be74dd5-a87e-4919-bbe8-ec7991ea9456,8be74dd5-a87e-4919-bbe8-ec7991ea9456,0.0,0.85,0.0,1.0,0.0,0.0,0
+ERROR Timeout waiting for service dependency_id=e5b88c20-6f8f-417d-9ecd-9d23e9836bb7,e5b88c20-6f8f-417d-9ecd-9d23e9836bb7,0.3,0.85,0.0,1.0,0.1,0.0,0
+DEBUG User login request. password=Tr0ub4dor&3647,Tr0ub4dor&3647,1.0,0.7,1.0,1.0,1.0,0.0,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+DEBUG User login request. password=Sup3rS3cr3t#99480,Sup3rS3cr3t#99480,1.0,0.7,0.7,1.0,1.0,0.0,1
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+ERROR Timeout waiting for service dependency_id=01a9a23d-4235-40d6-ab33-550bea8b8b3f,01a9a23d-4235-40d6-ab33-550bea8b8b3f,0.3,0.85,0.0,1.0,0.1,0.0,0
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+WARN  Invalid API key provided: api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,1.0,0.85,1.0,1.0,1.0,0.0,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+WARN  Invalid API key provided: api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,1.0,0.85,1.0,1.0,1.0,0.0,1
+ERROR Timeout waiting for service dependency_id=64f52385-a083-48bc-a8ac-25aa48486e16,64f52385-a083-48bc-a8ac-25aa48486e16,0.3,0.85,0.0,1.0,0.1,0.0,0
+ERROR Timeout waiting for service dependency_id=1f9faff6-e9fb-403e-8ee4-a4a32e753be6,1f9faff6-e9fb-403e-8ee4-a4a32e753be6,0.3,0.85,0.0,1.0,0.1,0.0,0
+ERROR Timeout waiting for service dependency_id=f58433f3-c60c-4fc9-a41e-ebb4b611aad0,f58433f3-c60c-4fc9-a41e-ebb4b611aad0,0.3,0.85,0.0,1.0,0.1,0.0,0
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+DEBUG File downloaded. ETag: aa1c3e3abda619726bf21237d8d71734,aa1c3e3abda619726bf21237d8d71734,0.3,0.85,1.0,0.0,0.0,0.8,0
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+DEBUG File downloaded. ETag: 85a5ec882559567c0c1f21927dac04a8,85a5ec882559567c0c1f21927dac04a8,0.3,0.85,1.0,0.0,0.0,0.8,0
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+INFO  [Config] Github Token configured: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,0.3,0.85,0.0,0.7,0.9,0.0,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+DEBUG File downloaded. ETag: 84a331fb78ea997489abd44527d99489,84a331fb78ea997489abd44527d99489,0.3,0.85,0.7,0.0,0.0,0.8,0
+ERROR Timeout waiting for service dependency_id=c9df6a0a-f27a-47a2-9eb2-27aa2c170771,c9df6a0a-f27a-47a2-9eb2-27aa2c170771,0.3,0.85,0.0,1.0,0.1,0.0,0
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+INFO  Request processed successfully. trace_id=ea4a6522-9d1b-4102-8de7-a8eefbfb6795,ea4a6522-9d1b-4102-8de7-a8eefbfb6795,0.0,0.85,0.0,1.0,0.0,0.0,0
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+DEBUG File downloaded. ETag: ec41138d207477ec60dc95f9d9b76449,ec41138d207477ec60dc95f9d9b76449,0.3,0.85,1.0,0.0,0.0,0.8,0
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+INFO  Request processed successfully. trace_id=f018f276-a5f4-4b78-b5a6-269fbeb02f39,f018f276-a5f4-4b78-b5a6-269fbeb02f39,0.0,0.85,0.0,1.0,0.0,0.0,0
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+ERROR Timeout waiting for service dependency_id=7f233c19-c57d-48f8-bea3-d4c4e0d0d970,7f233c19-c57d-48f8-bea3-d4c4e0d0d970,0.3,0.85,0.0,1.0,0.1,0.0,0
+DEBUG User login request. password=Sup3rS3cr3t#99623,Sup3rS3cr3t#99623,1.0,0.7,0.7,1.0,1.0,0.0,1
+ERROR Timeout waiting for service dependency_id=9d5e2184-33c7-4421-b7cd-753ea19faa8a,9d5e2184-33c7-4421-b7cd-753ea19faa8a,0.3,0.85,0.0,1.0,0.1,0.0,0
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+DEBUG User login request. password=Tr0ub4dor&3447,Tr0ub4dor&3447,1.0,0.7,0.7,1.0,1.0,0.0,1
+DEBUG User login request. password=correcthorsebatterystaple355,correcthorsebatterystaple355,1.0,0.7,1.0,0.7,1.0,0.8,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+WARN  Invalid API key provided: api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,1.0,0.85,1.0,1.0,1.0,0.0,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+WARN  Invalid API key provided: api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,api_key=aB3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5z,1.0,0.85,1.0,1.0,1.0,0.0,1
+DEBUG File downloaded. ETag: 1b8c790583b30025830f1b6b762184b7,1b8c790583b30025830f1b6b762184b7,0.3,0.85,1.0,0.0,0.0,0.8,0
+INFO  Request processed successfully. trace_id=f81de197-f538-469c-83ee-b06da1eabf1e,f81de197-f538-469c-83ee-b06da1eabf1e,0.0,0.85,0.0,1.0,0.0,0.0,0
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+INFO  Session started with token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c,1.0,0.85,1.0,1.0,0.8,0.0,1
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+DEBUG File downloaded. ETag: 5a6a775c80e6f960663ba910813e3160,5a6a775c80e6f960663ba910813e3160,0.3,0.85,1.0,0.0,0.0,0.8,0
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+DEBUG User login request. password=correcthorsebatterystaple701,correcthorsebatterystaple701,1.0,0.7,1.0,0.7,1.0,0.8,1
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+DEBUG Connecting to database: postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,postgres://admin:MyP@ssw0rd123!@db-host:5432/prod,0.0,1.0,1.0,1.0,0.30000000000000004,0.0,1
+INFO  Request processed successfully. trace_id=83d232ac-9c7a-4948-b070-20fa6edcb93c,83d232ac-9c7a-4948-b070-20fa6edcb93c,0.0,0.85,0.0,1.0,0.0,0.0,0
+INFO  Startup complete. Mode=Production Version=1.4.2,Production,0.0,0.0,0.7,0.0,0.1,0.0,0
+DUMP  Environment dump: slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,slack_token=x0xb-123456789012-1234567890123-xxxxxxxxxxxxxxxxxxxxxxxx,1.0,1.0,1.0,1.0,1.0,0.0,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+INFO  Connection established to host=192.168.1.5 port=8080,192.168.1.5,0.0,0.0,0.3,0.0,0.0,0.0,0
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+WARN  Invalid API key provided: api_key=1234567890abcdef1234567890abcdef,api_key=1234567890abcdef1234567890abcdef,1.0,0.85,1.0,1.0,1.0,0.0,1
+ERROR Timeout waiting for service dependency_id=505e7d0e-a882-4c80-9934-b6bd44168cb3,505e7d0e-a882-4c80-9934-b6bd44168cb3,0.3,0.85,0.0,1.0,0.1,0.0,0
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+ERROR Timeout waiting for service dependency_id=f35b7eb6-62f7-4414-8f2f-3cb450e9a92e,f35b7eb6-62f7-4414-8f2f-3cb450e9a92e,0.3,0.85,0.0,1.0,0.1,0.0,0
+WARN  Cache miss for key=user_profile_12345,user_profile_12345,1.0,0.0,1.0,1.0,0.6,0.0,0
+DEBUG Payment intent failed. STRIPE_SECRET_KEY=sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,sk_test_51J9xXXXXXXXXXXXXXXXXXXXXXXXXXX,1.0,1.0,0.3,1.0,1.0,0.0,1
+INFO  Request processed successfully. trace_id=22cb157d-0d9f-4d07-af17-59de19d9f7a6,22cb157d-0d9f-4d07-af17-59de19d9f7a6,0.0,0.85,0.0,1.0,0.0,0.0,0
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1
+ERROR Failed to authenticate. AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY,1.0,1.0,1.0,1.0,1.0,0.8,1

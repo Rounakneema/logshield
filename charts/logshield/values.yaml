@@ -1,0 +1,30 @@
+controller:
+  image: "logshield-controller:latest"
+  imagePullPolicy: IfNotPresent
+  replicaCount: 1
+
+webhook:
+  serviceName: logshield-webhook-service
+  port: 443
+  targetPort: 8443
+
+defaultPolicy:
+  detection:
+    threshold: 80
+    flagThreshold: 50
+  features:
+    entropy: true
+    regex: true
+    context: true
+    encoding: true
+    tokenStructure: true
+    variableProximity: true
+  recovery:
+    enabled: true
+    ttl: 30d
+  lineage:
+    enabled: true
+  action:
+    highConfidence: REDACT
+    mediumConfidence: FLAG
+    lowConfidence: ALLOW

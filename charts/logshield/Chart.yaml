@@ -1,0 +1,6 @@
+apiVersion: v2
+name: logshield
+description: A Kubernetes-native zero-config log secret detection engine.
+type: application
+version: 0.1.0
+appVersion: "1.0"
