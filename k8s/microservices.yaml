@@ -72,6 +72,17 @@ spec:
         app: auth-service
     spec:
       serviceAccountName: logshield-sa
+      initContainers:
+      - name: volume-permission-fix
+        image: busybox:latest
+        command: ['sh', '-c', 'chown -R 1000:1000 /shared /data || true']
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - name: shared-logs
+          mountPath: /shared
+        - name: logshield-data
+          mountPath: /data
       containers:
       - name: target-app
         image: logshield-protected-app:latest
@@ -145,6 +156,17 @@ spec:
       labels:
         app: payment-service
     spec:
+      initContainers:
+      - name: volume-permission-fix
+        image: busybox:latest
+        command: ['sh', '-c', 'chown -R 1000:1000 /shared /data || true']
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - name: shared-logs
+          mountPath: /shared
+        - name: logshield-data
+          mountPath: /data
       containers:
       - name: target-app
         image: logshield-protected-app:latest
@@ -212,6 +234,17 @@ spec:
       labels:
         app: inventory-service
     spec:
+      initContainers:
+      - name: volume-permission-fix
+        image: busybox:latest
+        command: ['sh', '-c', 'chown -R 1000:1000 /shared /data || true']
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - name: shared-logs
+          mountPath: /shared
+        - name: logshield-data
+          mountPath: /data
       containers:
       - name: target-app
         image: logshield-protected-app:latest
@@ -279,6 +312,17 @@ spec:
       labels:
         app: user-service
     spec:
+      initContainers:
+      - name: volume-permission-fix
+        image: busybox:latest
+        command: ['sh', '-c', 'chown -R 1000:1000 /shared /data || true']
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - name: shared-logs
+          mountPath: /shared
+        - name: logshield-data
+          mountPath: /data
       containers:
       - name: target-app
         image: logshield-protected-app:latest
@@ -346,6 +390,17 @@ spec:
       labels:
         app: notification-service
     spec:
+      initContainers:
+      - name: volume-permission-fix
+        image: busybox:latest
+        command: ['sh', '-c', 'chown -R 1000:1000 /shared /data || true']
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - name: shared-logs
+          mountPath: /shared
+        - name: logshield-data
+          mountPath: /data
       containers:
       - name: target-app
         image: logshield-protected-app:latest
