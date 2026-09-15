@@ -19,8 +19,9 @@ from sidecar.logmask.scorer import SCSEngine
 from sidecar.securereveal.vault import Vault
 from sidecar.secretlineage.fingerprint import Fingerprinter
 
+pod_name = os.environ.get("POD_NAME", "unknown")
 LOG_INPUT_PATH    = os.environ.get("LOG_INPUT_PATH",    "/shared/app.log")
-STATS_OUTPUT_PATH = os.environ.get("STATS_OUTPUT_PATH", "/data/stats.json")
+STATS_OUTPUT_PATH = os.environ.get("STATS_OUTPUT_PATH", f"/data/stats_{pod_name}.json")
 VAULT_EXPIRY_INTERVAL_S = int(os.environ.get("VAULT_EXPIRY_INTERVAL", "3600"))
 VAULT_DB_PATH     = os.environ.get("VAULT_DB_PATH",     "/data/vault.db")
 VAULT_KEY_PATH    = os.environ.get("VAULT_KEY_PATH",    "/data/vault.key")
@@ -124,7 +125,7 @@ class LogShieldInterceptor:
                 with open(STATS_OUTPUT_PATH, "w") as f:
                     json.dump(self.stats, f, indent=2)
                     
-                recent_logs_path = os.environ.get("RECENT_LOGS_PATH", "/data/recent_logs.json")
+                recent_logs_path = os.environ.get("RECENT_LOGS_PATH", f"/data/recent_logs_{pod_name}.json")
                 with open(recent_logs_path, "w") as f:
                     json.dump(list(self.recent_logs), f, indent=2)
             except Exception as e:
