@@ -419,7 +419,7 @@ spec:
         env:
         # Dashboard reads API from ANY sidecar because they all share the logshield-data volume!
         - name: SIDECAR_API_URL
-          value: "http://auth-service:8080/api/v1"
+          value: "http://auth-service:8080/api"
 
 ---
 apiVersion: v1
