@@ -80,24 +80,50 @@ def cmd_retrieve(ref_id, actor, reason):
         print(f"  {YELLOW}  ↳ This failed attempt is permanently recorded in the audit log.{RESET}")
 
 
-def cmd_audit():
+def cmd_audit(verify=False, actor=None, outcome=None, export=None):
+    if verify:
+        banner("CRYPTOGRAPHIC AUDIT CHAIN VERIFICATION", CYAN)
+        is_valid, broken_id, message, total = vault.verify_audit_chain()
+        if is_valid:
+            print(f"  {GREEN}[+] AUDIT CHAIN VALID -- {message}{RESET}")
+            print(f"     Total Blocks: {BOLD}{total}{RESET} | Genesis to Tip: Cryptographically Sealed")
+        else:
+            print(f"  {RED}[!] INTEGRITY VIOLATION DETECTED!{RESET}")
+            print(f"     Broken Record ID: {BOLD}#{broken_id}{RESET}")
+            print(f"     Details         : {RED}{message}{RESET}")
+        return
+
     banner("IMMUTABLE AUDIT LOG", YELLOW)
     with sqlite3.connect(os.environ["VAULT_DB_PATH"]) as conn:
-        audit_rows = conn.execute(
-            "SELECT timestamp, ref_id, action, actor, reason, outcome "
-            "FROM audit_log ORDER BY timestamp DESC LIMIT 50"
-        ).fetchall()
+        query = "SELECT timestamp, ref_id, action, actor, reason, outcome FROM audit_log WHERE 1=1"
+        params = []
+        if actor:
+            query += " AND actor LIKE ?"
+            params.append(f"%{actor}%")
+        if outcome:
+            query += " AND outcome = ?"
+            params.append(outcome)
+        query += " ORDER BY id DESC LIMIT 50"
+        audit_rows = conn.execute(query, params).fetchall()
 
     if not audit_rows:
-        print("  No audit events found.")
+        print("  No matching audit events found.")
+        return
+
+    if export:
+        import json
+        with open(export, "w", encoding="utf-8") as f:
+            records = [{"timestamp": r[0], "ref_id": r[1], "action": r[2], "actor": r[3], "reason": r[4], "outcome": r[5]} for r in audit_rows]
+            json.dump(records, f, indent=2)
+        print(f"  {GREEN}Exported {len(records)} audit records to {export}{RESET}")
         return
 
     print(f"  {'Timestamp':<20} {'Ref ID':<22} {'Action':<10} {'Actor':<15} {'Outcome'}")
     print(f"  {'-'*20} {'-'*22} {'-'*10} {'-'*15} {'-'*10}")
-    for ts, ref_id, action, actor, reason, outcome in audit_rows:
+    for ts, ref_id, action, act, reason, outc in audit_rows:
         dt = datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")
-        color = GREEN if outcome == "SUCCESS" else RED if outcome in ("DENIED",) else YELLOW
-        print(f"  {dt}  {ref_id:<22} {action:<10} {actor:<15} {color}{outcome}{RESET}")
+        color = GREEN if outc == "SUCCESS" else RED if outc in ("DENIED",) else YELLOW
+        print(f"  {dt}  {ref_id:<22} {action:<10} {act:<15} {color}{outc}{RESET}")
 
 
 def cmd_sprawl():
@@ -130,7 +156,11 @@ def main():
     p_ret.add_argument("--reason", required=True, help="Reason for retrieval")
 
     # audit
-    sub.add_parser("audit", help="View recent audit logs")
+    p_aud = sub.add_parser("audit", help="View recent audit logs or verify chain")
+    p_aud.add_argument("--verify", action="store_true", help="Run cryptographic chain verification")
+    p_aud.add_argument("--actor", help="Filter by actor name")
+    p_aud.add_argument("--outcome", help="Filter by outcome")
+    p_aud.add_argument("--export", help="Export matching audit logs to a JSON file")
 
     # sprawl
     sub.add_parser("sprawl", help="View secret lineage sprawl report")
@@ -142,7 +172,7 @@ def main():
     elif args.cmd == "retrieve":
         cmd_retrieve(args.ref_id, args.actor, args.reason)
     elif args.cmd == "audit":
-        cmd_audit()
+        cmd_audit(verify=args.verify, actor=args.actor, outcome=args.outcome, export=args.export)
     elif args.cmd == "sprawl":
         cmd_sprawl()
 

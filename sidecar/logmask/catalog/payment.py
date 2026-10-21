@@ -17,10 +17,10 @@ PAYMENT_DETECTORS = [
     # ════════════════════════════════════════════════════════════════════
     # Stripe
     # ════════════════════════════════════════════════════════════════════
-    (re.compile(r"sk_live_[A-Za-z0-9]{24,99}"),
+    (re.compile(r"sk_live_[A-Za-z0-9]{16,99}"),
      "Stripe Live Secret Key", "Stripe", "payment", 1.0),
 
-    (re.compile(r"sk_test_[A-Za-z0-9]{24,99}"),
+    (re.compile(r"sk_test_[A-Za-z0-9]{16,99}"),
      "Stripe Test Secret Key", "Stripe", "payment", 1.0),
 
     (re.compile(r"rk_live_[A-Za-z0-9]{24,99}"),

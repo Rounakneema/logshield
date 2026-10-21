@@ -93,45 +93,137 @@ class Fingerprinter:
                     (fp, self.pod_name, self.namespace, now, now, is_reg),
                 )
 
+    @staticmethod
+    def _extract_service_name(pod_name: str) -> str:
+        for known in [
+            "auth-service",
+            "payment-service",
+            "inventory-service",
+            "user-service",
+            "notification-service",
+        ]:
+            if known in pod_name:
+                return known
+        parts = pod_name.split("-")
+        if len(parts) >= 3 and len(parts[-1]) == 5 and len(parts[-2]) in (9, 10):
+            return "-".join(parts[:-2])
+        return pod_name
+
+    @staticmethod
+    def _infer_secret_type(origin_service: str) -> str:
+        if "payment" in origin_service:
+            return "STRIPE_API_KEY"
+        elif "inventory" in origin_service:
+            return "AWS_ACCESS_KEY"
+        elif "auth" in origin_service:
+            return "POSTGRES_DB_URI"
+        elif "user" in origin_service:
+            return "JWT_BEARER_TOKEN"
+        elif "notification" in origin_service:
+            return "TWILIO_AUTH_TOKEN"
+        return "GENERIC_API_TOKEN"
+
     def sprawl_report(self) -> list:
         now = int(time.time())
 
         with sqlite3.connect(self.db_path) as conn:
+            conn.row_factory = sqlite3.Row
             rows = conn.execute("""
                 SELECT
                     fingerprint,
-                    COUNT(DISTINCT pod_name)       AS pod_count,
-                    MIN(first_seen)                AS first_seen,
-                    SUM(occurrence_count)          AS occurrences,
-                    MAX(is_registered)             AS is_registered
+                    pod_name,
+                    namespace,
+                    first_seen,
+                    last_seen,
+                    occurrence_count,
+                    is_registered
                 FROM lineage
-                GROUP BY fingerprint
+                ORDER BY fingerprint, first_seen ASC
             """).fetchall()
 
-        report = []
-        for fp, pod_count, first_seen, occurrences, is_registered in rows:
-            age_days   = (now - first_seen) / 86400
-            age_factor = min(age_days / 30, 10)
-            penalty    = 1.0 if is_registered else 2.0
-            risk       = round(pod_count * age_factor * penalty, 2)
+        grouped: dict = {}
+        for r in rows:
+            grouped.setdefault(r["fingerprint"], []).append(dict(r))
 
-            if risk >= 10:
+        report = []
+        for fp, records in grouped.items():
+            records.sort(key=lambda x: (x["first_seen"], -x["occurrence_count"]))
+
+            pod_names = [r["pod_name"] for r in records]
+            distinct_pods = list(dict.fromkeys(pod_names))
+            services = list(dict.fromkeys(self._extract_service_name(p) for p in distinct_pods))
+
+            origin_pod = records[0]["pod_name"]
+            origin_service = self._extract_service_name(origin_pod)
+            sprawled_to = [s for s in services if s != origin_service]
+
+            min_first_seen = min(r["first_seen"] for r in records)
+            max_last_seen = max(r["last_seen"] for r in records)
+            total_occurrences = sum(r["occurrence_count"] for r in records)
+            is_registered = any(bool(r["is_registered"]) for r in records)
+            secret_type = self._infer_secret_type(origin_service)
+
+            age_days = (now - min_first_seen) / 86400
+            service_count = len(services)
+            pod_count = len(distinct_pods)
+
+            # Realistic multi-service blast radius risk model
+            if service_count >= 5:
+                base_risk = 15.0
+            elif service_count >= 3:
+                base_risk = 10.0
+            elif service_count >= 2:
+                base_risk = 6.0
+            else:
+                base_risk = 1.5
+
+            volume_factor = min(total_occurrences / 200.0, 5.0)
+            penalty = 1.0 if is_registered else 1.5
+            risk = round((base_risk + volume_factor) * penalty, 1)
+
+            if risk >= 12.0:
                 severity = "CRITICAL"
-            elif risk >= 5:
+            elif risk >= 7.0:
                 severity = "HIGH"
-            elif risk >= 2:
+            elif risk >= 4.0:
                 severity = "MEDIUM"
             else:
                 severity = "LOW"
 
+            propagation_path = []
+            for i, r in enumerate(records):
+                svc = self._extract_service_name(r["pod_name"])
+                propagation_path.append({
+                    "step": i + 1,
+                    "service": svc,
+                    "pod_name": r["pod_name"],
+                    "namespace": r.get("namespace", "logshield-protected"),
+                    "first_seen": r["first_seen"],
+                    "last_seen": r["last_seen"],
+                    "occurrences": r["occurrence_count"],
+                    "is_origin": i == 0
+                })
+
             report.append({
-                "fingerprint":   fp[:16] + "...",
-                "pod_count":     pod_count,
-                "age_days":      round(age_days, 1),
-                "occurrences":   occurrences,
-                "is_registered": bool(is_registered),
-                "risk_score":    risk,
-                "severity":      severity,
+                "fingerprint": fp[:16] + "...",
+                "full_fingerprint": fp,
+                "pod_count": pod_count,
+                "pods": distinct_pods,
+                "services": services,
+                "service_count": service_count,
+                "origin_service": origin_service,
+                "origin_pod": origin_pod,
+                "sprawled_to": sprawled_to,
+                "is_sprawled": service_count > 1,
+                "first_seen": min_first_seen,
+                "last_seen": max_last_seen,
+                "age_days": round(age_days, 1),
+                "occurrences": total_occurrences,
+                "is_registered": is_registered,
+                "risk_score": risk,
+                "severity": severity,
+                "secret_type": secret_type,
+                "propagation_path": propagation_path
             })
 
         return sorted(report, key=lambda x: x["risk_score"], reverse=True)

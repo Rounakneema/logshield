@@ -28,8 +28,7 @@ class ContextEngine:
         'uuid': -0.9, 'etag': -0.9, 'checksum': -0.9, 'md5': -0.8,
         'sha256': -0.7, 'hash': -0.5, 'cache_id': -0.9, 'identifier': -0.9,
         'diagnostic': -1.5, 'multipart credential': -1.5, 'escaped authentication': -1.5,
-        'customer_id': -0.8, 'commit': -1.0, 'payload': -1.0, 'revision': -1.0,
-        'ls_test_password': -2.0
+        'customer_id': -0.8, 'commit': -1.0, 'payload': -1.0, 'revision': -1.0
     }
     
     # Log level signals

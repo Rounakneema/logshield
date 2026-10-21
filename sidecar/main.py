@@ -46,8 +46,9 @@ class LogShieldInterceptor:
             "timeseries":       []
         }
         self._latency_window: deque = deque(maxlen=1000)
-        self._timeseries_buffer: deque = deque(maxlen=60) # Last 60 points
+        self._timeseries_buffer: deque = deque(maxlen=60)
         self.recent_logs: deque = deque(maxlen=200)
+        self.recent_raw_logs: deque = deque(maxlen=200)
 
     def process_line(self, raw_line: str) -> str:
         t_start = time.perf_counter()
@@ -88,9 +89,10 @@ class LogShieldInterceptor:
         elapsed_ms = (time.perf_counter() - t_start) * 1000
         self._latency_window.append(elapsed_ms)
         
-        if self.stats["lines_processed"] % 100 == 0:
+        if self.stats["lines_processed"] % 10 == 0:
             self._update_latency_stats()
             
+        self.recent_raw_logs.append(raw_line)
         self.recent_logs.append(sanitised)
 
         return sanitised
@@ -111,7 +113,6 @@ class LogShieldInterceptor:
 
     def _stats_writer(self):
         while True:
-            time.sleep(10)
             try:
                 now_str = time.strftime("%H:%M:%S")
                 self._timeseries_buffer.append({
@@ -122,18 +123,24 @@ class LogShieldInterceptor:
                 self.stats["timeseries"] = list(self._timeseries_buffer)
                 
                 Path(STATS_OUTPUT_PATH).parent.mkdir(parents=True, exist_ok=True)
-                with open(STATS_OUTPUT_PATH, "w") as f:
+                with open(STATS_OUTPUT_PATH, "w", encoding="utf-8") as f:
                     json.dump(self.stats, f, indent=2)
                     
                 recent_logs_path = os.environ.get("RECENT_LOGS_PATH", f"/data/recent_logs_{pod_name}.json")
-                with open(recent_logs_path, "w") as f:
+                with open(recent_logs_path, "w", encoding="utf-8") as f:
                     json.dump(list(self.recent_logs), f, indent=2)
+
+                recent_raw_logs_path = os.environ.get("RECENT_RAW_LOGS_PATH", f"/data/recent_raw_logs_{pod_name}.json")
+                with open(recent_raw_logs_path, "w", encoding="utf-8") as f:
+                    json.dump(list(self.recent_raw_logs), f, indent=2)
             except Exception as e:
                 print(f"[StatsWriter] Error: {e}", file=sys.stderr)
+            time.sleep(2)
 
     def _api_worker(self):
         import uvicorn
-        uvicorn.run("sidecar.api:app", host="0.0.0.0", port=8080, log_level="warning")
+        port = int(os.environ.get("PORT", "8000"))
+        uvicorn.run("sidecar.api:app", host="0.0.0.0", port=port, log_level="warning")
 
     def run(self):
         print("[LogShield] Waiting for log file...", flush=True)

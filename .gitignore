@@ -1,7 +1,81 @@
-node_modules
-.venv
-datasets/
+# Dependencies
+node_modules/
+dashboard/node_modules/
+.venv/
+venv/
+env/
+ENV/
+
+# Python cache & artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Next.js / Frontend builds
+dashboard/.next/
+dashboard/out/
+dashboard/build/
+.next/
+out/
+.vercel
+next-env.d.ts
+*.tsbuildinfo
+
+# Logs & debugging
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+logs/
+*.log
 logs.txt
 ground_truth.txt
-__pycache__/
-*.pyc
+
+# Databases, keys & runtime state (Sensitive / Generated)
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+*.key
+*.pem
+datasets/
+data/
+vault.db
+vault.key
+lineage.db
+lineage.key
+stats.json
+
+# Environment files
+.env
+.env*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Operating System & IDE files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Microsoft Office temporary files
+~$*
+~$*.doc*
+~$*.ppt*
+~$*.xls*

@@ -89,10 +89,16 @@ class SCSEngine:
         if not self.candidate_finder.is_candidate(line):
             return results
 
+        INFRA_KEYS = {
+            'pod', 'node', 'thread', 'pid', 'namespace', 'service', 'level',
+            'status', 'code', 'version', 'host', 'port', 'method', 'path',
+            'ip', 'client_ip', 'user_agent'
+        }
+
         # Evaluate candidates
         for token_obj in preprocessed.tokens:
             token = token_obj.value
-            source_key = token_obj.source_key or ""
+            source_key = (token_obj.source_key or "").lower().strip()
             
             # ── Stage 3: Context Engine ──────────────────────────────────────
             # Create a character window (±100 chars) around the token
@@ -114,10 +120,20 @@ class SCSEngine:
             # ── Stage 4: Secret Classifier ───────────────────────────────────
             classification = self.classifier.classify(token, line, context_score)
             
+            # Token-specific varname evaluation
+            varname_score = 0.0
+            if source_key:
+                if source_key in self.f_varname.HIGH_RISK_VARNAMES:
+                    varname_score = 1.0
+                elif source_key in self.f_varname.LOW_RISK_VARNAMES:
+                    varname_score = 0.0
+            else:
+                varname_score = self.f_varname.evaluate(line)
+
             # ── Stage 5: Confidence Model (SCS) ──────────────────────────────
             factors = {
                 "regex":        classification.confidence,
-                "varname":      self.f_varname.evaluate(line),
+                "varname":      varname_score,
                 "entropy":      self.f_entropy.evaluate(token),
                 "token_struct": self.f_token_struct.evaluate(token, line),
                 "context":      context_score,
@@ -127,13 +143,19 @@ class SCSEngine:
             raw = sum(factors[f] * self.WEIGHTS[f] for f in factors)
             score = int(min(100, raw))
 
-            # Exact-format specific detector override
+            # Skip benign infrastructure metadata
+            if source_key in INFRA_KEYS and not (classification.is_specific and classification.confidence >= 0.85):
+                continue
+
+# Exact-format specific detector override
             if classification.is_specific and not classification.is_context_gated:
                 if classification.confidence >= 1.0:
                     score = max(score, 80)
                 elif classification.confidence >= 0.85 and (factors["varname"] > 0 or factors["context"] > 0):
                     score = max(score, 60)
-
+            elif classification.confidence == 0.0 and factors["varname"] == 0.0 and context_score < 0.8:
+                # Require high confidence before flagging unidentified tokens
+                score = min(score, 45)
             # ── Stage 6: Decision Gate ───────────────────────────────────────
             if score >= 80:
                 decision = "MASK"

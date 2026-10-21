@@ -1104,6 +1104,7 @@ class VarnameFactor:
         "level", "severity", "logger", "service", "component",
         "version", "build", "environment", "env",
         "retry", "attempt", "iteration",
+        "pod", "pod_name", "node", "pid", "thread", "namespace",
     }
 
     def evaluate(self, line: str) -> float:

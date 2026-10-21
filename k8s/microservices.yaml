@@ -74,8 +74,9 @@ spec:
       serviceAccountName: logshield-sa
       initContainers:
       - name: volume-permission-fix
-        image: busybox:latest
-        command: ['sh', '-c', 'chown -R 1000:1000 /shared /data || true']
+        image: alpine:latest
+        imagePullPolicy: IfNotPresent
+        command: ['sh', '-c', 'chmod -R 777 /shared /data || true']
         securityContext:
           runAsUser: 0
         volumeMounts:
@@ -101,6 +102,8 @@ spec:
         ports:
         - containerPort: 8080
         env:
+        - name: PORT
+          value: "8080"
         - name: POD_NAME
           valueFrom:
             fieldRef:
@@ -158,8 +161,9 @@ spec:
     spec:
       initContainers:
       - name: volume-permission-fix
-        image: busybox:latest
-        command: ['sh', '-c', 'chown -R 1000:1000 /shared /data || true']
+        image: alpine:latest
+        imagePullPolicy: IfNotPresent
+        command: ['sh', '-c', 'chmod -R 777 /shared /data || true']
         securityContext:
           runAsUser: 0
         volumeMounts:
@@ -173,7 +177,7 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
         - name: STRIPE_SECRET_KEY
-          value: "sk_live_paymentabc123456789"
+          value: "sk_live_paymentabc1234567890abcdef123"
         volumeMounts:
         - name: shared-logs
           mountPath: /shared
@@ -181,6 +185,8 @@ spec:
         image: logshield-sidecar:latest
         imagePullPolicy: IfNotPresent
         env:
+        - name: PORT
+          value: "8080"
         - name: POD_NAME
           valueFrom:
             fieldRef:
@@ -236,8 +242,9 @@ spec:
     spec:
       initContainers:
       - name: volume-permission-fix
-        image: busybox:latest
-        command: ['sh', '-c', 'chown -R 1000:1000 /shared /data || true']
+        image: alpine:latest
+        imagePullPolicy: IfNotPresent
+        command: ['sh', '-c', 'chmod -R 777 /shared /data || true']
         securityContext:
           runAsUser: 0
         volumeMounts:
@@ -259,6 +266,8 @@ spec:
         image: logshield-sidecar:latest
         imagePullPolicy: IfNotPresent
         env:
+        - name: PORT
+          value: "8080"
         - name: POD_NAME
           valueFrom:
             fieldRef:
@@ -314,8 +323,9 @@ spec:
     spec:
       initContainers:
       - name: volume-permission-fix
-        image: busybox:latest
-        command: ['sh', '-c', 'chown -R 1000:1000 /shared /data || true']
+        image: alpine:latest
+        imagePullPolicy: IfNotPresent
+        command: ['sh', '-c', 'chmod -R 777 /shared /data || true']
         securityContext:
           runAsUser: 0
         volumeMounts:
@@ -337,6 +347,8 @@ spec:
         image: logshield-sidecar:latest
         imagePullPolicy: IfNotPresent
         env:
+        - name: PORT
+          value: "8080"
         - name: POD_NAME
           valueFrom:
             fieldRef:
@@ -392,8 +404,9 @@ spec:
     spec:
       initContainers:
       - name: volume-permission-fix
-        image: busybox:latest
-        command: ['sh', '-c', 'chown -R 1000:1000 /shared /data || true']
+        image: alpine:latest
+        imagePullPolicy: IfNotPresent
+        command: ['sh', '-c', 'chmod -R 777 /shared /data || true']
         securityContext:
           runAsUser: 0
         volumeMounts:
@@ -412,6 +425,8 @@ spec:
         image: logshield-sidecar:latest
         imagePullPolicy: IfNotPresent
         env:
+        - name: PORT
+          value: "8080"
         - name: POD_NAME
           valueFrom:
             fieldRef:
@@ -510,32 +525,30 @@ spec:
     spec:
       containers:
       - name: generator
-        image: alpine/curl
+        image: logshield-protected-app:latest
+        imagePullPolicy: IfNotPresent
         command:
-        - /bin/sh
+        - python
         - -c
         - |
-          while true; do
-            # 1. AUTH SERVICE
-            curl -s http://auth-service:8000/orders/$RANDOM > /dev/null
-            curl -s http://auth-service:8000/auth?token=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9 > /dev/null
-            
-            # 2. PAYMENT SERVICE
-            curl -s http://payment-service:8000/orders/$RANDOM > /dev/null
-            curl -s http://payment-service:8000/process-payment > /dev/null
-            
-            # 3. INVENTORY SERVICE
-            curl -s http://inventory-service:8000/orders/$RANDOM > /dev/null
-            curl -s http://inventory-service:8000/health > /dev/null
-            
-            # 4. USER SERVICE
-            curl -s http://user-service:8000/orders/$RANDOM > /dev/null
-            # Let's hit auth on user-service as well to simulate a leak there
-            curl -s http://user-service:8000/auth?token=Bearer%20JWT123 > /dev/null
-            
-            # 5. NOTIFICATION SERVICE
-            curl -s http://notification-service:8000/orders/$RANDOM > /dev/null
-            curl -s http://notification-service:8000/debug > /dev/null
-            
-            sleep 1
-          done
+          import urllib.request, time, random
+          urls = [
+            "http://auth-service:8000/orders/",
+            "http://auth-service:8000/auth?token=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+            "http://payment-service:8000/orders/",
+            "http://payment-service:8000/process-payment",
+            "http://inventory-service:8000/orders/",
+            "http://inventory-service:8000/health",
+            "http://user-service:8000/orders/",
+            "http://user-service:8000/auth?token=Bearer%20JWT123",
+            "http://notification-service:8000/orders/",
+            "http://notification-service:8000/debug",
+          ]
+          while True:
+            for u in urls:
+              try:
+                target = u + str(random.randint(100, 999)) if u.endswith("/") else u
+                urllib.request.urlopen(target, timeout=2)
+              except Exception:
+                pass
+            time.sleep(1)

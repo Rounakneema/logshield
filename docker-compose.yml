@@ -4,10 +4,12 @@ services:
   demo-app:
     build:
       context: .
-      dockerfile: demo-app/Dockerfile
+      dockerfile: target-app/Dockerfile
     container_name: logshield-demo-app
     volumes:
       - log-data:/shared
+    ports:
+      - "8001:8000"
     restart: unless-stopped
 
   sidecar:
@@ -15,13 +17,25 @@ services:
       context: .
       dockerfile: sidecar/Dockerfile
     container_name: logshield-sidecar
+    user: "root"
     volumes:
       - log-data:/shared
-      - sidecar-data:/data
+      - D:/data:/data
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - LOG_INPUT_PATH=/shared/app.log
+      - STATS_OUTPUT_PATH=/data/stats.json
+      - VAULT_DB_PATH=/data/vault.db
+      - VAULT_KEY_PATH=/data/vault.key
+      - LINEAGE_DB_PATH=/data/lineage.db
+      - LINEAGE_KEY_PATH=/data/lineage.key
+      - POD_NAME=docker-sidecar
+      - PYTHONUNBUFFERED=1
     depends_on:
       - demo-app
     restart: unless-stopped
 
 volumes:
   log-data:
-  sidecar-data:
