@@ -144,6 +144,7 @@ def build_paper():
     sec1.left_margin = Inches(0.625)
     sec1.right_margin = Inches(0.625)
     
+    # Title
     p_title = doc_out.add_paragraph()
     p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_title.paragraph_format.space_before = Pt(0)
@@ -154,28 +155,64 @@ def build_paper():
     r_title.font.size = Pt(24.0)
     r_title.font.bold = True
     
-    tbl_auth = doc_out.add_table(rows=1, cols=2)
-    tbl_auth.alignment = WD_TABLE_ALIGNMENT.CENTER
-    c1, c2 = tbl_auth.rows[0].cells[0], tbl_auth.rows[0].cells[1]
-    c1.width = Inches(3.50); c2.width = Inches(3.50)
-    
-    p_a1 = c1.paragraphs[0]; p_a1.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_a1.paragraph_format.line_spacing = 1.0; p_a1.paragraph_format.space_after = Pt(0)
-    r = p_a1.add_run("Rounak Neema\n"); r.font.name = "Times New Roman"; r.font.size = Pt(11.0); r.font.bold = True
-    r = p_a1.add_run("Department of Computer Engineering\n"); r.font.name = "Times New Roman"; r.font.size = Pt(10.0)
-    r = p_a1.add_run("Mukesh Patel School of Technology\nManagement & Engineering\nNMIMS University\n"); r.font.name = "Times New Roman"; r.font.size = Pt(9.5)
-    r = p_a1.add_run("Mumbai, India\n"); r.font.name = "Times New Roman"; r.font.size = Pt(9.5)
-    r = p_a1.add_run("rounak.neema@nmims.edu"); r.font.name = "Times New Roman"; r.font.size = Pt(9.5)
-    
-    p_a2 = c2.paragraphs[0]; p_a2.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_a2.paragraph_format.line_spacing = 1.0; p_a2.paragraph_format.space_after = Pt(0)
-    r = p_a2.add_run("Capstone Research Group\n"); r.font.name = "Times New Roman"; r.font.size = Pt(11.0); r.font.bold = True
-    r = p_a2.add_run("Cloud-Native Security Laboratory\nProject LogShield Initiative\n"); r.font.name = "Times New Roman"; r.font.size = Pt(10.0)
-    r = p_a2.add_run("Mumbai, India\n"); r.font.name = "Times New Roman"; r.font.size = Pt(9.5)
-    r = p_a2.add_run("research@logshield.internal"); r.font.name = "Times New Roman"; r.font.size = Pt(9.5)
-    
-    for c in [c1, c2]:
-        set_cell_borders(c, top={'val': 'none'}, bottom={'val': 'none'}, left={'val': 'none'}, right={'val': 'none'})
+    # Author Block: Row 1 (3 Authors)
+    tbl_auth1 = doc_out.add_table(rows=1, cols=3)
+    tbl_auth1.alignment = WD_TABLE_ALIGNMENT.CENTER
+    authors_r1 = [
+        ("Rounak Neema", "rounak.neema046@nmims.in"),
+        ("Manas Borse", "manas.borse057@nmims.in"),
+        ("Arnab Chowdhury", "arnab.chowdhury032@nmims.in"),
+    ]
+    for ci, (name, email) in enumerate(authors_r1):
+        cell = tbl_auth1.rows[0].cells[ci]
+        cell.width = Inches(2.40)
+        p = cell.paragraphs[0]
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.paragraph_format.line_spacing = 1.05
+        p.paragraph_format.space_after = Pt(0)
+        
+        r_n = p.add_run(name + "\n")
+        r_n.font.name = "Times New Roman"; r_n.font.size = Pt(10.5); r_n.font.bold = True
+        
+        r_d = p.add_run("Dept. of Computer Engineering\nMPSTME, NMIMS University\nMumbai, India\n")
+        r_d.font.name = "Times New Roman"; r_d.font.size = Pt(8.5)
+        
+        r_e = p.add_run(email)
+        r_e.font.name = "Times New Roman"; r_e.font.size = Pt(8.5); r_e.font.italic = True
+        
+        set_cell_borders(cell, top={'val': 'none'}, bottom={'val': 'none'}, left={'val': 'none'}, right={'val': 'none'})
+
+    # Spacing between author rows
+    p_auth_sp = doc_out.add_paragraph()
+    p_auth_sp.paragraph_format.space_before = Pt(4)
+    p_auth_sp.paragraph_format.space_after = Pt(0)
+    p_auth_sp.paragraph_format.line_spacing = 1.0
+
+    # Author Block: Row 2 (2 Authors, Centered)
+    tbl_auth2 = doc_out.add_table(rows=1, cols=2)
+    tbl_auth2.alignment = WD_TABLE_ALIGNMENT.CENTER
+    authors_r2 = [
+        ("Prince Roy", "prince.roy031@nmims.in"),
+        ("Rudrani Ingle", "Rudrani.Ingle@nmims.edu"),
+    ]
+    for ci, (name, email) in enumerate(authors_r2):
+        cell = tbl_auth2.rows[0].cells[ci]
+        cell.width = Inches(2.80)
+        p = cell.paragraphs[0]
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.paragraph_format.line_spacing = 1.05
+        p.paragraph_format.space_after = Pt(0)
+        
+        r_n = p.add_run(name + "\n")
+        r_n.font.name = "Times New Roman"; r_n.font.size = Pt(10.5); r_n.font.bold = True
+        
+        r_d = p.add_run("Dept. of Computer Engineering\nMPSTME, NMIMS University\nMumbai, India\n")
+        r_d.font.name = "Times New Roman"; r_d.font.size = Pt(8.5)
+        
+        r_e = p.add_run(email)
+        r_e.font.name = "Times New Roman"; r_e.font.size = Pt(8.5); r_e.font.italic = True
+        
+        set_cell_borders(cell, top={'val': 'none'}, bottom={'val': 'none'}, left={'val': 'none'}, right={'val': 'none'})
         
     p_sep = doc_out.add_paragraph()
     p_sep.paragraph_format.space_before = Pt(4)
@@ -204,6 +241,11 @@ def build_paper():
             txt = p.text.strip()
             if not txt or txt.startswith("LogShield: In-Pod") or "Department of Computer Engineering" in txt:
                 continue
+            if txt.startswith("This study was conducted as part of the Capstone"):
+                continue # Skip Capstone note completely
+            if txt.lower() == "references" or txt.startswith(("[1]", "[1]\t")):
+                # Stop reading body elements here; references are generated cleanly at the end
+                break
             p_elements.append(('p', p, txt))
         elif tag == 'tbl':
             tbl = Table(elem, doc_src)
@@ -211,9 +253,6 @@ def build_paper():
             current_tbl_index += 1
             
     print(f"Total elements to process: {len(p_elements)}")
-    
-    # Wide tables that should span across both columns
-    wide_table_indices = {4, 7, 8, 10} # Table II, Table III, Table IV, Table VI
     
     idx = 0
     while idx < len(p_elements):
@@ -298,12 +337,31 @@ def build_paper():
             if text_raw.lower() == "acknowledgment":
                 p_out = doc_out.add_paragraph()
                 p_out.alignment = WD_ALIGN_PARAGRAPH.CENTER
-                p_out.paragraph_format.space_before = Pt(11)
+                p_out.paragraph_format.space_before = Pt(14)
                 p_out.paragraph_format.space_after = Pt(4)
                 p_out.paragraph_format.keep_with_next = True
                 p_out.paragraph_format.first_line_indent = Pt(0)
                 r = p_out.add_run("ACKNOWLEDGMENT")
                 r.font.name = "Times New Roman"; r.font.size = Pt(10.0); r.font.bold = True
+                
+                # Insert humanized, deslopped acknowledgment prose
+                p_ack = doc_out.add_paragraph()
+                p_ack.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                p_ack.paragraph_format.line_spacing = 1.05
+                p_ack.paragraph_format.space_before = Pt(0)
+                p_ack.paragraph_format.space_after = Pt(6)
+                p_ack.paragraph_format.first_line_indent = Pt(10.8)
+                r_ack = p_ack.add_run(
+                    "The authors thank the maintainers of SecretBench, TruffleHog, and Gitleaks for open-sourcing "
+                    "their detection datasets and rule engines. We also thank the Department of Computer Engineering "
+                    "at NMIMS University for providing computing facilities and laboratory infrastructure for our "
+                    "Kubernetes testbed cluster."
+                )
+                r_ack.font.name = "Times New Roman"; r_ack.font.size = Pt(10.0)
+                
+                # Advance past source acknowledgment paragraph if present
+                if idx + 1 < len(p_elements) and p_elements[idx + 1][0] == 'p':
+                    idx += 1
                 idx += 1
                 continue
                 
@@ -343,17 +401,6 @@ def build_paper():
                         tbl_desc_str = cand_desc
                         idx += 1
                         
-                # Check which table follows
-                next_tbl_idx = None
-                for peek in p_elements[idx:]:
-                    if peek[0] == 'tbl':
-                        next_tbl_idx = peek[2]
-                        break
-                        
-                is_wide = (next_tbl_idx in wide_table_indices)
-                if is_wide:
-                    switch_to_1col(doc_out)
-                    
                 p_tnum = doc_out.add_paragraph()
                 p_tnum.alignment = WD_ALIGN_PARAGRAPH.CENTER
                 p_tnum.paragraph_format.space_before = Pt(16)
@@ -541,8 +588,6 @@ def build_paper():
                 r_n = p_note.add_run("*Rule-of-Three 95% upper confidence bound for FPR in 4,778 true negatives is FPR ≤ 0.063%; exact Clopper-Pearson 95% CI for precision is [0.9992, 1.0000]. †Evaluated on the dedicated balanced adversarial evasion corpus (N = 2,400).")
                 r_n.font.name = "Times New Roman"; r_n.font.size = Pt(7.0); r_n.font.italic = True
                 
-                # Resume 2 columns
-                switch_to_2col(doc_out)
                 idx += 1
                 continue
                 
@@ -577,9 +622,6 @@ def build_paper():
             p_post.paragraph_format.space_before = Pt(0)
             p_post.paragraph_format.space_after = Pt(6)
             
-            if tbl_idx in wide_table_indices:
-                switch_to_2col(doc_out)
-                
             idx += 1
             continue
 

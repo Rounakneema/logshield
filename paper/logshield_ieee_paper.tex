@@ -31,21 +31,13 @@
 
 \begin{document}
 
-\title{LogShield: In-Pod Secret Sanitization and Autonomous Closed-Loop Containment for Kubernetes Log Streams\\
-\thanks{This research was conducted as part of the Capstone Project in Computer Engineering, focusing on Cloud-Native Security and Information Assurance.}
-}
+\title{LogShield: In-Pod Secret Sanitization and Autonomous Closed-Loop Containment for Kubernetes Log Streams}
 
-\author{\IEEEauthorblockN{Rounak Neema}
+\author{\IEEEauthorblockN{Rounak Neema\IEEEauthorrefmark{1}, Manas Borse\IEEEauthorrefmark{1}, Arnab Chowdhury\IEEEauthorrefmark{1}, Prince Roy\IEEEauthorrefmark{1}, Rudrani Ingle\IEEEauthorrefmark{2}}
 \IEEEauthorblockA{\textit{Department of Computer Engineering} \\
-\textit{Mukesh Patel School of Technology Management \& Engineering}\\
-NMIMS University, Mumbai, India \\
-rounak.neema@nmims.edu}
-\and
-\IEEEauthorblockN{Capstone Research Group}
-\IEEEauthorblockA{\textit{Cloud-Native Security Laboratory} \\
-\textit{Project LogShield Initiative}\\
+\textit{Mukesh Patel School of Technology Management \& Engineering, NMIMS University} \\
 Mumbai, India \\
-research@logshield.internal}
+\IEEEauthorrefmark{1}\{rounak.neema046, manas.borse057, arnab.chowdhury032, prince.roy031\}@nmims.in, \IEEEauthorrefmark{2}Rudrani.Ingle@nmims.edu}
 }
 
 \maketitle
@@ -767,7 +759,7 @@ While LogShield provides automated in-pod protection, several research avenues r
 Accidental credential exposure in application logs poses severe security and regulatory risks to cloud-native systems. In this paper, we presented \textbf{LogShield}, an in-pod Kubernetes sidecar framework that transforms runtime log sanitization from a passive string filter into an active security control. By integrating an $O(N)$ Aho-Corasick prefilter, an adaptive sliding-window Token Fusion engine, a 6-factor Secret Confidence Score model, an ephemeral Fernet authenticated vault, canonical transformation-aware blind lineage tracking, and autonomous Kubernetes network policy containment, LogShield achieves an F1-score of \textbf{0.9997} on standard credentials ($N=9,205$), improves evasion recall from 32.20\% to \textbf{91.30\%} on a 2,400-sample adversarial corpus, and executes closed-loop pod egress quarantine policy dispatch in \textbf{16.7--26.7 ms} with verified zero impact on innocent workloads in the test cluster. These results establish that active, real-time credential protection can be embedded directly into microservices without degrading telemetry throughput or developer velocity.
 
 \section*{Acknowledgment}
-The authors thank the maintainers of SecretBench, TruffleHog, and Gitleaks, as well as the faculty advisors at the Department of Computer Engineering for their constructive feedback throughout this research.
+The authors thank the maintainers of SecretBench, TruffleHog, and Gitleaks for open-sourcing their detection datasets and rule engines. We also thank the Department of Computer Engineering at NMIMS University for providing computing facilities and laboratory infrastructure for our Kubernetes testbed cluster.
 
 \balance
 \bibliographystyle{IEEEtran}

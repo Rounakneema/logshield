@@ -4,8 +4,6 @@ Abstract—Microservice architectures managed by Kubernetes clusters generate hu
 
 Index Terms—Cloud-native security, Kubernetes sidecar, log sanitization, secret detection, CWE-532, Shannon entropy, Aho-Corasick automaton, NetworkPolicy quarantine, secret lineage.
 
-This study was conducted as part of the Capstone Project in Computer Engineering, concentrating on Cloud-Native Security and Information Assurance.
-
 I. INTRODUCTION
 
 Containerized microservices managed by Kubernetes form the primary foundation for cloud-native software systems [6]; within these clusters, application logging offers the central source of telemetry for operational observability, distributed debugging, and security monitoring [25], [2]. Large-scale cloud deployments routinely create terabytes of unstructured application output each day [5].
@@ -486,7 +484,7 @@ Accidental credential exposure in application logs poses severe security and reg
 
 ACKNOWLEDGMENT
 
-The authors thank the maintainers of SecretBench, TruffleHog, and Gitleaks, as well as the faculty advisors at the Department of Computer Engineering, for their constructive feedback throughout this study.
+The authors thank the maintainers of SecretBench, TruffleHog, and Gitleaks for open-sourcing their detection datasets and rule engines. We also thank the Department of Computer Engineering at NMIMS University for providing computing facilities and laboratory infrastructure for our Kubernetes testbed cluster.
 
 REFERENCES
 
