@@ -7,7 +7,7 @@ from docx.oxml.ns import nsdecls, qn
 import os
 import win32com.client
 
-def build_tuned_report(fig_w=4.3, p_after=2.5, p_space=1.12):
+def build_tuned_report(fig_w=4.1, p_after=2, p_space=1.10):
     doc = docx.Document()
     
     # ------------------ Page Margins ------------------
