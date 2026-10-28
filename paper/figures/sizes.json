@@ -1,7 +1,7 @@
 {
  "fig10_lineage": [
   2570,
-  1215
+  1261
  ],
  "fig1_architecture": [
   2385,
@@ -35,9 +35,13 @@
   3120,
   1290
  ],
+ "fig5_evasion_benchmark": [
+  2480,
+  1230
+ ],
  "fig6_lineage": [
   2570,
-  1215
+  1261
  ],
  "fig6_pipeline": [
   2617,
@@ -51,17 +55,21 @@
   2480,
   1230
  ],
+ "fig7_latency_throughput": [
+  3120,
+  1290
+ ],
  "fig8_containment_lifecycle": [
-  2472,
-  1168
+  2385,
+  1215
  ],
  "fig_contributions_summary": [
   3560,
   1677
  ],
  "fig_latency_throughput": [
-  4154,
-  1620
+  3120,
+  1290
  ],
  "fig_ml_training": [
   5370,
@@ -92,8 +100,8 @@
   964
  ],
  "f_evasion": [
-  2182,
-  939
+  2480,
+  1230
  ],
  "f_gap": [
   1024,
@@ -104,8 +112,8 @@
   471
  ],
  "f_latency": [
-  2379,
-  850
+  3120,
+  1290
  ],
  "f_lineage": [
   1434,
@@ -158,9 +166,5 @@
  "ph_pods": [
   1434,
   563
- ],
- "logo": [
-  300,
-  310
  ]
 }

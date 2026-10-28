@@ -384,59 +384,69 @@ def generate_fig5_benchmark():
 
     plt.tight_layout()
     save_dual(fig, "fig5_benchmark.png", "fig4_benchmark.png")
+    # Also save with canonical figure-7 and descriptive names to prevent any inversion
+    for extra_name in ["fig7_latency_throughput.png", "fig_latency_throughput.png", "f_latency.png"]:
+        p_extra = os.path.join(PAPER_FIG_DIR, extra_name)
+        with open(os.path.join(PAPER_FIG_DIR, "fig5_benchmark.png"), "rb") as sf, open(p_extra, "wb") as df:
+            df.write(sf.read())
 
 # ─────────────────────────────────────────────────────────────────────────────
 # FIG 6: SecretLineage Cross-Pod Sprawl Graph (Zero Overlap Edge Layout)
 # ─────────────────────────────────────────────────────────────────────────────
 def generate_fig6_lineage():
-    fig, ax = plt.subplots(figsize=(9.5, 5.0))
+    fig, ax = plt.subplots(figsize=(10.0, 5.2))
     ax.axis("off")
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
 
-    # Distinct non-colliding microservice node positions
+    # Distinct non-colliding microservice node positions (cx, cy)
     nodes = {
-        "auth": (0.18, 0.72, "auth-service\n[Credential Issuer]", "#bbdefb", "#1976d2"),
-        "payment": (0.50, 0.78, "payment-service\n[Payment Gateway]", "#ffe0b2", "#f57c00"),
-        "user": (0.82, 0.72, "user-service\n[User Directory]", "#c8e6c9", "#2e7d32"),
-        "inventory": (0.28, 0.28, "inventory-service\n[Cache / DB Client]", "#e1bee7", "#7b1fa2"),
-        "notify": (0.72, 0.28, "notification-service\n[Email / Webhook]", "#cfd8dc", "#455a64"),
+        "auth": (0.17, 0.72, "auth-service\n[Credential Issuer]", "#bbdefb", "#1976d2"),
+        "payment": (0.50, 0.75, "payment-service\n[Payment Gateway]", "#ffe0b2", "#f57c00"),
+        "user": (0.83, 0.72, "user-service\n[User Directory]", "#c8e6c9", "#2e7d32"),
+        "inventory": (0.25, 0.26, "inventory-service\n[Cache / DB Client]", "#e1bee7", "#7b1fa2"),
+        "notify": (0.75, 0.26, "notification-service\n[Email / Webhook]", "#cfd8dc", "#455a64"),
     }
 
-    # Render Node cards
-    for key, (x, y, label, bg, border) in nodes.items():
-        card = patches.FancyBboxPatch((x - 0.10, y - 0.08), 0.20, 0.16, boxstyle="round,pad=0.015",
-                                      facecolor=bg, edgecolor=border, linewidth=1.8)
-        ax.add_patch(card)
-        ax.text(x, y, label, ha="center", va="center", fontsize=8.0, fontweight="bold", color="#111111")
+    card_w, card_h = 0.21, 0.15
 
-    # Directed edges with dedicated offsets and pill boxes
-    edges = [
-        # (src, dst, label, color, rad, label_offset_x, label_offset_y)
-        ("auth", "payment", "JWT Signing Key\nHMAC: c4f8...b12a", "#1976d2", 0.15, 0.0, 0.08),
-        ("payment", "user", "Stripe API Secret\nHMAC: 9a3e...77d1", "#f57c00", 0.15, 0.0, 0.08),
-        ("auth", "inventory", "Postgres URI\nHMAC: 12de...840c", "#7b1fa2", -0.15, -0.06, 0.0),
-        ("payment", "notify", "Webhook Secret\nHMAC: 77bb...e390", "#d32f2f", 0.12, 0.05, 0.0),
-        ("user", "notify", "Internal Auth Token\nHMAC: ff01...44a9", "#2e7d32", 0.15, 0.06, 0.0),
+    # Render Node cards first
+    for key, (x, y, label, bg, border) in nodes.items():
+        card = patches.FancyBboxPatch((x - card_w/2, y - card_h/2), card_w, card_h, boxstyle="round,pad=0.015",
+                                      facecolor=bg, edgecolor=border, linewidth=1.8, zorder=2)
+        ax.add_patch(card)
+        ax.text(x, y, label, ha="center", va="center", fontsize=8.0, fontweight="bold", color="#111111", zorder=3)
+
+    # Directed edges connecting strictly to CARD PERIMETERS with clearance
+    # (src_pt, dst_pt, label, badge_pos, color, rad)
+    edge_routes = [
+        # 1. auth -> payment (right of auth to left of payment)
+        ((0.275, 0.73), (0.395, 0.75), "JWT Signing Key\nHMAC: c4f8...b12a", (0.335, 0.85), "#1976d2", 0.12),
+        # 2. payment -> user (right of payment to left of user)
+        ((0.605, 0.75), (0.725, 0.73), "Stripe API Secret\nHMAC: 9a3e...77d1", (0.665, 0.85), "#f57c00", 0.12),
+        # 3. auth -> inventory (bottom of auth to top-left of inventory)
+        ((0.20, 0.645), (0.23, 0.335), "Postgres URI\nHMAC: 12de...840c", (0.12, 0.49), "#7b1fa2", -0.10),
+        # 4. payment -> notify (bottom of payment to top-left of notify)
+        ((0.53, 0.675), (0.71, 0.335), "Webhook Secret\nHMAC: 77bb...e390", (0.57, 0.50), "#d32f2f", 0.06),
+        # 5. user -> notify (bottom of user to top-right of notify)
+        ((0.83, 0.645), (0.79, 0.335), "Internal Auth Token\nHMAC: ff01...44a9", (0.88, 0.49), "#2e7d32", 0.10),
     ]
 
-    for src, dst, label, col, rad, off_x, off_y in edges:
-        x1, y1 = nodes[src][0], nodes[src][1]
-        x2, y2 = nodes[dst][0], nodes[dst][1]
-
+    for (x1, y1), (x2, y2), label, (lx, ly), col, rad in edge_routes:
         ax.annotate("", xy=(x2, y2), xytext=(x1, y1),
-                    arrowprops=dict(arrowstyle="->", lw=1.8, color=col, connectionstyle=f"arc3,rad={rad}"))
+                    arrowprops=dict(arrowstyle="->", lw=1.8, color=col,
+                                    connectionstyle=f"arc3,rad={rad}", shrinkA=0, shrinkB=0),
+                    zorder=4)
 
-        # Midpoint with clean offset
-        mx = (x1 + x2)/2 + off_x
-        my = (y1 + y2)/2 + off_y
-        ax.text(mx, my, label, ha="center", va="center", fontsize=7.2, color=col, fontweight="bold",
-                bbox=dict(boxstyle="round,pad=0.25", facecolor="#ffffff", edgecolor=col, alpha=0.95, lw=0.8))
+        # Crisp opaque label badge with non-overlapping dedicated placement
+        ax.text(lx, ly, label, ha="center", va="center", fontsize=7.2, color=col, fontweight="bold",
+                bbox=dict(boxstyle="round,pad=0.25", facecolor="#ffffff", edgecolor=col, alpha=0.98, lw=0.9),
+                zorder=5)
 
     # Header and Footer
-    ax.text(0.50, 0.94, "SecretLineage Blind Graph: Real-Time Cross-Pod Sprawl Correlation",
+    ax.text(0.50, 0.95, "SecretLineage Blind Graph: Real-Time Cross-Pod Sprawl Correlation",
             ha="center", fontsize=11, fontweight="bold", color="#222222")
-    ax.text(0.50, 0.08, "Zero-Knowledge Proliferation Mapping: Microservices correlate keyed HMAC-SHA256 blind fingerprints without storing or disclosing plaintext credentials",
+    ax.text(0.50, 0.07, "Zero-Knowledge Proliferation Mapping: Microservices correlate keyed HMAC-SHA256 blind fingerprints without storing or disclosing plaintext credentials",
             ha="center", fontsize=7.8, color="#444444",
             bbox=dict(boxstyle="round,pad=0.3", facecolor="#f5f5f5", edgecolor="#cccccc", lw=0.8))
 
@@ -473,31 +483,40 @@ def generate_fig7_evasion_benchmark():
                  fontweight="bold", pad=12)
     ax.set_xticks(x)
     ax.set_xticklabels(categories, fontsize=8.5)
-    ax.set_ylim(0, 115)
+    ax.set_ylim(0, 130)
     ax.axhline(100, color="#888888", linestyle="--", linewidth=0.8, alpha=0.7)
     ax.grid(axis="y", linestyle=":", alpha=0.6)
-    ax.legend(loc="upper left", framealpha=0.95)
+    ax.legend(loc="upper left", fontsize=8.2, framealpha=0.95)
     
     # Value annotations on bars
     for r in rects1:
         h = r.get_height()
-        ax.text(r.get_x() + r.get_width()/2., h + 1.5, f"{h:.1f}%", ha="center", va="bottom", fontsize=8.0, color="#444444")
+        ax.text(r.get_x() + r.get_width()/2., h + 1.8, f"{h:.1f}%", ha="center", va="bottom", fontsize=8.0, color="#444444")
     for r in rects2:
         h = r.get_height()
-        ax.text(r.get_x() + r.get_width()/2., h + 1.5, f"{h:.1f}%", ha="center", va="bottom", fontsize=8.0, fontweight="bold", color="#0d47a1")
+        ax.text(r.get_x() + r.get_width()/2., h + 1.8, f"{h:.1f}%", ha="center", va="bottom", fontsize=8.0, fontweight="bold", color="#0d47a1")
+
+    # Callout badge for bypass reduction
+    ax.text(4.8, 114, "Bypass: 67.8% → 8.7%\n(−59.1 pp reduction)", ha="center", va="center",
+            fontsize=8.0, fontweight="bold", color="#1b5e20",
+            bbox=dict(boxstyle="round,pad=0.3", facecolor="#e8f5e9", edgecolor="#2e7d32", lw=0.9))
         
     p1 = os.path.join(FIG_DIR, "fig7_evasion_benchmark.png")
     p2 = os.path.join(PAPER_FIG_DIR, "fig7_evasion_benchmark.png")
+    p3 = os.path.join(PAPER_FIG_DIR, "fig5_evasion_benchmark.png")
+    p4 = os.path.join(PAPER_FIG_DIR, "f_evasion.png")
     fig.savefig(p1, format="png")
     fig.savefig(p2, format="png")
+    fig.savefig(p3, format="png")
+    fig.savefig(p4, format="png")
     plt.close(fig)
-    print("Saved cleanly: fig7_evasion_benchmark.png")
+    print("Saved cleanly: fig7_evasion_benchmark.png (and fig5_evasion_benchmark.png)")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # FIG 8: Autonomous Containment & Blast-Radius Mitigation Lifecycle
 # ─────────────────────────────────────────────────────────────────────────────
 def generate_fig8_containment_lifecycle():
-    fig, ax = plt.subplots(figsize=(10.0, 4.8))
+    fig, ax = plt.subplots(figsize=(10.0, 5.0))
     ax.axis("off")
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
@@ -507,52 +526,63 @@ def generate_fig8_containment_lifecycle():
             ha="center", fontsize=11, fontweight="bold", color="#222222")
 
     # Step 1: Interception Card
-    c1 = patches.FancyBboxPatch((0.03, 0.50), 0.26, 0.36, boxstyle="round,pad=0.015",
+    c1 = patches.FancyBboxPatch((0.04, 0.48), 0.26, 0.38, boxstyle="round,pad=0.015",
                                 facecolor="#e3f2fd", edgecolor="#1976d2", linewidth=1.8)
     ax.add_patch(c1)
-    ax.text(0.16, 0.81, "1. In-Pod Detection & Vaulting", ha="center", fontsize=9, fontweight="bold", color="#0d47a1")
-    ax.text(0.16, 0.65, "- Intercepts stdout log stream\n- Token Fusion & Decoders\n- In-place [REDACTED:SEC-..]\n- Fernet AES-128 vaulting",
-            ha="center", fontsize=8, color="#333333")
-    ax.text(0.16, 0.53, "Latency: 0.586 ms", ha="center", fontsize=8, fontweight="bold", color="#1976d2",
-            bbox=dict(boxstyle="round,pad=0.2", facecolor="#ffffff", edgecolor="#1976d2", lw=0.8))
+    ax.text(0.17, 0.81, "1. In-Pod Detection & Vaulting", ha="center", fontsize=9.0, fontweight="bold", color="#0d47a1")
+    ax.text(0.17, 0.67, "- Intercepts stdout log stream\n- Token Fusion & Decoders\n- In-place [REDACTED:SEC-..]\n- Fernet AES-128 vaulting",
+            ha="center", fontsize=8.0, color="#333333")
+    ax.text(0.17, 0.54, "Latency: 0.586 ms", ha="center", fontsize=8.0, fontweight="bold", color="#1976d2",
+            bbox=dict(boxstyle="round,pad=0.25", facecolor="#ffffff", edgecolor="#1976d2", lw=0.9))
 
     # Step 2: Lineage Assessment Card
-    c2 = patches.FancyBboxPatch((0.37, 0.50), 0.26, 0.36, boxstyle="round,pad=0.015",
+    c2 = patches.FancyBboxPatch((0.37, 0.48), 0.26, 0.38, boxstyle="round,pad=0.015",
                                 facecolor="#fff3e0", edgecolor="#f57c00", linewidth=1.8)
     ax.add_patch(c2)
-    ax.text(0.50, 0.81, "2. Blast-Radius Assessment", ha="center", fontsize=9, fontweight="bold", color="#e65100")
-    ax.text(0.50, 0.65, "- Queries SecretLineage\n- Canonical blind HMAC-SHA256\n- Identifies cross-service sprawl\n- Evaluates severity (CRITICAL)",
-            ha="center", fontsize=8, color="#333333")
-    ax.text(0.50, 0.53, "Blast: 3 Services, 3 Pods", ha="center", fontsize=8, fontweight="bold", color="#f57c00",
-            bbox=dict(boxstyle="round,pad=0.2", facecolor="#ffffff", edgecolor="#f57c00", lw=0.8))
+    ax.text(0.50, 0.81, "2. Blast-Radius Assessment", ha="center", fontsize=9.0, fontweight="bold", color="#e65100")
+    ax.text(0.50, 0.67, "- Queries SecretLineage\n- Canonical blind HMAC-SHA256\n- Identifies cross-service sprawl\n- Evaluates severity (CRITICAL)",
+            ha="center", fontsize=8.0, color="#333333")
+    ax.text(0.50, 0.54, "Blast: 3 Services, 3 Pods", ha="center", fontsize=8.0, fontweight="bold", color="#f57c00",
+            bbox=dict(boxstyle="round,pad=0.25", facecolor="#ffffff", edgecolor="#f57c00", lw=0.9))
 
     # Step 3: Kubernetes Containment Enforcement Card
-    c3 = patches.FancyBboxPatch((0.71, 0.50), 0.26, 0.36, boxstyle="round,pad=0.015",
+    c3 = patches.FancyBboxPatch((0.70, 0.48), 0.26, 0.38, boxstyle="round,pad=0.015",
                                 facecolor="#e8f5e9", edgecolor="#2e7d32", linewidth=1.8)
     ax.add_patch(c3)
-    ax.text(0.84, 0.81, "3. Control Plane Enforcement", ha="center", fontsize=9, fontweight="bold", color="#1b5e20")
-    ax.text(0.84, 0.65, "- Deploys V1NetworkPolicy\n- Blocks pod egress exfiltration\n- Annotates pod metadata\n- Zero collateral blast radius",
-            ha="center", fontsize=8, color="#333333")
-    ax.text(0.84, 0.53, "MTTC: 16.7 - 26.7 ms", ha="center", fontsize=8, fontweight="bold", color="#2e7d32",
-            bbox=dict(boxstyle="round,pad=0.2", facecolor="#ffffff", edgecolor="#2e7d32", lw=0.8))
+    ax.text(0.83, 0.81, "3. Control Plane Enforcement", ha="center", fontsize=9.0, fontweight="bold", color="#1b5e20")
+    ax.text(0.83, 0.67, "- Deploys V1NetworkPolicy\n- Blocks pod egress exfiltration\n- Annotates pod metadata\n- Zero collateral blast radius",
+            ha="center", fontsize=8.0, color="#333333")
+    ax.text(0.83, 0.54, "MTTC: 16.7 - 26.7 ms", ha="center", fontsize=8.0, fontweight="bold", color="#2e7d32",
+            bbox=dict(boxstyle="round,pad=0.25", facecolor="#ffffff", edgecolor="#2e7d32", lw=0.9))
 
-    # Inter-card arrows
-    ax.annotate("", xy=(0.36, 0.68), xytext=(0.30, 0.68),
+    # Inter-card arrows connecting perimeter
+    ax.annotate("", xy=(0.365, 0.67), xytext=(0.305, 0.67),
                 arrowprops=dict(arrowstyle="->", lw=2.2, color="#1976d2"))
-    ax.annotate("", xy=(0.70, 0.68), xytext=(0.64, 0.68),
+    ax.annotate("", xy=(0.695, 0.67), xytext=(0.635, 0.67),
                 arrowprops=dict(arrowstyle="->", lw=2.2, color="#f57c00"))
 
-    # Lower comparison banner
-    b_box = patches.FancyBboxPatch((0.03, 0.08), 0.94, 0.32, boxstyle="round,pad=0.015",
-                                   facecolor="#f9f9f9", edgecolor="#9e9e9e", linewidth=1.2)
+    # Lower comparison container (zero text collision with two independent cards)
+    b_box = patches.FancyBboxPatch((0.04, 0.05), 0.92, 0.37, boxstyle="round,pad=0.015",
+                                   facecolor="#f9f9f9", edgecolor="#b0bec5", linewidth=1.2)
     ax.add_patch(b_box)
-    ax.text(0.50, 0.33, "Security Posture Transformation: Passive Redaction vs. Closed-Loop Containment",
-            ha="center", fontsize=8.5, fontweight="bold", color="#222222")
+    ax.text(0.50, 0.375, "Security Posture Transformation: Passive Redaction vs. Closed-Loop Containment",
+            ha="center", fontsize=9.2, fontweight="bold", color="#222222")
 
-    ax.text(0.26, 0.20, "Passive Redaction Baseline:\n* Plaintext masked in logs, but compromised credentials stay active\n* Unknown blast radius; requires manual human triage (>1 hour)",
-            ha="left", fontsize=7.5, color="#c62828")
-    ax.text(0.60, 0.20, "LogShield Autonomous Containment:\n* Real-time network egress quarantine blocks live exfiltration\n* Sub-30 ms MTTC with verified zero collateral workload impact",
-            ha="left", fontsize=7.5, color="#2e7d32")
+    # Left comparison sub-card: Passive Redaction Baseline
+    p_box = patches.FancyBboxPatch((0.06, 0.08), 0.42, 0.25, boxstyle="round,pad=0.01",
+                                   facecolor="#fff5f5", edgecolor="#ef5350", linewidth=1.1)
+    ax.add_patch(p_box)
+    ax.text(0.27, 0.285, "Passive Redaction Baseline", ha="center", fontsize=8.5, fontweight="bold", color="#c62828")
+    ax.text(0.08, 0.175, "• Plaintext masked in logs, but keys stay active\n• Unknown blast radius; requires manual triage\n• Egress exfiltration continues unchecked",
+            ha="left", va="center", fontsize=7.2, color="#b71c1c", linespacing=1.4)
+
+    # Right comparison sub-card: LogShield Autonomous Containment
+    l_box = patches.FancyBboxPatch((0.52, 0.08), 0.42, 0.25, boxstyle="round,pad=0.01",
+                                   facecolor="#f1f8e9", edgecolor="#66bb6a", linewidth=1.1)
+    ax.add_patch(l_box)
+    ax.text(0.73, 0.285, "LogShield Autonomous Containment", ha="center", fontsize=8.5, fontweight="bold", color="#2e7d32")
+    ax.text(0.54, 0.175, "• Real-time V1NetworkPolicy egress quarantine\n• Instant sprawl tracking via canonical HMAC\n• Sub-30 ms MTTC with zero collateral impact",
+            ha="left", va="center", fontsize=7.2, color="#1b5e20", linespacing=1.4)
 
     p1 = os.path.join(FIG_DIR, "fig8_containment_lifecycle.png")
     p2 = os.path.join(PAPER_FIG_DIR, "fig8_containment_lifecycle.png")
