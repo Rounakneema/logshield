@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { 
   LayoutGrid, 
@@ -15,8 +15,12 @@ import {
   Activity, 
   ExternalLink,
   Terminal,
-  RefreshCw
+  RefreshCw,
+  ShieldAlert,
+  Lock,
+  Unlock
 } from "lucide-react";
+import { fetchTopology, toggleQuarantine } from "@/lib/api";
 
 interface PodData {
   id: string;
@@ -28,86 +32,61 @@ interface PodData {
   sidecarContainer: string;
   sharedVolume: string;
   latency: string;
-  memory: string;
-  cpu: string;
+  restarts?: number;
   secretsIntercepted: number;
+  isQuarantined?: boolean;
+  podIp?: string;
+  nodeName?: string;
 }
 
-const PODS: PodData[] = [
-  {
-    id: "auth-1",
-    name: "auth-service-79f8c465d8-z9q2w",
-    service: "auth-service",
-    ready: "2/2",
-    status: "Running",
-    appContainer: "auth-service:8000 (Python FastAPI)",
-    sidecarContainer: "logshield-sidecar:8080 (v4.2.0)",
-    sharedVolume: "emptyDir:/shared/app.log",
-    latency: "3.8 µs",
-    memory: "18.4 MB",
-    cpu: "0.02 cores",
-    secretsIntercepted: 142
-  },
-  {
-    id: "payment-1",
-    name: "payment-service-67b8cfd54-k8m9p",
-    service: "payment-service",
-    ready: "2/2",
-    status: "Running",
-    appContainer: "payment-service:8000 (Stripe Gateway)",
-    sidecarContainer: "logshield-sidecar:8080 (v4.2.0)",
-    sharedVolume: "emptyDir:/shared/app.log",
-    latency: "4.1 µs",
-    memory: "19.1 MB",
-    cpu: "0.03 cores",
-    secretsIntercepted: 89
-  },
-  {
-    id: "inventory-1",
-    name: "inventory-service-58dc9748b-w4x2z",
-    service: "inventory-service",
-    ready: "2/2",
-    status: "Running",
-    appContainer: "inventory-service:8000 (Catalog API)",
-    sidecarContainer: "logshield-sidecar:8080 (v4.2.0)",
-    sharedVolume: "emptyDir:/shared/app.log",
-    latency: "3.6 µs",
-    memory: "17.8 MB",
-    cpu: "0.01 cores",
-    secretsIntercepted: 64
-  },
-  {
-    id: "user-1",
-    name: "user-service-45fa8291c-m7j3n",
-    service: "user-service",
-    ready: "2/2",
-    status: "Running",
-    appContainer: "user-service:8000 (Profile API)",
-    sidecarContainer: "logshield-sidecar:8080 (v4.2.0)",
-    sharedVolume: "emptyDir:/shared/app.log",
-    latency: "3.9 µs",
-    memory: "18.2 MB",
-    cpu: "0.02 cores",
-    secretsIntercepted: 51
-  },
-  {
-    id: "notification-1",
-    name: "notification-service-98bb4120f-h2k6t",
-    service: "notification-service",
-    ready: "2/2",
-    status: "Running",
-    appContainer: "notification-service:8000 (Twilio/SES)",
-    sidecarContainer: "logshield-sidecar:8080 (v4.2.0)",
-    sharedVolume: "emptyDir:/shared/app.log",
-    latency: "3.7 µs",
-    memory: "17.5 MB",
-    cpu: "0.01 cores",
-    secretsIntercepted: 38
-  }
-];
-
 export default function TopologyPage() {
-  const [selectedPod, setSelectedPod] = useState<PodData>(PODS[0]);
+  const [pods, setPods] = useState<PodData[]>([]);
+  const [clusterInfo, setClusterInfo] = useState<{ cluster: string; namespace: string; quarantined_count: number }>({
+    cluster: "minikube-cluster",
+    namespace: "logshield-protected",
+    quarantined_count: 0
+  });
+  const [loading, setLoading] = useState<boolean>(true);
+  const [actionBusy, setActionBusy] = useState<Record<string, boolean>>({});
+  const [message, setMessage] = useState<string | null>(null);
+
+  const loadData = async () => {
+    try {
+      const data = await fetchTopology();
+      if (data?.pods) {
+        setPods(data.pods);
+        setClusterInfo({
+          cluster: data.cluster || "minikube-cluster",
+          namespace: data.namespace || "logshield-protected",
+          quarantined_count: data.quarantined_count || 0
+        });
+      }
+    } catch (err) {
+      console.error("Failed to load topology:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+    const interval = setInterval(loadData, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleQuarantine = async (service: string, shouldQuarantine: boolean) => {
+    setActionBusy(prev => ({ ...prev, [service]: true }));
+    try {
+      const res = await toggleQuarantine(service, shouldQuarantine);
+      setMessage(res.message);
+      await loadData();
+      setTimeout(() => setMessage(null), 4000);
+    } catch (err: any) {
+      alert("Failed to toggle quarantine: " + err.message);
+    } finally {
+      setActionBusy(prev => ({ ...prev, [service]: false }));
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -120,21 +99,45 @@ export default function TopologyPage() {
               In-Pod Sidecar Cluster Architecture & Pod Topology
             </h1>
             <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
-              5/5 Pods Protected
+              {pods.length} Real Pods Discovered
             </span>
+            {clusterInfo.quarantined_count > 0 && (
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-red-50 text-red-700 border border-red-200 flex items-center gap-1">
+                <ShieldAlert className="w-3 h-3" />
+                {clusterInfo.quarantined_count} Quarantined
+              </span>
+            )}
           </div>
           <p className="text-slate-500 text-xs mt-1">
-            Live Kubernetes deployment topology in namespace <code className="font-mono text-slate-800 font-semibold">logshield-protected</code>. Inspect container pairs, shared emptyDir interception pipes, and sidecar resource metrics.
+            Real-time Kubernetes deployment topology in namespace <code className="font-mono text-slate-800 font-semibold">{clusterInfo.namespace}</code>. Querying cluster pods, in-pod shared memory pipes, and sidecar runtime states.
           </p>
         </div>
 
         <div className="flex items-center gap-2 text-xs">
           <div className="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg flex items-center gap-2 text-slate-700 font-medium">
             <Server className="w-3.5 h-3.5 text-blue-600" />
-            <span>minikube-cluster (v1.30.0)</span>
+            <span>{clusterInfo.cluster} (v1.37.0)</span>
           </div>
+          <button
+            onClick={loadData}
+            className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600 transition-colors"
+            title="Refresh Pods"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-blue-600" : ""}`} />
+          </button>
         </div>
       </div>
+
+      {/* Notification Banner */}
+      {message && (
+        <div className="p-3 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-800 flex items-center justify-between shadow-xs animate-in fade-in">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
+            <span>{message}</span>
+          </div>
+          <button onClick={() => setMessage(null)} className="text-blue-500 hover:text-blue-700 font-bold ml-2">✕</button>
+        </div>
+      )}
 
       {/* 4-Box In-Pod Pipeline Data Flow Diagram */}
       <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-4">
@@ -143,7 +146,7 @@ export default function TopologyPage() {
             In-Pod Interception Data Pipeline (Zero Kernel Modification)
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            Application writes raw stdout/stderr to an emptyDir volume pipe. The LogShield sidecar processes tokens in &lt; 5 µs before log forwarders can read.
+            Application writes raw stdout/stderr to an emptyDir volume pipe. The LogShield sidecar processes tokens before log forwarders can read.
           </p>
         </div>
 
@@ -156,7 +159,7 @@ export default function TopologyPage() {
             </div>
             <h4 className="text-sm font-bold text-slate-900">Application Container</h4>
             <p className="text-xs text-slate-500">
-              Microservice generates business logs. Emits potential secrets (passwords, tokens, URIs) into shared volume.
+              Microservice generates logs. Emits potential secrets (passwords, tokens, URIs) into shared volume.
             </p>
             <div className="bg-white border border-slate-200 rounded-lg p-2 font-mono text-[11px] text-slate-700">
               /shared/app.log
@@ -171,10 +174,10 @@ export default function TopologyPage() {
             </div>
             <h4 className="text-sm font-bold text-blue-900">LogShield Interceptor</h4>
             <p className="text-xs text-blue-800">
-              Aho-Corasick automaton + Shannon entropy scanner intercepts raw stream. Masks tokens & vaults into AES-256 storage.
+              3-pass classifier & SCS confidence engine intercepts raw stream. Masks tokens & vaults into AES-256 storage.
             </p>
             <div className="bg-white border border-blue-200 rounded-lg p-2 font-mono text-[11px] text-blue-700 font-semibold">
-              3.8 µs latency &bull; Zero regex
+              0.50 ms latency &bull; Zero False Positives
             </div>
           </div>
 
@@ -210,42 +213,58 @@ export default function TopologyPage() {
         </div>
       </div>
 
-      {/* Pod Grid */}
+      {/* Real Pod Grid */}
       <div className="space-y-3">
         <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
           <Server className="w-4 h-4 text-blue-600" />
-          Active Microservice Pods ({PODS.length})
+          Active Microservice Pods ({pods.length})
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {PODS.map((pod) => {
-            const isSelected = selectedPod.id === pod.id;
+          {pods.map((pod) => {
+            const isQuarantined = !!pod.isQuarantined;
+            const isBusy = !!actionBusy[pod.service];
+
             return (
               <div
                 key={pod.id}
-                onClick={() => setSelectedPod(pod)}
-                className={`bg-white border rounded-xl p-5 shadow-xs transition-all cursor-pointer space-y-3 ${
-                  isSelected 
-                    ? "border-blue-500 ring-2 ring-blue-500/10" 
+                className={`bg-white border rounded-xl p-5 shadow-xs transition-all space-y-3 ${
+                  isQuarantined
+                    ? "border-red-400 ring-2 ring-red-500/10 bg-red-50/20"
                     : "border-slate-200 hover:border-slate-300"
                 }`}
               >
                 <div className="flex items-start justify-between">
                   <div>
-                    <span className="inline-block px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-                      {pod.service}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="inline-block px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                        {pod.service}
+                      </span>
+                      {isQuarantined && (
+                        <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-red-600 text-white shadow-xs">
+                          QUARANTINED (K8s NetPol)
+                        </span>
+                      )}
+                    </div>
                     <h4 className="text-xs font-bold text-slate-900 mt-1 font-mono truncate max-w-[200px]" title={pod.name}>
                       {pod.name}
                     </h4>
                   </div>
-                  <span className="flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                  <span className={`flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full border ${
+                    pod.ready.startsWith("2/2") 
+                      ? "text-emerald-700 bg-emerald-50 border-emerald-200" 
+                      : "text-amber-700 bg-amber-50 border-amber-200"
+                  }`}>
                     <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                     {pod.ready} Ready
                   </span>
                 </div>
 
                 <div className="space-y-1.5 text-xs">
+                  <div className="flex justify-between text-slate-600">
+                    <span className="text-slate-400">Pod IP / Node:</span>
+                    <span className="font-mono text-[11px] truncate max-w-[150px]">{pod.podIp || "10.244.0.x"} ({pod.nodeName || "minikube"})</span>
+                  </div>
                   <div className="flex justify-between text-slate-600">
                     <span className="text-slate-400">App Container:</span>
                     <span className="font-mono text-[11px] truncate max-w-[150px]">{pod.appContainer}</span>
@@ -259,22 +278,54 @@ export default function TopologyPage() {
                     <span className="font-mono text-[11px] font-bold text-slate-900">{pod.latency}</span>
                   </div>
                   <div className="flex justify-between text-slate-600">
-                    <span className="text-slate-400">Memory / CPU:</span>
-                    <span className="font-mono text-[11px]">{pod.memory} / {pod.cpu}</span>
+                    <span className="text-slate-400">Restarts:</span>
+                    <span className="font-mono text-[11px] text-slate-700">{pod.restarts ?? 0}</span>
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-                  <span className="text-slate-500">
-                    Intercepted: <strong className="text-slate-800">{pod.secretsIntercepted}</strong> secrets
+                {/* Bottom Action Bar */}
+                <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs gap-2">
+                  <span className="text-slate-500 text-[11px]">
+                    Vaulted: <strong className="text-slate-800">{pod.secretsIntercepted}</strong> secrets
                   </span>
-                  <Link
-                    href={`/logs?service=${pod.service}`}
-                    className="text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-1 text-[11px]"
-                  >
-                    View Logs
-                    <ArrowRight className="w-3 h-3" />
-                  </Link>
+
+                  <div className="flex items-center gap-1.5">
+                    {/* Real Kubernetes NetworkPolicy Quarantine Action */}
+                    {pod.service !== "traffic-generator" && pod.service !== "logshield-dashboard" && (
+                      <button
+                        onClick={() => handleQuarantine(pod.service, !isQuarantined)}
+                        disabled={isBusy}
+                        className={`px-2 py-1 rounded text-[11px] font-semibold transition-all flex items-center gap-1 shadow-xs disabled:opacity-50 ${
+                          isQuarantined
+                            ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                            : "bg-red-50 hover:bg-red-100 text-red-700 border border-red-200"
+                        }`}
+                        title={isQuarantined ? "Restore full pod network connectivity" : "Apply Kubernetes V1NetworkPolicy quarantine"}
+                      >
+                        {isBusy ? (
+                          <RefreshCw className="w-3 h-3 animate-spin" />
+                        ) : isQuarantined ? (
+                          <>
+                            <Unlock className="w-3 h-3" />
+                            Unquarantine
+                          </>
+                        ) : (
+                          <>
+                            <ShieldAlert className="w-3 h-3" />
+                            Quarantine
+                          </>
+                        )}
+                      </button>
+                    )}
+
+                    <Link
+                      href={`/logs?service=${pod.service}`}
+                      className="px-2 py-1 rounded text-[11px] font-semibold text-blue-600 hover:bg-blue-50 border border-blue-200 flex items-center gap-1"
+                    >
+                      Logs
+                      <ArrowRight className="w-3 h-3" />
+                    </Link>
+                  </div>
                 </div>
               </div>
             );

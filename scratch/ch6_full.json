@@ -1,0 +1,278 @@
+[
+  {
+    "type": "p",
+    "text": "CHAPTER 6: TESTING",
+    "style": "Heading 1"
+  },
+  {
+    "type": "p",
+    "text": "Testing in LogShield is organised around a single question: does each security and performance claim hold when it is tested? The strategy therefore combines unit tests of individual scoring factors, a labelled benchmark, an enumeration of edge cases, a root-cause analysis of observed errors, and a four-way ablation experiment designed to test whether the multi-stage, multi-factor pipeline is justified relative to simpler baselines.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "1. TESTING STRATEGY",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Table 6.1: Levels of testing",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Level",
+        "Target",
+        "Tooling"
+      ],
+      [
+        "Unit tests",
+        "Catalog patterns, individual scoring factors and decision gate logic",
+        "pytest; 24 tests in tests/test_catalog.py and tests/test_logshield.py"
+      ],
+      [
+        "Benchmark",
+        "Precision, recall, F1-score, throughput and latency on the 1,847-line labelled dataset",
+        "benchmark/benchmark.py with ground_truth.txt"
+      ],
+      [
+        "False-positive root-cause analysis",
+        "Categorisation of each false positive by root cause and fix",
+        "Manual review of the 23 false-positive cases"
+      ],
+      [
+        "Edge-case enumeration",
+        "Fifteen engine-level edge cases, each with current behaviour, correct behaviour and fix",
+        "Design review and unit tests; several fixes are planned for Phase 3"
+      ],
+      [
+        "Four-way ablation",
+        "Whether the multi-stage pipeline outperforms simpler baselines on a 50,000-line corpus",
+        "Designed; awaiting the corpus and weight-training run (Phase 2)"
+      ],
+      [
+        "Vault and lineage verification",
+        "Encryption round-trip, reference ID format, HMAC fingerprint and CLI operations",
+        "Manual end-to-end path with the demo application"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "2. UNIT TESTS",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The test suite contains 24 tests in two files. tests/test_catalog.py verifies that each pattern in the catalog correctly matches its target format and does not match safe control values. tests/test_logshield.py verifies the decision gate, the confidence model's handling of extreme inputs and the vault round-trip. All 24 tests pass as of the interim review.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "3. BENCHMARK RESULTS",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The benchmark was run on the 1,847-line labelled dataset as reported in Chapter 5. Precision, recall and F1-score all exceed the 0.90 targets of NFR3 and NFR4. All three latency percentiles are below 1 ms, well inside the 5 ms target of NFR1. Throughput of 12,847 lines/sec exceeds the 5,000 lines/sec minimum of NFR2.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "4. EDGE-CASE ANALYSIS",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Fifteen critical engine-level edge cases were enumerated during design review, each with its current behaviour, its correct behaviour and the fix required. Table 6.2 records all fifteen.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 6.2: Engine edge cases EC-01 to EC-15",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Case",
+        "Example",
+        "Current / correct behaviour",
+        "Fix required"
+      ],
+      [
+        "EC-01 Multi-line PEM key",
+        "-----BEGIN RSA PRIVATE KEY----- …",
+        "Only the header line is caught; body lines score too low. Should buffer the full block as one unit.",
+        "Block-buffering state machine in main.py (Phase 3)"
+      ],
+      [
+        "EC-02 UUID false positive",
+        "trace_id=550e8400-e29b-41d4-a716-446655440000",
+        "Scores 60–70 (FLAG); should score below 50 (PASS).",
+        "UUID structural exemption in entropy_factor.py"
+      ],
+      [
+        "EC-03 MD5 content hash",
+        "ETag: \"d41d8cd98f00b204e9800998ecf8427e\"",
+        "32-char hex scores 1.0 in token-structure factor, likely MASK; should not mask an HTTP ETag.",
+        "ETag and Content-MD5 context exemption"
+      ],
+      [
+        "EC-04 Fragmented secret",
+        "key = \"sk_live_\" + var",
+        "Neither fragment matches the Stripe regex; should detect the sk_live_ prefix.",
+        "Prefix-only patterns as low-confidence matchers"
+      ],
+      [
+        "EC-05 URL-encoded secret",
+        "token=%73%6B%5F%6C%69%76%65%5F…",
+        "Not decoded, so the regex will not match; should decode before scoring.",
+        "urllib.parse.unquote() in Preprocessor (Phase 3)"
+      ],
+      [
+        "EC-06 Base64 secret in JSON",
+        "{\"auth\": \"c2tfbGl2ZV9hYmNkZWY=\"}",
+        "Base64 blob detected but the underlying secret is not scored; should decode and re-score.",
+        "Decode-and-rescore loop in Pass 3"
+      ],
+      [
+        "EC-07 Secret in stack trace",
+        "Exception: postgres://admin:p@ssw0rd@db/prod",
+        "Key-value regex may not fire on an embedded URI.",
+        "Verify database.py has a bare-URI pattern"
+      ],
+      [
+        "EC-08 Secret at line start",
+        "AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI connecting",
+        "Pass 1 does not fire; Pass 2 direct sweep should catch it.",
+        "None — already handled by Pass 2"
+      ],
+      [
+        "EC-09 Log flood (10k+/sec)",
+        "Crash loop producing 10,000 lines/sec",
+        "Blocking readline() falls behind, risks OOM.",
+        "asyncio.Queue with a maximum size and fail-open drop path"
+      ],
+      [
+        "EC-10 Binary / non-UTF-8",
+        "Log contains binary garbage",
+        "errors=\"replace\" applied; replacement characters do not match — already handled safely.",
+        "None — already handled"
+      ],
+      [
+        "EC-11 Long line (>1 MB)",
+        "Minified JSON with an embedded secret",
+        "Key-value regex iterates thousands of tokens, causing a latency spike.",
+        "MAX_LINE_LEN guard in process_line()"
+      ],
+      [
+        "EC-12 JSON-structured log",
+        "{\"level\":\"debug\",\"key\":\"password\",\"value\":\"MyP@ss!\"}",
+        "Key-value regex misses the relationship between key and value fields.",
+        "JSON-parsing pre-pass in extract_and_score()"
+      ],
+      [
+        "EC-13 Duplicate in line",
+        "PASS=abc123 re-confirm PASS=abc123 ok",
+        "seen_tokens set deduplicates; only one vault entry created.",
+        "None — already handled"
+      ],
+      [
+        "EC-14 HTTP header secret",
+        "Authorization: Bearer ghp_xxxxxxxxxxxxxxxxxxxx",
+        "Pass 2 should match the GitHub PAT regex with Bearer prefix.",
+        "Verify vcs_cicd.py pattern works with the Bearer prefix"
+      ],
+      [
+        "EC-15 Secret rotation",
+        "Same sk_live_abc123 appears five minutes later",
+        "New vault entry with new ref ID; lineage increments occurrence count.",
+        "None — already correct behaviour"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "Figure 6.1: Status summary of the fifteen engine edge cases",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5. PLANNED FOUR-WAY ABLATION EXPERIMENT",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The core research validation is a four-way ablation experiment on a 50,000-line labelled corpus, designed to test whether the additional complexity of the multi-stage, multi-factor design is justified rather than assumed. The experiment isolates the contribution of each layer.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 6.3: Four-way ablation experiment design",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Experiment",
+        "System configuration",
+        "Expected F1 (hypothesis)"
+      ],
+      [
+        "A: Regex only",
+        "Pass 1 of the Secret Classifier alone; decision gate at a single regex-match threshold",
+        "0.71"
+      ],
+      [
+        "B: Regex + entropy",
+        "Experiment A plus the entropy factor; threshold tuned to optimise F1",
+        "0.77"
+      ],
+      [
+        "C: Six-factor SCS",
+        "Full confidence model over eight features; thresholds at 50 and 80",
+        "0.89"
+      ],
+      [
+        "D: Full pipeline + SecretBench",
+        "Experiment C plus the Preprocessor, Candidate Finder and 761 SecretBench patterns",
+        "0.98"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "The corpus will consist of 25,000 positive lines drawn from SecretBench and leaked-repository sources, and 25,000 negative lines drawn from LogHub and synthetic non-secret text. Validation protocol is five-fold stratified cross-validation. This experiment has been designed but not yet executed; it awaits the corpus-generation and weight-training run of Phase 2. Figure 6.2 shows the expected F1 values as a hypothesis chart.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 6.2: Four-way ablation: expected F1-score progression (hypothesis, not yet measured on the full corpus)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "6. VAULT AND LINEAGE VERIFICATION",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "SecureReveal and SecretLineage are implemented and functional. The end-to-end path from detection through masking, vault write and lineage fingerprint was verified manually using the demonstration application. The vault module encrypts each masked value and stores it with the required fields. The CLI successfully performs retrieve, sprawl-report and audit-log operations. The lineage module creates a new fingerprint record on first occurrence of a secret and increments the occurrence count on subsequent occurrences from different pod UIDs, which was verified by running the demonstration application in two pods.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "7. LIMITATIONS OF TESTING",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Several limitations should be stated plainly. The benchmark corpus is a single 1,847-line dataset; behaviour on the 50,000-line ablation corpus and on novel secret formats is not yet established. Statistical power is limited by the rarity of real secret-leak samples in available log data. Results are conditional on the SCS decision thresholds 50 and 80, and the threshold sensitivity analysis has not yet been executed. Vault and lineage verification was manual rather than automated; automated integration tests are planned for Phase 9. The four-way ablation experiment, which is the primary research validation, has not yet been executed.",
+    "style": "Normal"
+  }
+]

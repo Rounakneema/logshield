@@ -24,12 +24,13 @@ import {
 export default function VaultPage() {
   const [vaultEntries, setVaultEntries] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(true);
   const [pin, setPin] = useState("");
   const [pinError, setPinError] = useState("");
   const [revealedSecrets, setRevealedSecrets] = useState<Record<string, string>>({});
   const [revealing, setRevealing] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState("");
+  const [manualRefId, setManualRefId] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const loadData = async () => {
@@ -199,6 +200,76 @@ export default function VaultPage() {
         </div>
       </div>
 
+      {/* Instant Secret Revealer Card */}
+      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
+              <Eye className="w-4 h-4" />
+            </div>
+            <div>
+              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+                Instant Secret Revealer
+              </h2>
+              <p className="text-xs text-slate-500">
+                Lookup any masked token (<span className="font-mono text-blue-600 font-semibold">SEC-XXXXXXXX</span>) to decrypt the original plaintext with cryptographic audit logging.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-3">
+          <input
+            type="text"
+            placeholder="Paste reference ID (e.g. SEC-3200A94B)..."
+            value={manualRefId}
+            onChange={(e) => setManualRefId(e.target.value)}
+            className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2 text-xs font-mono text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white"
+          />
+          <button
+            onClick={() => manualRefId.trim() && handleReveal(manualRefId.trim())}
+            disabled={!manualRefId.trim() || revealing[manualRefId.trim()]}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-xs flex items-center gap-2 disabled:opacity-50"
+          >
+            {revealing[manualRefId.trim()] ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Eye className="w-3.5 h-3.5" />}
+            <span>Reveal Plaintext</span>
+          </button>
+        </div>
+
+        {/* Revealed Result Display */}
+        {manualRefId && revealedSecrets[manualRefId.trim()] && (
+          <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-emerald-800 flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                Decrypted Plaintext Secret for {manualRefId.trim()}:
+              </span>
+              <button
+                onClick={() => copySecret(revealedSecrets[manualRefId.trim()], manualRefId.trim())}
+                className="text-xs font-semibold text-emerald-700 hover:text-emerald-900 flex items-center gap-1"
+              >
+                {copiedId === manualRefId.trim() ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                {copiedId === manualRefId.trim() ? "Copied!" : "Copy Secret"}
+              </button>
+            </div>
+            <div className="bg-white border border-emerald-200 rounded-md p-3 font-mono text-xs text-slate-900 break-all select-all font-bold">
+              {revealedSecrets[manualRefId.trim()]}
+            </div>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1 border-t border-emerald-200/60">
+              <p className="text-[11px] text-emerald-700">
+                Audit Trail Recorded: <strong>1. ATTEMPTED</strong> (Pre-Auth Intent) ➔ <strong>2. SUCCESS</strong> (Decrypted Plaintext Released)
+              </p>
+              <a
+                href={`/audit?q=${manualRefId.trim()}`}
+                className="text-xs font-bold text-blue-600 hover:text-blue-800 underline flex items-center gap-1"
+              >
+                View Audit Trail in Ledger →
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* KPI Stats Strip */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
@@ -353,19 +424,27 @@ export default function VaultPage() {
                       <td className="px-5 py-3.5 text-right">
                         <div className="flex items-center justify-end gap-2">
                           {isRevealed && (
-                            <div className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 rounded-lg px-2.5 py-1 text-slate-800 font-mono text-xs max-w-xs truncate shadow-xs">
-                              <span className="font-bold text-emerald-700 select-all">{revealedSecrets[entry.ref_id]}</span>
-                              <button
-                                onClick={() => copySecret(revealedSecrets[entry.ref_id], entry.ref_id)}
-                                className="text-slate-400 hover:text-slate-700 p-0.5 rounded"
-                                title="Copy Plaintext"
+                            <div className="flex flex-col items-end gap-1">
+                              <div className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 rounded-lg px-2.5 py-1 text-slate-800 font-mono text-xs max-w-xs truncate shadow-xs">
+                                <span className="font-bold text-emerald-700 select-all">{revealedSecrets[entry.ref_id]}</span>
+                                <button
+                                  onClick={() => copySecret(revealedSecrets[entry.ref_id], entry.ref_id)}
+                                  className="text-slate-400 hover:text-slate-700 p-0.5 rounded"
+                                  title="Copy Plaintext"
+                                >
+                                  {copiedId === entry.ref_id ? (
+                                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                                  ) : (
+                                    <Copy className="w-3.5 h-3.5" />
+                                  )}
+                                </button>
+                              </div>
+                              <a
+                                href={`/audit?q=${entry.ref_id}`}
+                                className="text-[10px] text-blue-600 hover:text-blue-800 underline font-semibold"
                               >
-                                {copiedId === entry.ref_id ? (
-                                  <Check className="w-3.5 h-3.5 text-emerald-600" />
-                                ) : (
-                                  <Copy className="w-3.5 h-3.5" />
-                                )}
-                              </button>
+                                View in Audit Ledger →
+                              </a>
                             </div>
                           )}
 

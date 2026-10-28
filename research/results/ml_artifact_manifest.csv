@@ -1,0 +1,14 @@
+File_Name,Relative_Path,Size_Bytes,SHA256,Last_Modified,Status
+train_60k.csv,research\datasets\train_60k.csv,15432416,cfc654bb7451fd3424fa3b17589177b297729859d90d1e2e61c1a8c10c453d70,2026-10-21 12:01:23,VERIFIED_PRESENT
+val_20k.csv,research\datasets\val_20k.csv,5124102,a6bdc4e90a2d1438b3c1de965273286feded2ad1845f96f5013fbaeb9beadf91,2026-10-21 12:01:23,VERIFIED_PRESENT
+test_20k.csv,research\datasets\test_20k.csv,5132992,bed0c3542b338602de2654c6d84688abea23d9eb0c3523de0a8f134e4e59cb4f,2026-10-21 12:01:23,VERIFIED_PRESENT
+train_features.npz,research\cache\train_features.npz,83863,b1671a75ff0aaa4ea6f7c2fb5c81834ad23b4b9a34faad91f1cf7def546594df,2026-10-21 14:45:52,VERIFIED_PRESENT
+val_features.npz,research\cache\val_features.npz,28453,8083731b573884be51e3c35b473c5e612fa6afa4ee40baa31eec647a992c0dd8,2026-10-21 14:47:02,VERIFIED_PRESENT
+test_features.npz,research\cache\test_features.npz,28647,087be09d24e70829b8149ee08333dd0a65e98f563b2c40c8e3fbe112dd5fbe15,2026-10-21 14:48:12,VERIFIED_PRESENT
+optimal_weights.json,scripts\optimal_weights.json,113,901802620c941889a8a6c5a6a77706e8070c2554c93a953ae1bc86c3c6610f14,2026-10-21 15:59:23,VERIFIED_PRESENT
+ml_test_predictions.csv,research\results\ml_test_predictions.csv,4120908,23c2e61329cbed012d5e6ce93b5bdc5c28321d42d9a4edc0e4451d0c6dd9cf02,2026-10-21 15:59:36,VERIFIED_PRESENT
+ml_recomputed_metrics.json,research\results\ml_recomputed_metrics.json,1409,6bed8d69cbc8e3874f135d6ce3a7c336a8168664c62515f30825125d73dfab7b,2026-10-21 15:59:36,VERIFIED_PRESENT
+ml_paired_comparison.csv,research\results\ml_paired_comparison.csv,77531,bbb564db2adfb67b8082c057c3117d7059a5785749d7ec16d3ddb75fb81b4729,2026-10-21 15:59:36,VERIFIED_PRESENT
+ml_runtime_integration_test.txt,research\results\ml_runtime_integration_test.txt,1361,7db6761ed7c74ac5abe4ba81ab6756e355bbbe69c66cdfd597acd393b684cfdd,2026-10-21 15:59:36,VERIFIED_PRESENT
+scorer.py,sidecar\logmask\scorer.py,7735,8f817152a72459de02992fd44f04a6cd22ffa3ba8f5524a4aa6b9b05d5e93a2b,2026-10-16 12:37:25,VERIFIED_PRESENT
+logshield_ieee_paper.tex,paper\logshield_ieee_paper.tex,63795,e943aa10b16433083cd2319046c383158740383a5c78d8d611495dcf0f47a4a9,2026-10-21 15:59:05,VERIFIED_PRESENT

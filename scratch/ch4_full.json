@@ -1,0 +1,466 @@
+[
+  {
+    "type": "p",
+    "text": "CHAPTER 4: DESIGN",
+    "style": "Heading 1"
+  },
+  {
+    "type": "p",
+    "text": "1. SYSTEM ARCHITECTURE",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "LogShield is built in layers so that each concern is implemented once. The overall sidecar architecture within a Kubernetes pod is shown in Figure 4.1. The application and the sidecar share an emptyDir log volume. The sidecar's three main subsystems are LogMask, which implements the detection pipeline; SecureReveal, which manages encrypted vault storage and retrieval; and SecretLineage, which maintains the HMAC fingerprint store. The sidecar's standard output is the only channel through which log data leaves the pod and is collected by the existing log-shipping agent. Nothing else changes in the cluster.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 4.1: LogShield sidecar architecture within a Kubernetes pod",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "The architecture is motivated directly by the requirements of Chapter 3. Pre-ingestion interception (NFR1 of the threat model) is achieved because the sidecar reads the log file from the shared volume before any line reaches standard output. Zero-configuration deployment (NFR8) follows from the admission webhook, which modifies the pod specification before it is persisted, so application teams see no change to their manifests. Fail-open behaviour (NFR6) is enforced at the stage boundary: if the vault or lineage module raises an exception, the decision gate falls back to forwarding the original line rather than blocking.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "2. THE SIX-STAGE DETECTION PIPELINE",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Every raw log line is passed through six stages in sequence. The pipeline is designed so that the large majority of lines exit at the earliest possible stage, keeping average latency low. Figure 4.2 shows the full pipeline; Figure 4.3 shows the three-pass structure of the Secret Classifier at Stage 4.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 4.2: The six-stage detection pipeline (Stage 2 early exit removes roughly 65% of lines from further processing)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "i. Stage 1 — Preprocessor",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The Preprocessor runs on every line at O(n) cost. It performs JSON field extraction for semantic key-value detection, URL-decoding of percent-encoded tokens, Base64-decoding of suspicious blobs, assembly of multi-line blocks such as PEM keys or JSON objects (planned for Phase 3; edge case EC-01), and enforces a line-length guard capped at 64 KB (edge case EC-11). Its output is a PreprocessedLine object carrying an array of tokens and a map of decoded values.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ii. Stage 2 — Candidate Finder",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The Candidate Finder runs on every line using an Aho–Corasick automaton built from approximately 2,000 keywords covering vendor names and sensitive field names. If no keyword is found, the line exits immediately as a pass-through. This early exit is the primary latency control: approximately 65% of real Kubernetes log lines are expected to carry no candidate keyword and exit here at effectively zero marginal cost (Phase 3, performance hardening).",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "iii. Stage 3 — Context Engine",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The Context Engine runs on the remaining lines. It applies positive signals such as the presence of the words password, secret or api_key, negative signals such as trace_id, uuid or etag, and a log-level signal, since DEBUG and ERROR output is treated as more suspicious than INFO. Its output is a context_score in the range 0.0 to 1.0.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "iv. Stage 4 — Secret Classifier",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The Secret Classifier applies pattern matching in three passes. Pass 1 checks the 600+ hand-crafted catalog regexes. Pass 2 checks the 755 non-false-positive SecretBench patterns (Sheet 1). Pass 3 checks the 6 high-false-positive SecretBench patterns (Sheet 2), gated so that they fire only when the context score exceeds 0.5. The stage outputs a secret_type, a regex_score and a flag indicating whether the match was context-gated. Figure 4.3 shows the three-pass structure.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 4.3: Three-pass structure of Stage 4 (Secret Classifier)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "v. Stage 5 — Confidence Model",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The Confidence Model constructs an eight-dimensional feature vector and passes it through a logistic regression model, producing a calibrated probability that is scaled to the SCS integer from 0 to 100. Table 4.1 describes each feature.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 4.1: Eight features of the confidence model",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Feature",
+        "What it measures",
+        "High value suggests"
+      ],
+      [
+        "Regex score",
+        "Whether the token matches a known credential format and the specificity of the matching pattern",
+        "Recognised credential type"
+      ],
+      [
+        "Entropy",
+        "Shannon entropy per character of the token, normalised to 0-1",
+        "Randomly generated key material"
+      ],
+      [
+        "Variable-name proximity",
+        "Distance in characters from the token to the nearest sensitive field name (password, token, key, secret)",
+        "Context near a sensitive field"
+      ],
+      [
+        "Structural validation",
+        "Whether the token length, character set and format match known credential specifications",
+        "Well-formed credential"
+      ],
+      [
+        "Context score",
+        "Output of Stage 3: presence of positive trigger words, absence of negative words, log level",
+        "Debug or error output near a sensitive label"
+      ],
+      [
+        "Encoding signal",
+        "Whether the token is Base64, URL-encoded or hex-encoded",
+        "Encoded credential in transit"
+      ],
+      [
+        "Length normalisation",
+        "Normalised token length; very short and very long tokens are down-weighted",
+        "Length consistent with known key material"
+      ],
+      [
+        "Dictionary-word penalty",
+        "Whether the token is composed of common English words, which are unlikely to be secrets",
+        "Not a secret (e.g. a descriptive string)"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "vi. Stage 6 — Decision Gate",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The Decision Gate applies the three-way decision described in Table 1.2: SCS below 50 passes the line untouched; SCS from 50 to 79 flags it with a reference marker without redacting it; SCS of 80 or above redacts the token, writes the plaintext to the vault, and records a lineage fingerprint. An optional asynchronous validity check by the Analyzer module (Phase 4) may subsequently upgrade the severity of a flagged value found to correspond to a live credential. Figure 4.4 shows the three decision zones.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 4.4: Decision gate: three zones of the Secret Confidence Score",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "3. SOFTWARE ENVIRONMENT",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Table 4.2: Software environment",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Category",
+        "Tools and libraries",
+        "Role in the system"
+      ],
+      [
+        "Primary language",
+        "Python 3.11",
+        "Sidecar, detection engine, vault, lineage, benchmark and training scripts"
+      ],
+      [
+        "Infrastructure",
+        "YAML, Kubernetes client library",
+        "Kubernetes deployment, RBAC and webhook manifests"
+      ],
+      [
+        "Core detection",
+        "Python re (standard library), pyahocorasick",
+        "Regex matching; Aho–Corasick keyword prefilter"
+      ],
+      [
+        "Confidence model",
+        "scikit-learn, scipy",
+        "Logistic regression, calibration and NNLS weight optimisation"
+      ],
+      [
+        "Encryption",
+        "cryptography (Fernet)",
+        "AES-128-CBC with HMAC; vault entry encryption"
+      ],
+      [
+        "Storage",
+        "sqlite3 (standard library)",
+        "Local vault and audit-log database"
+      ],
+      [
+        "Fingerprinting",
+        "hmac (standard library)",
+        "HMAC-SHA256 lineage fingerprint"
+      ],
+      [
+        "Demo application",
+        "FastAPI",
+        "Intentionally leaks secrets for demonstration"
+      ],
+      [
+        "Metrics",
+        "prometheus_client",
+        "Prometheus /metrics endpoint (Phase 7)"
+      ],
+      [
+        "Dashboard",
+        "JavaScript / Node.js (planned)",
+        "Next.js enterprise dashboard (Phase 8)"
+      ],
+      [
+        "Deployment targets",
+        "Minikube (demo); EKS or GKE (production)",
+        "Local demonstration and production-scale operation"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "4. ALGORITHMS AND DATA STRUCTURES",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "i. Core Data Structures",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Three data structures carry state through the pipeline, the vault and the lineage tracker, and together they constitute the data design of the system.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 4.3: Principal data structures",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Structure",
+        "Key fields",
+        "Purpose"
+      ],
+      [
+        "SCSResult",
+        "token, score (0–100), factors (6 factor scores), decision (MASK/FLAG/PASS), detector_name, vendor, category, detector_type",
+        "Full scoring result for a single extracted token; transient, never persisted"
+      ],
+      [
+        "VaultEntry",
+        "ref_id (e.g. SEC-20241115-A1B2), ciphertext (Fernet AES-128-CBC), score, factors_json, timestamp, expiry, pod_uid",
+        "Encrypted record of a masked secret keyed by reference ID; persisted in the local SQLite vault"
+      ],
+      [
+        "FingerprintRecord",
+        "hmac_hash (HMAC-SHA256 of the secret value), occurrences, pod_uids, namespaces, first_seen, last_seen",
+        "Tracks reuse of the same secret across pods and namespaces without storing the plaintext; persisted in the local SQLite fingerprint store"
+      ],
+      [
+        "AuditEvent",
+        "actor, operation, ref_id, timestamp",
+        "Immutable audit record written on every retrieval through the SecureReveal CLI; persisted to the audit log"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "Figure 4.5 shows the logical relationships among the four structures. The vault and fingerprint records are created together when the Decision Gate fires a MASK decision; neither the SCSResult nor the AuditEvent carries the plaintext.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 4.5: Logical data model: SCSResult, VaultEntry, FingerprintRecord and AuditEvent",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ii. Decision Gate Algorithm",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The Decision Gate resolves the calibrated SCS produced by Stage 5 into one of three actions. Scores below 50 pass the line untouched. Scores from 50 to 79 flag the value with a reference marker. Scores of 80 or above trigger redaction together with a synchronous vault write and lineage fingerprint. The two thresholds are configuration parameters stored in the sidecar environment, not constants, and their effect on precision and recall is examined in Chapter 5.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "iii. Confidence Model Formulation",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The SCS is produced by a logistic regression model over the eight-dimensional feature vector of Table 4.1. The model's weights are trained rather than fixed by hand, using the NNLS-based weight trainer on a labelled corpus. The output probability is calibrated and scaled onto the integer 0–100 range consumed by the Decision Gate. This design is deliberate: replacing a single-factor rule with a learned combination of eight independent signals is the basis for the accuracy improvement expected in the four-way ablation experiment.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5. MASKING AND VAULTING SEQUENCE",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Figure 4.6 shows the sequence of operations from the moment a log line arrives at the sidecar to the moment the redacted line is forwarded to standard output.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 4.6: Masking, vaulting and lineage sequence for a line that scores MASK",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "The sidecar tails the shared volume file and reads each line (steps 1 and 2). Stages 1 to 5 of the detection pipeline compute the SCS (step 3). If the score is 80 or above, the Confidence Model calls SecureReveal to encrypt and store the value, which returns a reference ID (step 4), and SecretLineage to update the HMAC fingerprint record (step 5). The sidecar then writes the redacted line to standard output (step 6). Vault and lineage operations are both synchronous so that the reference ID is available before the redacted line is forwarded. Steps 4 and 5 raise exceptions only if the storage engine fails, and the exception handler falls back to forwarding the line rather than blocking.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "6. VAULT AND LINEAGE DESIGN",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "SecureReveal implements the vault and controlled-recovery module. Each masked value is encrypted with Fernet (AES-128 in CBC mode with HMAC-SHA256 authentication) and stored in a local SQLite database together with its reference ID, the SCS at detection time, the individual factor scores, a timestamp, a TTL-based expiry and the pod UID from which it was detected. A command-line interface exposes three operations: retrieve recovers a specific secret by reference ID; sprawl-report lists every fingerprint whose occurrence count exceeds one; and audit-log shows the complete access history.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "SecretLineage implements the fingerprinting and cross-application tracking module. Rather than storing the plaintext again, it computes an HMAC-SHA256 fingerprint of the value and records the number of occurrences, the list of pod UIDs and namespaces, and first- and last-seen timestamps. This allows LogShield to detect that the same credential has leaked from more than one application without holding a second copy. Cross-cluster aggregation of lineage records remains future work.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 4.4: Vault and lineage component characteristics",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Property",
+        "Value"
+      ],
+      [
+        "Encryption scheme",
+        "Fernet symmetric encryption (AES-128, CBC mode, HMAC-SHA256 authentication)"
+      ],
+      [
+        "Storage backend",
+        "Local SQLite database"
+      ],
+      [
+        "Reference identifier format",
+        "SEC-YYYYMMDD-XXXX (for example SEC-20241115-A1B2)"
+      ],
+      [
+        "Retention",
+        "TTL-based auto-deletion; default configurable at deployment time"
+      ],
+      [
+        "Retrieval interface",
+        "Command-line interface: retrieve, sprawl-report, audit-log"
+      ],
+      [
+        "Lineage fingerprint",
+        "HMAC-SHA256 of the secret value; plaintext never duplicated"
+      ],
+      [
+        "Lineage scope (current)",
+        "Single node; cross-pod aggregation recorded via pod UID and namespace fields"
+      ],
+      [
+        "Fail-open behaviour",
+        "On vault or lineage exception, the redacted line is forwarded and the exception is logged"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "7. DEPLOYMENT DESIGN",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The sidecar is declared in the Kubernetes pod specification alongside the application container, sharing an emptyDir volume mounted at a common path. In the current demonstration deployment, this declaration is supplied in the manifests under k8s/deployment.yaml and k8s/rbac.yaml. In the planned Phase 6, a mutating admission webhook intercepts pod creation for labelled namespaces and adds the sidecar and volume automatically, so that the application team needs only to apply the namespace label. Figure 4.7 shows the webhook admission flow.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 4.7: Kubernetes mutating admission webhook flow (planned, Phase 6)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 4.5: Kubernetes resource roles",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Resource",
+        "Purpose"
+      ],
+      [
+        "Pod (two containers: app + sidecar)",
+        "Application and LogShield share a lifecycle; log volume is a shared emptyDir mount"
+      ],
+      [
+        "emptyDir volume",
+        "Carries the raw log file from the application container to the sidecar"
+      ],
+      [
+        "Namespace label (logshield.io/enabled=true)",
+        "Selector for the admission webhook; controls which namespaces receive automatic injection"
+      ],
+      [
+        "ServiceAccount, Role, RoleBinding",
+        "Grant the sidecar read-only access to pod metadata for lineage cross-checks"
+      ],
+      [
+        "MutatingWebhookConfiguration (Phase 6)",
+        "Intercepts pod creation and injects sidecar container and volume mount"
+      ],
+      [
+        "Kubernetes Secret (Phase 5)",
+        "Holds the vault encryption key; restricts access to the sidecar service account only"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "8. ERROR HANDLING DESIGN",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Errors that affect a single log line do not stop the pipeline. A scoring exception at any stage falls back to a PASS decision and the original line is forwarded, with the exception logged at WARNING level. A vault write failure is logged but does not block the redacted line from being emitted; the reference marker is written to the line with a note that retrieval may be unavailable. A lineage update failure is swallowed after logging; losing a fingerprint increment is less harmful than losing a line. Long lines above the 64 KB guard are truncated to the guard length before scoring and the truncation is flagged in the output. Binary and non-UTF-8 content is decoded with errors=\"replace\" so the pipeline does not crash on corrupt input.",
+    "style": "Normal"
+  }
+]

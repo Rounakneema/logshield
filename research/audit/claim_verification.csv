@@ -1,0 +1,7 @@
+Claim_ID,Claim_Topic,Reported_Value,Reconciled_Value,Status,Evidence_File
+CLM-01,Detection F1-Score,"0.9997 (Precision 1.000, Recall 0.9993)","0.9997 on Standard Supported Corpus (N=9,205); 0.9173 under Combined Adversarial Stress (N=10,000)",REPRODUCED_WITH_CLARIFICATION,reconciled_confusion_matrices.csv
+CLM-02,False Positive Rate,0.00% (0 false positives),"0 observed in 4,778 negative cases. 95% Clopper-Pearson upper bound is FPR <= 0.063% (Precision >= 99.93%)",REPRODUCED_WITH_STATISTICAL_RIGOR,reconciled_confusion_matrices.csv
+CLM-03,Adversarial Robustness,Zero detections across 6 variants,"Confirmed 0.0% recall on 795 adversarial cases (whitespace splits, base64 chunking). Stated as fundamental limitation",CONFIRMED_AS_LIMITATION,adversarial_breakdown.csv
+CLM-04,Latency & Throughput,0.586 ms latency vs 230 lines/s throughput,Reconciled: Latency varies by token density. Single-token benign is 0.0056 ms (178k lines/s); 238B real stream is 3.48 ms (287 lines/s),RECONCILED,reconciled_performance_metrics.csv
+CLM-05,Scoring Model,Conflicting docs (8-factor ML vs 6-factor Bayesian),"Codebase audit confirms: 6-Factor Weighted SCS Engine (Regex 35, Context 42, Entropy 14, Struct 9, Varname 0, Encoding 0)",AUDITED_AND_STANDARDIZED,implementation_inventory.md
+CLM-06,Cryptography,AES-256-GCM / Fernet,Codebase uses Fernet (AES-128 in CBC mode with HMAC-SHA256 authenticated encryption) + SHA-256 hash chaining + keyed HMAC-SHA256 lineage,VERIFIED_IN_CODE,sidecar/securereveal/vault.py

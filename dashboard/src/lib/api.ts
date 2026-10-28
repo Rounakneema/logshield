@@ -32,17 +32,29 @@ export async function fetchVault() {
   return res.json();
 }
 
-export async function fetchAuditLogs(params?: { limit?: number; offset?: number; actor?: string; action?: string; outcome?: string }) {
-  const q = new URLSearchParams();
-  if (params?.limit) q.set("limit", params.limit.toString());
-  if (params?.offset) q.set("offset", params.offset.toString());
-  if (params?.actor) q.set("actor", params.actor);
-  if (params?.action) q.set("action", params.action);
-  if (params?.outcome) q.set("outcome", params.outcome);
+export async function fetchAuditLogs(params?: { limit?: number; offset?: number; actor?: string; action?: string; outcome?: string; ref_id?: string; q?: string }) {
+  const query = new URLSearchParams();
+  if (params?.limit) query.set("limit", params.limit.toString());
+  if (params?.offset) query.set("offset", params.offset.toString());
+  if (params?.actor) query.set("actor", params.actor);
+  if (params?.action) query.set("action", params.action);
+  if (params?.outcome) query.set("outcome", params.outcome);
+  if (params?.ref_id) query.set("ref_id", params.ref_id);
+  if (params?.q) query.set("q", params.q);
 
-  const res = await fetch(`${API_BASE}/audit?${q.toString()}`, { cache: 'no-store' });
+  const res = await fetch(`${API_BASE}/audit?${query.toString()}`, { cache: 'no-store' });
   if (!res.ok) throw new Error("Failed to fetch audit logs");
   return res.json();
+}
+
+export async function fetchRecentReveals() {
+  try {
+    const res = await fetch(`${API_BASE}/audit/recent_reveals`, { cache: 'no-store' });
+    if (!res.ok) return [];
+    return res.json();
+  } catch (e) {
+    return [];
+  }
 }
 
 export async function verifyAudit() {
@@ -102,5 +114,37 @@ export async function simulatePipeline(line: string) {
     body: JSON.stringify({ line })
   });
   if (!res.ok) throw new Error("Failed to run simulation");
+  return res.json();
+}
+
+export async function fetchTopology() {
+  const res = await fetch(`${API_BASE}/topology`, { cache: 'no-store' });
+  if (!res.ok) throw new Error("Failed to fetch topology");
+  return res.json();
+}
+
+export async function toggleQuarantine(service: string, quarantine: boolean) {
+  const res = await fetch(`${API_BASE}/topology/quarantine`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ service, quarantine })
+  });
+  if (!res.ok) throw new Error("Failed to toggle quarantine");
+  return res.json();
+}
+
+export async function fetchPolicies() {
+  const res = await fetch(`${API_BASE}/policies`, { cache: 'no-store' });
+  if (!res.ok) return null;
+  return res.json();
+}
+
+export async function deployPolicies(profile: string, rules?: any[]) {
+  const res = await fetch(`${API_BASE}/policies`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ profile, rules })
+  });
+  if (!res.ok) throw new Error("Failed to deploy policies");
   return res.json();
 }

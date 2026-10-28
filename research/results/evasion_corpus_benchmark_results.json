@@ -1,0 +1,151 @@
+{
+  "benchmark_timestamp": 1792581666,
+  "corpus_size": 2400,
+  "baseline_detector": {
+    "detector": "Baseline Regex Detector",
+    "total_samples": 2400,
+    "confusion_matrix": {
+      "tp": 388,
+      "fp": 248,
+      "tn": 952,
+      "fn": 812
+    },
+    "precision": 61.01,
+    "recall": 32.33,
+    "f1_score": 0.4227,
+    "false_positive_rate": 20.67,
+    "evasion_recall": 32.2,
+    "evasion_bypass_rate": 67.8,
+    "latency_us": {
+      "mean": 110.91,
+      "p95": 148.8,
+      "p99": 169.0
+    },
+    "breakdown": {
+      "benign_control": {
+        "total": 1200,
+        "tp": 0,
+        "fp": 248,
+        "tn": 952,
+        "fn": 0,
+        "recall": 0.0
+      },
+      "url_encoded": {
+        "total": 200,
+        "tp": 67,
+        "fp": 0,
+        "tn": 0,
+        "fn": 133,
+        "recall": 33.5
+      },
+      "delimiter_split": {
+        "total": 400,
+        "tp": 140,
+        "fp": 0,
+        "tn": 0,
+        "fn": 260,
+        "recall": 35.0
+      },
+      "base64_wrapped": {
+        "total": 200,
+        "tp": 39,
+        "fp": 0,
+        "tn": 0,
+        "fn": 161,
+        "recall": 19.5
+      },
+      "hex_escaped": {
+        "total": 200,
+        "tp": 76,
+        "fp": 0,
+        "tn": 0,
+        "fn": 124,
+        "recall": 38.0
+      },
+      "raw_unobfuscated": {
+        "total": 200,
+        "tp": 66,
+        "fp": 0,
+        "tn": 0,
+        "fn": 134,
+        "recall": 33.0
+      }
+    }
+  },
+  "logshield_adaptive": {
+    "detector": "LogShield Adaptive Pipeline",
+    "total_samples": 2400,
+    "confusion_matrix": {
+      "tp": 1113,
+      "fp": 0,
+      "tn": 1200,
+      "fn": 87
+    },
+    "precision": 100.0,
+    "recall": 92.75,
+    "f1_score": 0.9624,
+    "false_positive_rate": 0.0,
+    "evasion_recall": 91.3,
+    "evasion_bypass_rate": 8.7,
+    "latency_us": {
+      "mean": 2203.23,
+      "p95": 4161.4,
+      "p99": 6595.8
+    },
+    "breakdown": {
+      "benign_control": {
+        "total": 1200,
+        "tp": 0,
+        "fp": 0,
+        "tn": 1200,
+        "fn": 0,
+        "recall": 0.0
+      },
+      "url_encoded": {
+        "total": 200,
+        "tp": 200,
+        "fp": 0,
+        "tn": 0,
+        "fn": 0,
+        "recall": 100.0
+      },
+      "delimiter_split": {
+        "total": 400,
+        "tp": 313,
+        "fp": 0,
+        "tn": 0,
+        "fn": 87,
+        "recall": 78.25
+      },
+      "base64_wrapped": {
+        "total": 200,
+        "tp": 200,
+        "fp": 0,
+        "tn": 0,
+        "fn": 0,
+        "recall": 100.0
+      },
+      "hex_escaped": {
+        "total": 200,
+        "tp": 200,
+        "fp": 0,
+        "tn": 0,
+        "fn": 0,
+        "recall": 100.0
+      },
+      "raw_unobfuscated": {
+        "total": 200,
+        "tp": 200,
+        "fp": 0,
+        "tn": 0,
+        "fn": 0,
+        "recall": 100.0
+      }
+    }
+  },
+  "summary": {
+    "evasion_bypass_reduction_pct": 59.1,
+    "evasion_recall_gain_pct": 59.1,
+    "f1_improvement": 0.5397
+  }
+}

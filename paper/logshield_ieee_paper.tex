@@ -1,0 +1,859 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{url}
+\usepackage{tabularx}
+\usepackage{listings}
+\usepackage{balance}
+\usepackage{microtype}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\lstset{
+    basicstyle=\ttfamily\scriptsize,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!10},
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{green!50!black},
+    stringstyle=\color{red!70!black},
+    showstringspaces=false
+}
+
+\begin{document}
+
+\title{LogShield: In-Pod Secret Sanitization and Autonomous Closed-Loop Containment for Kubernetes Log Streams\\
+\thanks{This research was conducted as part of the Capstone Project in Computer Engineering, focusing on Cloud-Native Security and Information Assurance.}
+}
+
+\author{\IEEEauthorblockN{Rounak Neema}
+\IEEEauthorblockA{\textit{Department of Computer Engineering} \\
+\textit{Mukesh Patel School of Technology Management \& Engineering}\\
+NMIMS University, Mumbai, India \\
+rounak.neema@nmims.edu}
+\and
+\IEEEauthorblockN{Capstone Research Group}
+\IEEEauthorblockA{\textit{Cloud-Native Security Laboratory} \\
+\textit{Project LogShield Initiative}\\
+Mumbai, India \\
+research@logshield.internal}
+}
+
+\maketitle
+
+\begin{abstract}
+Microservice architectures managed by Kubernetes clusters generate vast volumes of container telemetry. Under continuous delivery pressures, developers frequently emit confidential credentials into standard output streams, including database connection strings, cloud access keys, private keys, and OAuth headers (CWE-532). Existing defenses leave substantial gaps. Static scanners cannot inspect dynamically assembled runtime strings. Centralized cloud sanitizers require network egress of raw log lines, exposing organizations to transit interception and violating data privacy regulations such as GDPR and HIPAA. Furthermore, passive log redactors mask text after the fact but leave compromised credentials active in production environments, leaving systems exposed until manual triage occurs hours or days later.
+
+To address these vulnerabilities, we present \textbf{LogShield}, a Kubernetes sidecar framework for real-time secret sanitization, keyed privacy-preserving lineage tracking, and autonomous closed-loop containment within the pod boundary. LogShield combines an $O(N)$ Aho-Corasick prefilter, an adaptive sliding-window token fusion engine that defeats delimiter-split and hex-escaped obfuscation, a 6-factor Secret Confidence Score (SCS) model, and a tri-state decision gate. Masked credentials are encrypted locally in the SecureReveal Vault using Fernet authenticated encryption (AES-128-CBC with HMAC-SHA256) paired with a tamper-evident SHA-256 hash-chained audit ledger with remote SIEM anchoring. To track cross-service credential sprawl without disclosing plaintext strings, LogShield uses canonical keyed blind HMAC-SHA256 fingerprinting to unify multi-representation artifacts (raw, Base64, Hex, URL-encoded), supported by a scoped exemption engine for pre-registered credentials. When active leaks occur, LogShield evaluates blast radius and enforces automated mitigation via dynamic Kubernetes \texttt{V1NetworkPolicy} egress isolation and cloud credential rotation webhooks.
+
+We evaluate LogShield across an authoritative inventory of four experimental corpora, an isolated Kubernetes control plane testbed, and an end-to-end 5-microservice cluster. In standard ablation testing ($N=9,205$), LogShield achieves an F1-score of \textbf{0.9997} (Precision: 1.0000, Recall: 0.9993) with zero observed false positives on benign controls ($\text{FPR} \le 0.063\%$). On a balanced 2,400-sample adversarial evasion benchmark, Token Fusion improves detection recall from 32.20\% to \textbf{91.30\%}, reducing evasion bypasses from 67.80\% to \textbf{8.70\%} (a 59.1 percentage-point reduction) while eliminating false positives on benign high-entropy system tokens. In separate statistical validation on 20,000 held-out records, the ML-trained normalized model detects \textbf{+228 additional secrets} over domain-expert heuristic weights ($\chi^2 = 226.00, p = 4.43 \times 10^{-51}$) at a strictly zero false-positive threshold ($T=80$). In live Kubernetes testing, LogShield achieves automated workload egress quarantine with \textbf{16.7--26.7 ms} policy dispatch latency and verified zero collateral disruption on non-leaking workloads.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Cloud-Native Security, Kubernetes Sidecar, Log Sanitization, Secret Detection, CWE-532, Shannon Entropy, Aho-Corasick Automaton, NetworkPolicy Quarantine, Secret Lineage.
+\end{IEEEkeywords}
+
+\section{Introduction}
+\IEEEPARstart{C}{ontainerized} microservices managed by Kubernetes form the primary foundation for cloud-native software systems~\cite{k8s_docs}. Within these clusters, application logging provides the main source of telemetry for operational observability, distributed debugging, and security monitoring~\cite{barik2016bones, aghili2025protecting}. Large-scale cloud deployments routinely produce terabytes of unstructured application output each day~\cite{datadog2023logging}.
+
+High logging volumes create persistent security risks. Under rapid deployment schedules and complex runtime debugging requirements, developers regularly emit data structures containing raw credentials~\cite{zhi2020preliminary, ahmed2025secret}. Common examples include logging complete HTTP headers, dumping environment variables during exceptions, and printing database URIs during connection timeouts:
+\begin{lstlisting}[language=Python]
+logger.debug(f"DB URI: {DATABASE_URL}") 
+# postgres://admin:MyP@ssw0rd@prod-db:5432/app
+logger.error(f"Auth error: {headers['Authorization']}") 
+# Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+logger.info(f"Payment token: {STRIPE_SECRET_KEY}") 
+# sk_live_51H7x8...
+logger.debug(f"Environment: {os.environ}") 
+# AWS_SECRET_ACCESS_KEY=AKIAIOSFODNN7EXAMPLE...
+\end{lstlisting}
+
+When emitted to standard output (\texttt{stdout}), these strings pass directly to node-level forwarding daemons (such as Fluent Bit or Vector) and travel across network perimeters to centralized log platforms (such as Elasticsearch, Grafana Loki, or Datadog)~\cite{portillo2020safelog}. Once indexed, credentials persist in plain text, accessible to anyone with log read permissions~\cite{khoje2023securing}.
+
+This vulnerability corresponds to \textbf{CWE-532} (Insertion of Sensitive Information into Log File) and \textbf{CWE-798} (Use of Hard-coded Credentials)~\cite{mitre2022cwe}. Zhi et al.~\cite{zhi2020preliminary} examined 413 real-world vulnerabilities reported in the National Vulnerability Database (NVD) under CWE-532 and found that 67.8\% were exploitable across network perimeters, with 89.3\% requiring low attacker effort. In 2023 alone, GitGuardian observed over 10 million distinct leaked credentials in public repositories, a 67\% increase year-over-year~\cite{gitguardian2024sprawl}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig1_architecture.png}
+\caption{LogShield in-pod deployment: co-located within the Kubernetes pod, the sidecar intercepts raw logs over shared memory-backed \texttt{emptyDir} (\texttt{tmpfs}), executes adaptive detection and token fusion, isolates secrets in an authenticated vault, enforces autonomous egress quarantine, and emits sanitized logs to container \texttt{stdout}.}
+\label{fig:architecture}
+\end{figure}
+
+\subsection{Shortcomings of Current Countermeasures}
+Existing security controls fail to address runtime container log streams due to architectural limitations:
+\begin{enumerate}
+    \item \textit{Static Code Scanners:} Tools such as Gitleaks~\cite{gitleaks}, TruffleHog~\cite{trufflehog}, and detect-secrets~\cite{detect_secrets} analyze static source files and commit histories. They cannot inspect dynamic runtime strings generated during database transactions, runtime token grants, or third-party API calls.
+    \item \textit{Secrets Managers:} Platforms such as HashiCorp Vault or AWS Secrets Manager inject credentials securely into container memory, but they do not monitor whether an application subsequently prints those credentials into log streams.
+    \item \textit{Cloud-Side Log Sanitizers:} Scanners such as Datadog Sensitive Data Scanner or Google Cloud DLP operate downstream in centralized storage. Credentials must leave the container and cross the network before inspection occurs, introducing transit exposure and violating strict data residency requirements under GDPR Article 25~\cite{gdpr2016}, HIPAA 45 CFR Part 164~\cite{hipaa1996}, PCI-DSS v4.0 Requirement 8~\cite{pcidss2022}, and NIST SP 800-53 controls SC-28 and AU-9~\cite{nist2020sp80053}.
+    \item \textit{Single-Factor Heuristic Scanners:} Runtime filters relying strictly on regular expressions or Shannon entropy produce high false-positive rates ($>15\%$), mistaking benign UUIDv4 strings, MD5 ETags, and commit hashes for credentials~\cite{saha2020secrets}.
+    \item \textit{Passive Redaction Limitations:} Conventional redactors merely substitute strings with mask tokens. They do not assess multi-service blast radius, link obfuscated representations, or mitigate live credential compromise, leaving active credentials exposed until human security teams investigate hours or days later.
+\end{enumerate}
+
+\subsection{Contributions}
+We design and implement \textbf{LogShield}, a Kubernetes sidecar framework that transforms runtime log sanitization from a passive string replacement filter into an active, attack-resistant security control. This paper makes five primary contributions:
+\begin{itemize}
+    \item We design an in-pod interception model using memory-backed Kubernetes \texttt{emptyDir} IPC channels, augmented with an adaptive sliding-window Token Fusion engine that reconstructs whitespace-split and hex-escaped credentials before egress.
+    \item We construct a six-stage hybrid detection pipeline integrating an $O(N)$ Aho-Corasick keyword filter, a dynamic context engine, 1,361+ validated patterns from our catalog and SecretBench~\cite{basak2023secretbench}, a 6-factor Secret Confidence Score (SCS) model, and a tri-state decision gate.
+    \item We implement the SecureReveal Vault using Fernet authenticated encryption (AES-128-CBC with HMAC-SHA256) with ephemeral memory storage (\texttt{tmpfs}) and a tamper-evident SHA-256 hash-chained audit ledger with remote SIEM anchoring.
+    \item We formulate a transformation-aware blind lineage protocol using canonical keyed blind HMAC-SHA256 fingerprinting to unify multi-representation sprawl across services (raw, Base64, Hex, URL-encoded), combined with a scoped exemption engine for pre-registered credentials.
+    \item We engineer an autonomous closed-loop containment engine that evaluates blast radius and enforces real-time mitigation via dynamic Kubernetes \texttt{V1NetworkPolicy} egress quarantine and cloud credential rotation.
+    \item We validate LogShield across an authoritative inventory of experimental datasets, an isolated Kubernetes control plane testbed, and an adversarial security test suite. LogShield achieves an F1-score of \textbf{0.9997} on standard credentials, improves evasion recall from 32.20\% to \textbf{91.30\%}, executes pod containment policy dispatch in \textbf{16.7--26.7 ms}, and maintains an average end-to-end latency of \textbf{0.586 ms/line} (with benign bypass in \textbf{0.0056 ms}).
+\end{itemize}
+
+
+\section{Threat Model \& System Invariants}
+
+\subsection{System Model and Trust Assumptions}
+Workloads execute in multi-container pods across Kubernetes worker nodes. Containers within a pod share a local network namespace and storage volumes. Application containers write log entries to a shared memory-backed path. A node-level log shipper forwards container outputs to central storage.
+
+\textit{Trust Assumptions:} We assume the underlying Linux host kernel, containerd/Docker runtime, and the Kubernetes control plane (\texttt{kube-apiserver}) are uncompromised and correctly enforce pod cgroup, IPC, and network isolation boundaries. Compromise of the host kernel or direct physical RAM acquisition on worker nodes is outside the scope of container sidecar controls. Table~\ref{tab:notations} summarizes the primary mathematical notations used throughout this paper.
+
+\begin{table}[t]
+\caption{Summary of Mathematical Notations}
+\label{tab:notations}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\linewidth}{lX}
+\toprule
+\textbf{Symbol} & \textbf{Definition} \\
+\midrule
+$L, L'$ & Raw input log line and sanitized output log line \\
+$s, \hat{s}$ & Candidate secret string and prefix-stripped secret string \\
+$\Sigma, |\Sigma|$ & Character alphabet and alphabet cardinality \\
+$H(s)$ & Shannon entropy of token $s$ (bits/character) \\
+$\mu_H, \sigma_H$ & Empirical mean (4.46) and standard deviation (0.71) of secret entropy \\
+$\mathcal{D}_{keys}$ & Dictionary of 2,000+ sensitive keyword roots \\
+$\mathbf{x} \in \mathbb{R}^6$ & Normalized 6-dimensional feature vector \\
+$\mathbf{w} \in \mathbb{R}^6$ & Model weights for confidence scoring ($w_1,\dots,w_6$) \\
+$S(s)$ & Secret Confidence Score (SCS), integer $S \in [0, 100]$ \\
+$C_{ctx}$ & Continuous context score, $C_{ctx} \in [0.0, 1.0]$ \\
+$K_v, K_{lineage}$ & Node-local vault encryption key and HMAC lineage secret key \\
+$\phi_s^*$ & Canonical blind keyed fingerprint, $\text{HMAC-SHA256}(K_{lineage}, \mathcal{C}(s))$ \\
+$\mathcal{H}_k$ & Cryptographic hash of audit ledger block $k$ \\
+$\mathcal{G} = (\mathcal{V}, \mathcal{E})$ & Bipartite credential sprawl graph across pods and secrets \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Adversary Model}
+We define an adversary $\mathcal{A}$ with the following capabilities:
+\begin{itemize}
+    \item \textit{Downstream Telemetry Consumer:} $\mathcal{A}$ has read access to the central log repository or intermediate forwarders, actively searching for credentials to escalate privileges.
+    \item \textit{Network Eavesdropper:} $\mathcal{A}$ observes network traffic between worker nodes and cloud storage endpoints.
+    \item \textit{Malicious Application Container / Insider:} $\mathcal{A}$ controls an application container within the pod or possesses access to developer namespaces, attempting to recover leaked secrets from cluster telemetry or tamper with local audit databases.
+    \item \textit{Adversarial Obfuscator:} $\mathcal{A}$ or a misconfigured logger emits credentials using delimiter splitting (e.g., \texttt{AKIA IOSF...}), byte-level hex-escaping (\texttt{\textbackslash x41\textbackslash x4b...}), URL percent-encoding, or sub-token Base64 wrapping to evade static signature matching.
+\end{itemize}
+
+\subsection{Formal Security Invariants}
+LogShield enforces six formal security invariants:
+\begin{itemize}
+    \item \textit{Invariant 1 (Policy-Conditioned Sanitization Invariant):} For any candidate credential $s \in \mathcal{C}_{\text{cand}}$ identified within log line $L$, if its confidence score satisfies $S(s) \ge T_{\text{mask}}$ (where operational threshold $T_{\text{mask}} = 80$), then $s$ is strictly replaced with an opaque surrogate tag before emission:
+    \begin{equation}
+        \forall s \in \mathcal{C}_{\text{cand}}, \quad S(s) \ge T_{\text{mask}} \implies s \notin L' \land \tau(s) \in L'
+    \end{equation}
+    where $\tau(s) = [\text{REDACTED:SEC-}ID\text{:SCS=}S(s)]$. For borderline candidates in the triage band ($50 \le S < 80$), LogShield applies $[\text{FLAGGED:SCS=}S]$ tagging to preserve developer debugging context while alerting monitoring systems. In compliance-strict environments, configuring $T_{\text{mask}} = 50$ enforces unconditional redaction across both bands.
+    \item \textit{Invariant 2 (Vault Secrecy \& Authenticated Integrity):} Plaintext credentials are encrypted using Fernet authenticated encryption (AES-128-CBC with HMAC-SHA256) prior to storage:
+    \begin{equation}
+        C = \text{Fernet-Encrypt}_{K_v}(s)
+    \end{equation}
+    Ephemeral master key $K_v$ resides exclusively in memory-backed \texttt{tmpfs} RAM and is zeroized upon pod termination. Direct ciphertext alterations in storage fail HMAC verification and trigger immediate \texttt{TAMPER\_DETECTED} security events.
+    \item \textit{Invariant 3 (Keyed Privacy-Preserving Blind Lineage):} Lineage records store only keyed blind fingerprints:
+    \begin{equation}
+        \phi_s^* = \text{HMAC-SHA256}(K_{lineage}, \mathcal{C}(s))
+    \end{equation}
+    Without knowledge of 256-bit cluster key $K_{lineage}$, dictionary recovery of $s$ from $\phi_s^*$ is computationally infeasible, while multi-format transit representations conditionally normalize to the same canonical graph node.
+    \item \textit{Invariant 4 (Tamper-Evident Audit Ledger with Remote Anchoring):} Audit records are linked sequentially via SHA-256 hash chains. Alterations to local historical records invalidate chain head verification. Asynchronous streaming of block heads to external immutable SIEM storage prevents a local pod-level adversary from forging an internally consistent ledger.
+    \item \textit{Invariant 5 (Bounded Processing Complexity):} Stage 1 and 2 prefiltering executes in strictly linear $O(N)$ time over input length $N$. Expensive regular expression matching is gated by keyword verification and bounded by an asynchronous 5.0 ms watchdog timer, preventing algorithmic ReDoS attacks.
+    \item \textit{Invariant 6 (Workload-Scoped Egress Quarantine):} When containment policy triggers network quarantine for leaking pod $P_{\text{leak}}$, dynamic \texttt{V1NetworkPolicy} egress isolation applies strictly to $P_{\text{leak}}$:
+    \begin{equation}
+        \text{EgressBlocked}(P_{\text{leak}}) = \text{True}, \quad \forall P \neq P_{\text{leak}}, \ \text{EgressBlocked}(P) = \text{False}
+    \end{equation}
+    ensuring zero collateral disruption on innocent microservice workloads.
+\end{itemize}
+
+
+\section{Related Work}
+
+\subsection{Log Privacy and Anonymization}
+Zhi et al.~\cite{zhi2020preliminary} examined 413 real-world vulnerabilities reported under CWE-532, identifying whole-object logging (43.4\%) and incorrect permissions (17.5\%) as the primary causes of leakage. In an extensive 2025 ACM PACMSE study, Aghili, Li, and Khomh~\cite{aghili2025protecting} analyzed 25 public log datasets from the LogHub~\cite{zhu2023loghub} and Internet Traffic Archive collections, and surveyed 45 industry practitioners. Their empirical findings revealed that while 86.7\% of practitioners classify IP addresses and 82.2\% classify MAC addresses as sensitive, 52\% recognize file paths and 59\% recognize hostnames as sensitive identifiers. Crucially, 66.7\% of surveyed practitioners reported that existing log anonymization tools exhibit unacceptable computational overhead or lack real-time throughput for production telemetry.
+
+Foundational work by Slagell and Yurcik~\cite{slagell2004sharing, slagell2006flaim} categorized five attack vectors against log anonymization: fingerprinting, structure recognition, known mapping attacks, data injection, and cryptographic attacks. Portillo-Dominguez and Ayala-Rivera proposed SafeLog~\cite{portillo2020safelog}, demonstrating a 65\% reduction in log volume while preserving anomaly detection utility on the NASA-HTTP and Yahoo benchmark datasets. However, SafeLog operates as an external proxy rather than an in-pod component, incurring network serialization and configuration overhead. Khoje~\cite{khoje2023securing} examined data masking in B2B data platforms, highlighting the performance trade-offs between static masking, dynamic masking, and cryptographic transformation.
+
+\subsection{Secret Detection in Repositories and Code}
+Meli et al.~\cite{meli2019bad} analyzed public Git repositories, showing that thousands of valid credentials across 11 high-impact platforms are leaked daily. Basak et al.~\cite{basak2023secretbench} developed SecretBench, compiling 97,479 candidate strings from 818 repositories to benchmark 761 regular expressions. 
+
+Saha et al.~\cite{saha2020secrets} extracted 24 syntactic features from 300 repositories (representing approximately 28 million files) and applied an ensemble of Logistic Regression, Naive Bayes, and Support Vector Machines, achieving an 84\% precision on 5,000 candidate samples. Ahmed et al.~\cite{ahmed2025secret} curated 54,148 candidate instances from 50,680 GitHub issue reports across 27,121 repositories using 761 regexes from SecretBench. Their empirical evaluation revealed that raw regular expressions yield an F1-score of only 12.8\% due to false positives, whereas contextual transformer models (CodeBERT, RoBERTa) reach F1-scores between 92.7\% and 94.5\%. Concurrently, Rahman et al.~\cite{rahman2025secret} fine-tuned 7B and 8B models (LLaMA-3.1, Mistral, CodeLLaMA) on SecretBench, demonstrating that contextual fine-tuning significantly improves precision over regex baselines. Huang et al.~\cite{huang2024your} investigated 18 credential types across 6 neural code completion tools and empirically derived that secret tokens follow a Gaussian Shannon entropy distribution with a mean of $\mu_H = 4.46\text{ bits/char}$ and standard deviation $\sigma_H = 0.71$, establishing a 3-sigma lower rejection threshold at 2.33 bits/char. 
+
+While language models achieve high classification accuracy in offline settings, their computational requirements (multiple gigabytes of GPU memory and latencies exceeding 100 ms) make them impractical for real-time container log filtering. LogShield resolves this bottleneck by combining an $O(N)$ string automaton with a 6-factor statistical model that executes in under 0.6 ms on commodity CPUs.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth,height=0.22\textheight,keepaspectratio]{figures/fig2_pipeline.png}
+\caption{The LogShield 6-Stage Detection Pipeline: Ingestion, multi-line normalization, and sliding-window Token Fusion (Stage 1), Aho-Corasick candidate keyword filtering (Stage 2), dynamic context scoring (Stage 3), hierarchical pattern classification (Stage 4), 6-factor SCS scoring (Stage 5), and tri-state decision gating (Stage 6).}
+\label{fig:pipeline}
+\end{figure*}
+
+\section{System Architecture}
+
+\subsection{In-Pod Sidecar Interception Mechanics}
+LogShield deploys as a co-located sidecar container within the Kubernetes pod boundary (Fig.~\ref{fig:architecture}). This architecture enforces four critical operational invariants:
+\begin{enumerate}
+    \item \textit{Local Boundary Containment:} Interception occurs entirely within pod-local memory, preventing raw credentials from ever crossing container network namespaces or touching persistent disk.
+    \item \textit{Zero Application Source Modification:} Developers do not modify application code. Log streams are intercepted using standard Kubernetes volume mounts and container entrypoint redirection.
+    \item \textit{Exclusive Telemetry Egress:} The sidecar is the sole container attached to the pod's outward standard output stream. The application container's standard streams are routed exclusively into the pod-internal shared buffer. Consequently, node-level log shipping agents (e.g., Fluent Bit, Vector, Promtail) tailing `/var/log/pods/...` ingest only post-sanitized records.
+    \item \textit{Kernel Memory Protection:} Sidecar processes execute with non-root privileges (\texttt{runAsNonRoot: true}) and read-only root filesystems, restricting writable scratch space to ephemeral RAM (\texttt{tmpfs}).
+\end{enumerate}
+
+To establish the zero-copy in-pod data path, the pod specification configures a shared volume:
+\begin{lstlisting}[language=XML]
+volumes:
+- name: log-buffer
+  emptyDir:
+    medium: Memory
+    sizeLimit: 128Mi
+\end{lstlisting}
+The \texttt{medium: Memory} directive mounts a volatile RAM-backed \texttt{tmpfs} filesystem at \texttt{/shared/} across both containers. Telemetry streaming is supported via two interchangeable mechanisms:
+\begin{itemize}
+    \item \textit{POSIX FIFO Named Pipe (Streaming Mode):} An initialization step creates a FIFO at \texttt{/shared/app.fifo}. The application streams stdout/stderr directly into this pipe using a container entrypoint wrapper (\texttt{app 2>\&1 > /shared/app.fifo}) or framework appender (Logback, Winston, Log4j2). The LogShield sidecar reads continuously from the FIFO descriptor, ensuring zero file accumulation in RAM.
+    \item \textit{Shared Buffer with Inode Tracking (File Mode):} The application appends to \texttt{/shared/app.log}. The sidecar polls file descriptors asynchronously. To handle log rotation and prevent truncation errors, the sidecar monitors file inode numbers (\texttt{st\_ino}) and byte offsets, detecting \texttt{copytruncate} rotations seamlessly.
+\end{itemize}
+Non-newline-terminated partial writes are buffered in an internal per-stream buffer capped at 8 KB. If a line exceeds 64 KB, it is deterministically segmented into chunks to prevent memory-exhaustion Denial-of-Service attacks.
+
+\subsection{The Six-Stage Detection Pipeline}
+The detection pipeline executes in six sequential stages (Fig.~\ref{fig:pipeline}):
+
+\subsubsection{Stage 1: Preprocessor, Token Fusion, and Multi-Line Buffer}
+Input lines are normalized:
+\begin{itemize}
+    \item \textit{JSON Flattening:} Structured JSON logs are parsed into flat key-value pairs, preserving associations between keys (e.g., \texttt{client\_secret}) and values.
+    \item \textit{Adaptive Token Window Fusion:} Evaluates bigrams and trigrams around delimiter breaks (whitespace, hyphens, slashes) within key-value assignments to assemble split credentials (e.g., \texttt{AKIA IOSFODNN7EXAMPLE} $\to$ \texttt{AKIAIOSFODNN7EXAMPLE}), while tracking the original \texttt{raw\_slice} for precise in-place string substitution.
+    \item \textit{Hex Normalization Engine:} Detects contiguous byte-level escape sequences (\texttt{\textbackslash x41\textbackslash x4b...}) and normalizes them to raw ASCII strings for classifier inspection.
+    \item \textit{Sub-Token Base64 Unnesting:} Extracts and decodes embedded credentials from HTTP \texttt{Authorization: Basic} and \texttt{Bearer} headers.
+    \item \textit{Block Buffering:} Multi-line cryptographic blocks (such as PEM RSA private keys) delimited by \texttt{-----BEGIN} and \texttt{-----END} are assembled into a single evaluation block.
+    \item \textit{Buffer Length Guards:} Lines longer than 64 KB are segmented to prevent memory exhaustion attacks.
+\end{itemize}
+
+\subsubsection{Stage 2: Candidate Keyword Finder (Aho-Corasick)}
+Evaluating hundreds of regular expressions on every benign line would bottleneck logging throughput. In Stage 2, LogShield scans lines using an Aho-Corasick automaton~\cite{aho1975efficient} constructed over dictionary $\mathcal{D}_{keys}$ containing 2,000+ sensitive keywords and prefixes (e.g., \texttt{AKIA}, \texttt{sk\_live}, \texttt{ghp\_}, \texttt{password}, \texttt{token}, \texttt{bearer}, \texttt{secret}). 
+If the automaton matches zero keywords and no active evasion token was extracted in Stage 1, the line is classified as benign and forwarded directly to \texttt{stdout}. In production traces, \textbf{65\% of benign lines exit at Stage 2 in under 0.006 ms}.
+
+\subsubsection{Stage 3: Context Engine}
+Candidate lines surviving Stage 2 pass to the Context Engine, which evaluates surrounding text:
+\begin{itemize}
+    \item \textit{Positive Signals:} Proximity to assignment operators and sensitive variable names (\texttt{password=}, \texttt{api\_key=}, \texttt{secret:}).
+    \item \textit{Negative Signals:} Proximity to benign identifiers (\texttt{trace\_id}, \texttt{span\_id}, \texttt{request\_id}, \texttt{uuid}, \texttt{etag}, \texttt{checksum}).
+    \item \textit{Log Level Weight:} Telemetry tagged with \texttt{DEBUG} or \texttt{TRACE} receives higher baseline suspicion than \texttt{INFO} or \texttt{WARN}.
+\end{itemize}
+The engine produces a continuous context metric $C_{ctx} \in [0.0, 1.0]$.
+
+\subsubsection{Stage 4: Hierarchical Secret Classifier}
+Candidates are evaluated against \textbf{1,361+ compiled patterns}:
+\begin{itemize}
+    \item \textit{Pass 1 (600+ Specific Detectors):} High-precision structural expressions targeting specific cloud, AI, database, and payment platforms (e.g., AWS IAM keys, OpenAI API keys, Slack Webhooks, GitHub PATs, Stripe Secret Keys).
+    \item \textit{Pass 2 (755 SecretBench Patterns):} Curated patterns from SecretBench~\cite{basak2023secretbench}, anchored to vendor context windows ($L_{ctx} \le 40$ chars).
+    \item \textit{Pass 3 (6 Context-Gated High-FP Patterns):} Generic patterns identified by SecretBench as prone to false positives (e.g., raw 32-character hex strings, generic password assignments). These patterns execute \textbf{only when Stage 3 yields $C_{ctx} > 0.5$}, preventing false alarms on non-sensitive tokens.
+\end{itemize}
+
+\subsubsection{Stage 5: Confidence Scoring Model}
+The candidate string and its extracted features are evaluated by the 6-factor Secret Confidence Score (SCS) engine. The engine computes an integer score $S \in [0, 100]$ using a deterministic linear model weighted by feature reliability.
+
+\subsubsection{Stage 6: Tri-State Decision Gate \& Policy Modes}
+Based on score $S$, the decision gate partitions operational actions across three distinct policy regimes:
+\begin{itemize}
+    \item \textit{PASS ($S < 50$):} The token is judged benign. The line is forwarded to \texttt{stdout} untouched.
+    \item \textit{FLAG ($50 \le S < 80$):} The token exhibits moderate suspicion. The line is tagged with \texttt{[FLAGGED:SEC-XXXX:SCS=S]} for SIEM alerting, but the value remains unmasked to preserve operational debugging utility. In strict compliance deployments, administrators can configure $T_{\text{mask}} = 50$, collapsing the FLAG band into unconditional redaction.
+    \item \textit{REDACT ($S \ge 80$):} The token is classified as a verified secret. LogShield generates an opaque tracking ID \texttt{SEC-XXXX}, substitutes the secret with \texttt{[REDACTED:SEC-XXXX:SCS=S]}, writes the encrypted payload to the SecureReveal Vault, updates the HMAC sprawl lineage database, and evaluates autonomous containment.
+\end{itemize}
+Under unhandled runtime exceptions, the sidecar defaults to \textbf{Fail-Open with Immediate Alerting} (\texttt{logshield\_failopen\_active} metric fires) to prevent blocking microservice container stdout. Alternatively, environments with zero tolerance for plaintext leakage can enable \texttt{FAIL\_SECURE=true}, dropping unparseable lines.
+
+
+\section{Mathematical Formulation \& Algorithms}
+
+\subsection{Prefix-Stripped Shannon Entropy with Syntactic Prior}
+Let candidate string $s$ be defined over alphabet $\Sigma$. The Shannon entropy $H(s)$ in bits per character measures character distribution diversity~\cite{shannon1948mathematical}:
+\begin{equation}
+    H(s) = - \sum_{c \in \Sigma} P(c) \log_2 P(c)
+\end{equation}
+where $P(c) = \frac{n_c}{|s|}$, and $n_c$ denotes the count of character $c$ in $s$. In LogShield, Shannon entropy is employed as an empirical syntactic filter to discard natural language and repetitive tokens, not as a theoretical measure of cryptographic key strength.
+
+Fixed vendor prefixes (e.g., \texttt{AKIA} for AWS or \texttt{sk\_live\_} for Stripe) lower calculated entropy on short tokens, while pseudo-random non-secrets (such as UUIDv4 strings) produce high entropy ($H \approx 3.4$). LogShield strips known vendor prefixes prior to evaluation:
+\begin{equation}
+    \hat{s} = s \setminus \text{Prefix}(s)
+\end{equation}
+
+Based on empirical distributions across 15,084 verified secrets in SecretBench~\cite{basak2023secretbench}, alphanumeric API tokens follow a distribution with sample mean $\mu_H = 4.46\text{ bits/char}$ and standard deviation $\sigma_H = 0.71$, establishing a lower syntactic prior boundary $\tau_L = \mu_H - 3\sigma_H \approx 2.33\text{ bits/char}$~\cite{huang2024your}. We define the piecewise continuous entropy factor $f_{\text{entropy}}$ as:
+\begin{equation}
+    f_{\text{entropy}}(\hat{s}) = \begin{cases}
+    1.0, & H(\hat{s}) \ge \mu_H \\
+    \frac{H(\hat{s}) - \tau_L}{3\sigma_H}, & \tau_L \le H(\hat{s}) < \mu_H \\
+    0.0, & \text{otherwise}
+    \end{cases}
+\end{equation}
+Crucially, low-entropy structured credentials (such as JWTs with repetitive JSON headers, PEM certificates, or database URIs) fall below $\tau_L$. In LogShield, such credentials are not discarded: they receive positive weighting through the structural feature $f_{\text{struct}}$ (+13 points) and context proximity $f_{\text{context}}$ (+29 points), ensuring that low character entropy alone does not cause false negatives.
+
+\subsection{Machine Learning Formulation: Six-Factor Confidence Scoring (SCS)}
+For candidate $s$ in line $L$, we evaluate a 6-factor feature vector $\mathbf{x} = [f_{\text{regex}}, f_{\text{context}}, f_{\text{entropy}}, f_{\text{struct}}, f_{\text{varname}}, f_{\text{encoding}}]^T$. Model weights were fit by solving an L2-regularized logistic regression problem across 60,000 labeled log entries from our training partition:
+\begin{equation}
+    \min_{\mathbf{w}, b} \sum_{k=1}^{M} \ln\left(1 + \exp\left(-y_k (\mathbf{w}^T \mathbf{x}_k + b)\right)\right) + \frac{1}{2C} \|\mathbf{w}\|_2^2
+\end{equation}
+with $M=60,000$, inverse regularization strength $C=1.0$, and binary ground-truth labels $y_k \in \{-1, +1\}$. Optimization converged via L-BFGS in 22 iterations (intercept $b = -8.1475$). 
+
+To eliminate floating-point arithmetic and transcendental evaluations in the critical logging path, positive learned coefficients were normalized to integer weights summing to 100. Table~\ref{tab:weights} summarizes the feature definitions, unconstrained logistic regression coefficients, and normalized production weights.
+
+\begin{table}[t]
+\caption{Feature Space and Parameter Weights for the 6-Factor SCS Model}
+\label{tab:weights}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabularx}{\linewidth}{llccX}
+\toprule
+\textbf{Feature} & \textbf{Domain} & \textbf{Coeff. ($\beta_i$)} & \textbf{Weight ($w_i$)} & \textbf{Measurement Basis} \\
+\midrule
+$f_{\text{regex}}$ & $\{0.0, 1.0\}$ & +5.80 & 41 & Specific / catalog pattern match \\
+$f_{\text{context}}$ & $[0.0, 1.0]$ & +4.14 & 29 & Variable name proximity window \\
+$f_{\text{entropy}}$ & $[0.0, 1.0]$ & +2.38 & 17 & 3-sigma bounded Shannon entropy \\
+$f_{\text{struct}}$ & $\{0.0, 1.0\}$ & +1.82 & 13 & Checksums, JWT dots, PEM headers \\
+$f_{\text{varname}}$ & $\{0.0, 1.0\}$ & -0.71 & 0 & Subsumed into $f_{\text{context}}$ distance \\
+$f_{\text{encoding}}$ & $\{0.0, 1.0\}$ & -4.50 & 0 & Handled in Stage 1 preprocessor \\
+\midrule
+\textbf{Total} & & & \textbf{100} & Normalized Maximum Score $S \in [0, 100]$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The Secret Confidence Score $S(s) \in [0, 100]$ is computed as:
+\begin{equation}
+    S(s) = \min\left(100, \sum_{i=1}^{6} w_i \cdot f_i(s)\right)
+\end{equation}
+This integer formulation executes in under 14 microseconds per candidate token, providing both statistical grounding and predictable real-time execution.
+
+\subsection{Formal Algorithmic Complexity Breakdown}
+The computational complexity of LogShield is partitioned across its execution stages:
+\begin{itemize}
+    \item \textit{Stage 1 (Token Fusion \& Normalization):} $O(N)$ time and space over line byte-length $N$, bounded by a 3-token sliding window.
+    \item \textit{Stage 2 (Aho-Corasick Automaton):} $O(N + k)$ time, where $k$ is the number of keyword hits. The DFA graph over dictionary $\mathcal{D}_{keys}$ is compiled once at sidecar initialization ($O(|\mathcal{D}_{keys}|)$ memory).
+    \item \textit{Stage 3 (Context Evaluation):} $O(k \cdot L_{ctx})$ where context window $L_{ctx} \le 40$ chars.
+    \item \textit{Stage 4 (Hierarchical Regex Matching):} Evaluated only on candidate tokens ($m \le 2$ typical). To prevent catastrophic ReDoS backtracking, expression matching is bounded by an asynchronous 5.0 ms watchdog timer: $O(m \cdot \min(T_{\text{watchdog}}, R))$.
+    \item \textit{Stage 5 (Confidence Scoring):} $O(m)$ constant-time integer operations.
+    \item \textit{Stage 6 (Vaulting \& Containment):} $O(m \cdot (|s| + t_{\text{crypto}}))$ where secret length $|s| \le 4\text{ KB}$.
+\end{itemize}
+Overall worst-case processing is strictly bounded by the 64 KB line length limit and the 5.0 ms regex watchdog timer.
+
+\subsection{Transformation-Aware Canonical Blind Lineage Graphing}
+To identify whether a leaked credential has proliferated across microservices without exposing plaintext strings, LogShield uses canonical keyed blind fingerprinting. When credentials transit heterogeneous architectures, they appear across multiple representations (raw ASCII, Base64 headers, hex bytes, and URL-encoded query parameters). 
+
+LogShield defines a conditional canonicalization mapping $\mathcal{C}(s)$ executed in strict sequence:
+\begin{enumerate}
+    \item \textit{Whitespace Stripping:} Trims surrounding whitespace and quotes.
+    \item \textit{Conditional RFC 3986 URL Decoding:} Executed only if percent escape tokens (\texttt{\%[0-9A-Fa-f]\{2\}}) are present and decode to valid UTF-8.
+    \item \textit{Conditional Hex Unescaping:} Executed only if byte escapes (\texttt{\textbackslash x[0-9A-Fa-f]\{2\}}) are detected and the resulting bytes are printable.
+    \item \textit{Conditional Base64 Unnesting:} Executed only if the token length is a multiple of 4, conforms to Base64 alphabet rules, and decodes to printable ASCII/UTF-8. If decoding yields unprintable binary data or invalid padding, the raw token is retained to prevent false hash collisions.
+\end{enumerate}
+
+The sidecar computes the canonical blind fingerprint using HMAC-SHA256 with cluster key $K_{lineage}$:
+\begin{equation}
+    \phi_s^* = \text{HMAC-SHA256}(K_{lineage}, \mathcal{C}(s))
+\end{equation}
+
+When secret $s$ is detected in pod $P$, LogShield checks an administrative scoped exemption registry $\mathcal{E}_{exempt}$ containing tuples of $(\phi_s^*, \text{Namespace}, \text{AuthorizedWorkload}, \text{ExpiresAt})$. If the exposure matches an authorized workload within its registered namespace, lineage recording on the user-facing sprawl graph is suppressed to eliminate operational alert fatigue. Crucially, \textbf{the event is still recorded in the local tamper-evident audit ledger} for forensic accountability. If the same credential is observed in an unauthorized pod or outside its registered namespace, the exemption does not apply, and an immediate cross-service leak incident is declared.
+
+Otherwise, $(\phi_s^*, \text{PodUID}, \text{Namespace}, \mathcal{T}_{seen}, t)$ is committed to SQLite storage. The dashboard aggregates entries into bipartite sprawl graph $\mathcal{G} = (\mathcal{V}_{\text{pod}}, \mathcal{V}_{\text{sec}}, \mathcal{E})$ (Fig.~\ref{fig:lineage}). We define the Sprawl Risk Index $\mathcal{R}(\phi_s^*)$ as:
+\begin{equation}
+    \mathcal{R}(\phi_s^*) = \alpha \cdot \text{deg}(\phi_s^*) + \beta \cdot |\text{Namespaces}(\phi_s^*)| + \gamma \cdot \log_{10}(N_{\text{hits}} + 1)
+\end{equation}
+with parameters $\alpha=0.5, \beta=0.3, \gamma=0.2$, allowing security operators to prioritize remediation for credentials shared across multiple services.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig6_lineage.png}
+\caption{SecretLineage graph: Mapping cross-pod credential proliferation using canonical HMAC-SHA256 blind fingerprints across heterogeneous encodings.}
+\label{fig:lineage}
+\end{figure}
+
+\subsection{Autonomous Closed-Loop Containment Engine}
+LogShield transforms secret detection from a passive observer into an active Kubernetes control plane actor. Upon detecting credential exposure, the Containment Engine calculates the multi-service blast radius:
+\begin{equation}
+    \mathcal{B}(s) = \left|\{ \text{Service}(u) : (u, \phi_s^*) \in \mathcal{E} \}\right|
+\end{equation}
+and evaluates policy rules against credential category and severity:
+\begin{itemize}
+    \item \texttt{POL-ROTATE-CLOUD}: Dispatches rotation webhooks for leaked cloud, payment, or database credentials.
+    \item \texttt{POL-QUARANTINE-POD}: Automatically isolates the leaking workload by synthesizing and deploying a Kubernetes \texttt{V1NetworkPolicy} restricting all outbound egress traffic (permitting only DNS port 53 for security telemetry).
+    \item \texttt{POL-REVOKE-SESSION}: Dispatches invalidation calls to identity providers for compromised JWT or OAuth bearer tokens.
+    \item \texttt{POL-AUDIT-HOLD}: Locks the credential in the vault with a forward-secure receipt.
+\end{itemize}
+
+Algorithm~\ref{alg:interception} summarizes the complete in-pod stream interception, sanitization, vaulting, and autonomous containment loop.
+
+\begin{algorithm}[t]
+\caption{In-Pod Stream Interception and Autonomous Containment}
+\label{alg:interception}
+\begin{algorithmic}[1]
+\REQUIRE Log path $\mathcal{P}$, dictionary $\mathcal{D}_{keys}$, weights $\mathbf{w}$, key $K_{lineage}$
+\ENSURE Sanitized logs to stdout; automated containment actions
+\STATE Open file descriptor $fd \leftarrow \text{tail}(\mathcal{P})$
+\WHILE{true}
+    \STATE $L \leftarrow \textsc{ReadLine}(fd)$
+    \IF{$L = \text{EOF}$}
+        \STATE $\text{Sleep}(10\text{ ms})$; \textbf{continue}
+    \ENDIF
+    \STATE $(L_{norm}, \mathcal{T}_{fused}) \leftarrow \textsc{PreprocessAndFuse}(L)$
+    \IF{$\textsc{AhoCorasickScan}(L_{norm}, \mathcal{D}_{keys}) = \emptyset$ \textbf{and} $|\mathcal{T}_{fused}| = 0$}
+        \STATE $\textsc{PrintStdout}(L)$; \textbf{continue}
+    \ENDIF
+    \STATE $C_{ctx} \leftarrow \textsc{EvaluateContext}(L_{norm})$
+    \STATE $\mathcal{C}_{cand} \leftarrow \textsc{ExtractCandidates}(L_{norm}, \mathcal{T}_{fused}, C_{ctx})$
+    \STATE $L_{out} \leftarrow L$
+    \FORALL{$s \in \mathcal{C}_{cand}$}
+        \STATE $\mathbf{x} \leftarrow \textsc{BuildFeatureVector}(s, L_{norm}, C_{ctx})$
+        \STATE $S \leftarrow \min(100, \sum_{i=1}^6 w_i \cdot x_i)$
+        \IF{$S \ge 80$}
+            \STATE $\text{RefID} \leftarrow \textsc{GenerateRefID}()$
+            \STATE $\textsc{VaultInsert}(\text{RefID}, s, S)$
+            \STATE $\phi_s^* \leftarrow \text{HMAC-SHA256}(K_{lineage}, \textsc{Canonicalize}(s))$
+            \IF{$\phi_s^* \notin \mathcal{E}_{exempt}$}
+                \STATE $\textsc{LineageRecord}(\phi_s^*, \text{PodUID}, \text{Namespace})$
+                \STATE $\textsc{AssessAndContain}(\text{RefID}, \phi_s^*, \text{Category}(s), S)$
+            \ENDIF
+            \STATE $L_{out} \leftarrow \textsc{Replace}(L_{out}, s.\text{raw\_slice}, [\text{REDACTED:} \parallel \text{RefID}])$
+        \ELSIF{$50 \le S < 80$}
+            \STATE $L_{out} \leftarrow \textsc{AppendTag}(L_{out}, [\text{FLAGGED:SCS=} \parallel S])$
+        \ENDIF
+    \ENDFOR
+    \STATE $\textsc{PrintStdout}(L_{out})$
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Tamper-Evident Cryptographic Audit Ledger with Remote Anchoring}
+Every administrative and retrieval interaction with the vault is committed to an append-only cryptographic ledger chained sequentially via SHA-256:
+\begin{align}
+    \mathcal{H}_0 &= \text{SHA256}(\text{ClusterUID}) \\
+    \mathcal{H}_k &= \text{SHA256}(\mathcal{H}_{k-1} \parallel t_k \parallel \text{Actor}_k \parallel \text{Action}_k \nonumber \\
+    &\qquad\quad \parallel \text{RefID}_k \parallel \text{Outcome}_k)
+\end{align}
+Each entry is committed to SQLite Write-Ahead Logging storage prior to releasing any decrypted data. To prevent a local pod-level adversary from retroactively rewriting both SQLite records and the local hash head, LogShield integrates an asynchronous SIEM audit exporter (\texttt{AuditExporter}). The exporter flushes structured Elastic Common Schema (ECS) records containing $\mathcal{H}_k$, $\mathcal{H}_{k-1}$, and an HMAC signature to an external immutable monitoring store (e.g., AWS S3 Object Lock, external Splunk/Elasticsearch cluster, or Kubernetes Events).
+
+\textbf{Theorem 1 (Tamper-Evident Ledger Integrity with Remote Anchoring):} An adversary $\mathcal{A}$ gaining root access to the sidecar database at time $T > t_k$ cannot alter historical audit record $A_j$ ($j \le k$) without detection, provided that external anchor head $\mathcal{H}_{\text{anchor}} = \mathcal{H}_k$ was published to the external SIEM prior to $T$.
+
+\textit{Proof:} Let the recorded local hash chain be $(\mathcal{H}_0, \mathcal{H}_1, \dots, \mathcal{H}_k)$. Suppose $\mathcal{A}$ modifies historical record $A_j$ to $A_j' \neq A_j$. The updated hash at position $j$ becomes $\mathcal{H}_j' = \text{SHA256}(\mathcal{H}_{j-1} \parallel A_j')$. Because SHA-256 is second-preimage resistant, $\mathcal{H}_j' \neq \mathcal{H}_j$ with probability $1 - 2^{-256}$. For the locally altered chain to match the published anchor $\mathcal{H}_{\text{anchor}}$ held securely in external storage, $\mathcal{A}$ must find preimages for every subsequent block $m \in [j+1, k]$ such that $\mathcal{H}_k' = \mathcal{H}_{\text{anchor}}$. Computing such preimages requires $O(2^{256})$ cryptographic hash evaluations, which is computationally infeasible. Any modification or truncation is therefore detected by \texttt{verify\_audit\_chain()}, which locates the exact index $j$ where the chain was broken. \hfill $\blacksquare$
+
+
+\section{SecureReveal Vault Architecture}
+
+\subsection{Authenticated Storage Specification}
+The SecureReveal Vault stores credentials locally in SQLite under WAL mode. Each masked credential receives an opaque reference identifier:
+\begin{equation}
+    \text{RefID} = \text{SEC-} \parallel \text{Hex}(R)_{8}
+\end{equation}
+where $R \leftarrow \{0,1\}^{32}$ is sampled from a CSPRNG.
+
+Encryption is implemented using Fernet authenticated symmetric encryption (AES-128 in CBC mode with PKCS7 padding and HMAC-SHA256 authentication):
+\begin{equation}
+    C = \text{Fernet-Encrypt}_{K_v}(s)
+\end{equation}
+Ephemeral 256-bit vault key $K_v$ ($128\text{ bits encryption} + 128\text{ bits HMAC}$) resides strictly in memory-backed \texttt{tmpfs} RAM. Decryption validates the HMAC signature prior to cipher block processing, preventing chosen-ciphertext and padding oracle attacks. Corrupted or tampered ciphertext bytes trigger immediate retrieval failures and log a \texttt{TAMPER\_DETECTED} event in the audit chain.
+
+\subsection{Multi-Tiered Authentication and Constant-Time Verification}
+In cloud-native deployments, securing secret retrieval requires separating identity authentication from constant-time authorization verification:
+\begin{enumerate}
+    \item \textit{Workload Authentication (Tier 1):} Callers authenticate via **Kubernetes ServiceAccount Projected Tokens** (\texttt{/var/run/secrets/kubernetes.io/serviceaccount/token}) validated against the Kubernetes \texttt{TokenReview} API, or via Mutual TLS (mTLS) with SPIFFE/SPIRE workload certificates.
+    \item \textit{Role-Based Scope Authorization (Tier 2):} The authenticated identity and namespace are evaluated against administrative retrieval policies, ensuring cross-namespace secret access is strictly blocked.
+    \item \textit{Constant-Time Verification (Tier 3):} To prevent side-channel timing attacks that could allow an attacker to infer valid identity strings~\cite{khoje2023securing}, the SecureReveal API verifies caller tokens and identifiers using byte-by-byte constant-time comparisons:
+\begin{lstlisting}[language=Python]
+def verify_identity(actor: str) -> bool:
+    allowed = os.environ.get("AUTHORIZED_ACTORS", "").split(",")
+    return any(hmac.compare_digest(actor.strip().encode("utf-8"), 
+                                   item.strip().encode("utf-8")) 
+               for item in allowed)
+\end{lstlisting}
+\end{enumerate}
+
+Algorithm~\ref{alg:reveal} details the audit-first reveal protocol. The audit entry is committed to disk before releasing decrypted data, preventing unlogged credential access.
+
+\begin{algorithm}[t]
+\caption{SecureReveal Decryption and Audit Logging}
+\label{alg:reveal}
+\begin{algorithmic}[1]
+\REQUIRE RefID, Actor credentials $\mathcal{C}_{act}$, Reason, Vault key $K_v$
+\ENSURE Decrypted plaintext secret $s$ or authorization failure
+\STATE $t \leftarrow \text{CurrentTimestamp}()$
+\STATE $\textsc{CommitAuditEntry}(t, \mathcal{C}_{act}, \text{RefID}, \text{ATTEMPTED})$
+\IF{\textbf{not} $\textsc{ConstantTimeVerify}(\mathcal{C}_{act}, \textsc{AuthorizedActors})$}
+    \STATE $\textsc{CommitAuditEntry}(t, \mathcal{C}_{act}, \text{RefID}, \text{DENIED})$
+    \RETURN $\text{Error}(\text{Unauthorized})$
+\ENDIF
+\STATE $C, \text{expires\_at} \leftarrow \textsc{FetchVaultRecord}(\text{RefID})$
+\IF{$t > \text{expires\_at}$}
+    \STATE $\textsc{CommitAuditEntry}(t, \mathcal{C}_{act}, \text{RefID}, \text{EXPIRED})$
+    \RETURN $\text{Error}(\text{Expired})$
+\ENDIF
+\IF{$\textsc{ValidateFernetHMAC}(K_v, C)$}
+    \STATE $s \leftarrow \textsc{FernetDecrypt}(K_v, C)$
+    \STATE $\textsc{CommitAuditEntry}(t, \mathcal{C}_{act}, \text{RefID}, \text{SUCCESS})$
+    \RETURN $s$
+\ELSE
+    \STATE $\textsc{CommitAuditEntry}(t, \mathcal{C}_{act}, \text{RefID}, \text{TAMPER\_DETECTED})$
+    \RETURN $\text{Error}(\text{Integrity Verification Failed})$
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+
+\section{Experimental Evaluation}
+
+\subsection{Authoritative Dataset and Experiment Inventory}\label{sec:dataset_inventory}
+To provide reproducible mapping between evaluations, detector configurations, and reported metrics, Table~\ref{tab:dataset_inventory} documents the complete experimental inventory across all evaluation corpora.
+
+\begin{table*}[t]
+\caption{Authoritative Inventory of Evaluation Corpora, Partitions, Detector Configurations, and Reported Metrics}
+\label{tab:dataset_inventory}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\textwidth}{p{2.8cm}Xccccccc}
+\toprule
+\textbf{Corpus Identifier} & \textbf{Evaluated Pipeline Configuration} & \textbf{Total ($N$)} & \textbf{Pos / Neg} & \textbf{Threshold} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Target Reference} \\
+\midrule
+Standard In-the-Wild & Full Pipeline (AC + Ctx + Regex + SCS) & 9,205 & 4,427 / 4,778 & $T=80$ & \textbf{1.0000} & \textbf{0.9993} & \textbf{0.9997} & Sec.~\ref{sec:ablation} (Table~\ref{tab:ablation}) \\
+Combined Evasion Stress & Full Pipeline without Token Fusion & 10,000 & 5,222 / 4,778 & $T=80$ & \textbf{1.0000} & \textbf{0.8472} & \textbf{0.9173} & Sec.~\ref{sec:ablation} (Table~\ref{tab:ablation}) \\
+ML Training Partition & L2 Logistic Regression Fitting (L-BFGS) & 60,000 & 13,114 / 46,886 & Continuous & --- & --- & --- & Sec.~\ref{sec:ml_eval} (Weights Fit) \\
+ML Validation Split & Validation Threshold Sweep ($\max S_{y=0}=66.9$) & 20,000 & 4,369 / 15,631 & $T \in [50, 95]$ & 1.0000 & 0.7482 & 0.8559 & Sec.~\ref{sec:ml_eval} (Tuning) \\
+ML Held-Out Test Split & Isolated 6-Factor SCS Linear Scorer & 20,000 & 5,088 / 14,912 & $T=80$ & \textbf{1.0000} & \textbf{0.7514} & \textbf{0.8580} & Sec.~\ref{sec:ml_eval} (+228 Secrets) \\
+Adversarial Evasion & Stage 1 Token Fusion \& Normalization & 2,400 & 1,200 / 1,200 & $T=80$ & \textbf{1.0000} & \textbf{0.9130} & \textbf{0.9624} & Sec.~\ref{sec:evasion} (Table~\ref{tab:evasion_benchmark}) \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Machine Learning Model Training \& Statistical Grounding}\label{sec:ml_eval}
+We trained the 6-factor SCS model across all 60,000 labeled instances in the training partition. L2-regularized logistic regression converged via L-BFGS in 22 iterations (84.0 ms training time) with intercept $b = -8.1475$ and learned coefficients $\mathbf{\beta} = [+5.80, +4.14, +2.38, +1.82, -0.71, -4.50]^T$. Decision thresholds were calibrated strictly on the independent 20,000-line validation partition ($N_{\text{benign}} = 15,631$). The maximum score attained by any benign validation entry was $\max S(s)_{y=0} = 66.90$, establishing $T = \lfloor 66.90 \rfloor + 1 = 67$ as the minimum integer zero-FP threshold ($1\text{ FP}$ at $T=66$, strictly $0\text{ FP}$ for all $T \ge 67$). The operational threshold $T_{\text{mask}} = 80$ was selected to provide a $+13.10$-point safety margin above the maximum benign score.
+
+Evaluation across the 20,000-line held-out test split (5,088 secrets, 14,912 benign lines) establishes:
+\begin{itemize}
+    \item \textit{Discrimination Quality:} The normalized integer scoring model achieves an Area Under the ROC Curve (AUROC) of \textbf{0.9580} and Area Under the Precision-Recall Curve (AUPRC) of \textbf{0.9383}, while the raw continuous logistic probability function achieves an AUROC of \textbf{0.9608} (AUPRC = 0.9466).
+    \item \textit{Statistically Significant Secret Gains:} Compared to domain-expert heuristic weights ($S \ge 80$), the ML-trained normalized model increased detected secrets from 3,595 to 3,823 (+228 additional secrets, raising test recall from 70.66\% to \textbf{75.14\%} and F1-score from 0.8281 to \textbf{0.8580}). A paired McNemar test with Edwards continuity correction on positive ground-truth instances confirms that the 228 discordant detections ($b=0$ regressions, $c=228$ gained detections) represent a statistically significant gain ($\chi^2 = 226.00, p = 4.43 \times 10^{-51}$, odds ratio $\psi = \infty$, effect size $+4.48\%$, 95\% CI $[3.90\%, 5.06\%]$; conventional two-sided exact binomial test $p = 2 \times 0.5^{228} \approx 4.64 \times 10^{-69}$).
+    \item \textit{Zero False Positive Invariant:} Across all 14,912 benign records in the held-out test partition, the deployed normalized model produced zero false alarms ($\text{FP} = 0$, observed $\text{FPR} = 0.00\%$, $\text{Precision} = 1.0000$). By the Rule of Three, the 95\% upper confidence bound on the population false-positive rate is $\text{FPR}_{95\%} \le 0.0201\%$, with an exact Clopper-Pearson 95\% confidence interval for precision of $[0.9990, 1.0000]$.
+    \item \textit{Reconciling ML Recall with Full Pipeline Recall:} The 75.14\% recall on this partition reflects the isolated 6-factor linear classifier operating at the conservative zero-FP threshold ($T=80$) without multi-stage regex recovery. When evaluated under raw logistic probability ($\hat{p} \ge 0.50$), recall reaches 89.49\%. In the complete pipeline (Table~\ref{tab:ablation}), the multi-stage cascade achieves 99.93\% recall on standard in-the-wild streams by combining specific vendor patterns with dynamic context windows.
+\end{itemize}
+
+\subsection{Controlled Multi-Stage Ablation Analysis}\label{sec:ablation}
+Table~\ref{tab:ablation} and Fig.~\ref{fig:ablation} isolate the precise contribution of each architectural component across controlled benchmark suites.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig4_ablation.png}
+\caption{Controlled Ablation Study: Precision, Recall, and F1-score across detector configurations on the standard in-the-wild benchmark corpus ($N=9,205$).}
+\label{fig:ablation}
+\end{figure}
+
+\begin{table*}[t]
+\caption{Controlled 6-Stage Ablation Study: Isolating Individual Pipeline Mechanisms on Identical Benchmark Inputs}
+\label{tab:ablation}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabularx}{\textwidth}{p{1.6cm}Xcccccr}
+\toprule
+\textbf{Config} & \textbf{Architecture Description} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{F2-Score} & \textbf{FP Rate} & \textbf{Avg. Latency} \\
+\midrule
+\multicolumn{8}{l}{\textbf{Part A: Standard In-The-Wild Evaluation ($N=9,205$, Evasion Vectors Excluded)}} \\
+\midrule
+\textbf{Stage 1} & Regex-Only Baseline (600 standard rules) & 0.8437 & 1.0000 & 0.9152 & 0.9643 & 17.16\% & 6.528 ms \\
+\textbf{Stage 2} & Regex + Aho-Corasick Early-Exit Filter & 0.8437 & 1.0000 & 0.9152 & 0.9643 & 17.16\% & 0.209 ms \\
+\textbf{Stage 3} & Regex + AC + Context Window Proximity & 0.8944 & 0.9854 & 0.9377 & 0.9658 & 10.90\% & 0.384 ms \\
+\textbf{Stage 4} & Regex + AC + Context + 6-Factor SCS ($T=80$) & \textbf{1.0000} & \textbf{0.9993} & \textbf{0.9997} & \textbf{0.9995} & \textbf{0.00\%}* & \textbf{0.504 ms} \\
+\midrule
+\multicolumn{8}{l}{\textbf{Part B: Combined Adversarial Stress-Test ($N=10,000$, 795 Evasion Vectors Counted as False Negatives)}} \\
+\midrule
+\textbf{Stage 5} & Stage 4 Pipeline under Evasion (Token Fusion Disabled) & \textbf{1.0000} & 0.8472 & 0.9173 & 0.8737 & \textbf{0.00\%}* & 0.504 ms \\
+\textbf{Stage 6} & \textbf{LogShield Full Pipeline} (Stage 4 + Token Fusion Active) & \textbf{1.0000} & \textbf{0.9130}\dag & \textbf{0.9545}\dag & \textbf{0.9291}\dag & \textbf{0.00\%}* & \textbf{0.586 ms} \\
+\bottomrule
+\multicolumn{8}{p{\dimexpr\textwidth-2\tabcolsep\relax}}{*Rule-of-Three 95\% upper confidence bound for FPR in 4,778 true negatives is $\text{FPR} \le 0.063\%$. Exact Clopper-Pearson 95\% CI for Precision is $[0.9992, 1.0000]$. \dag Evaluated on the dedicated balanced adversarial evasion corpus ($N=2,400$).}
+\end{tabularx}
+\end{table*}
+
+\begin{enumerate}
+    \item \textit{Early-Exit Filtering (Stage 2):} Adding the Aho-Corasick automaton reduces mean processing latency from 6.528 ms to 0.209 ms per line—a \textbf{31.2x throughput speedup} on benign microservice logs.
+    \item \textit{Context Gating (Stage 3):} Evaluating variable name proximity suppresses isolated high-entropy non-secrets, improving precision from 0.8437 to 0.8944.
+    \item \textit{6-Factor SCS Scoring (Stage 4):} The linear scoring model completely eliminates false alarms on benign tokens ($\text{FP}=0, \text{FPR}=0.00\%$, Precision = 1.0000) while detecting 4,424 of 4,427 standard secrets ($FN=3$).
+    \item \textit{Token Fusion Contribution (Stage 5 vs. Stage 6):} When adversarial delimiter splits and hex escapes are introduced without Token Fusion (Stage 5), recall drops to 84.72\% ($FN=795$). Activating Stage 1 sliding-window Token Fusion (Stage 6) recovers detection recall to \textbf{91.30\%} across obfuscated vectors with only 0.082 ms latency overhead.
+\end{enumerate}
+
+\subsection{Adversarial Evasion Benchmark on 2,400 Labeled Samples}\label{sec:evasion}
+To systematically evaluate robustness against obfuscation, we benchmarked the Baseline Detector against LogShield on a balanced corpus of 2,400 labeled entries ($1,200\text{ secrets} + 1,200\text{ benign controls}$). Table~\ref{tab:evasion_benchmark} and Fig.~\ref{fig:evasion_benchmark} detail the empirical findings.
+
+\begin{table}[t]
+\caption{Adversarial Evasion Benchmark Breakdown ($N=2,400$)}
+\label{tab:evasion_benchmark}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabularx}{\linewidth}{lcccc}
+\toprule
+\textbf{Evasion Category} & \textbf{Samples} & \textbf{Baseline} & \textbf{LogShield} & \textbf{$\Delta$ Recall} \\
+\midrule
+Raw Unobfuscated & 200 & 33.0\% & \textbf{100.0\%} & +67.0\% \\
+Delimiter Split (:, -, space) & 400 & 35.0\% & \textbf{78.3\%} & +43.3\% \\
+Hex Escaped (\texttt{\textbackslash x41...}) & 200 & 38.0\% & \textbf{100.0\%} & +62.0\% \\
+Base64 Wrapped & 200 & 19.5\% & \textbf{100.0\%} & +80.5\% \\
+URL Encoded & 200 & 33.5\% & \textbf{100.0\%} & +66.5\% \\
+\midrule
+\textbf{Combined Evasion Recall} & \textbf{1,000} & \textbf{32.2\%} & \textbf{91.3\%} & \textbf{+59.1\%} \\
+\textbf{Evasion Bypass Rate} & \textbf{1,000} & \textbf{67.8\%} & \textbf{8.7\%} & \textbf{-59.1\%} \\
+\midrule
+Benign System Controls & 1,200 & 20.7\% FP & \textbf{0.0\% FP} & -20.7\% \\
+\textbf{Overall F1-Score} & \textbf{2,400} & \textbf{0.4227} & \textbf{0.9624} & \textbf{+0.5397} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig7_evasion_benchmark.png}
+\caption{Adversarial evasion benchmark: Detection recall comparison between Baseline Scanner and LogShield Adaptive Pipeline across five evasion categories ($N=2,400$).}
+\label{fig:evasion_benchmark}
+\end{figure}
+
+The baseline scanner exhibited a 67.80\% evasion bypass rate, failing on whitespace splits, hex escapes, and nested Base64 strings. In contrast, LogShield's Stage 1 Token Window Fusion and normalization engine achieved \textbf{91.30\% recall} across obfuscated samples, slashing evasion bypasses from 67.80\% to \textbf{8.70\%} while maintaining zero false positives on benign system controls.
+
+\subsection{Live Kubernetes Cluster Containment \& Phase-Delineated Latencies}\label{sec:containment}
+We deployed LogShield against an isolated Kubernetes control plane testbed with multiple active workloads (\texttt{auth-service-pod-1}, \texttt{payment-service-pod-2}, \texttt{notification-service-pod-3}). Fig.~\ref{fig:containment_lifecycle} illustrates the closed-loop workflow.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig8_containment_lifecycle.png}
+\caption{Closed-loop autonomous containment lifecycle: Real-time detection, SecretLineage blast radius correlation, dynamic \texttt{V1NetworkPolicy} egress quarantine, and zero collateral workload impact.}
+\label{fig:containment_lifecycle}
+\end{figure}
+
+To avoid conflating API request dispatch with cluster network data-plane enforcement, we measure containment across distinct lifecycle phases:
+\begin{enumerate}
+    \item \textit{Detection \& Policy Decision Latency (0.58 ms):} In-pod secret classification, score computation, and blast radius calculation against the local SQLite lineage graph.
+    \item \textit{API Synthesis \& Dispatch Latency (16.70--26.67 ms):} Constructing the Kubernetes \texttt{V1NetworkPolicy} specification and executing the REST API mutation against \texttt{kube-apiserver}.
+    \item \textit{CNI Network Enforcement Latency (100--350 ms):} Data-plane propagation where the cluster CNI controller (e.g., Cilium eBPF or Calico iptables) programs kernel packet filtering rules across node interfaces. Network policy quarantine strictly requires a CNI implementation that supports \texttt{NetworkPolicy} objects.
+    \item \textit{Cloud Credential Revocation Dispatch (15--25 ms dispatch, 1.2--4.8 s propagation):} Asynchronous webhook dispatch to external cloud provider APIs (AWS IAM, Stripe) to invalidate compromised credentials.
+    \item \textit{Workload Isolation Verification:} Verified that non-leaking workloads (\texttt{payment-service-pod-2}, \texttt{notification-service-pod-3}) maintained full egress connectivity without policy application. Validated safe rollback via \texttt{unquarantine\_pod()}, restoring normal egress upon operator clearance.
+\end{enumerate}
+
+\subsection{Multi-Baseline Comparative Evaluation}\label{sec:baseline_comparison}
+Table~\ref{tab:baseline_comparison} summarizes the comparative evaluation across Detection-Only (SIEM alerting), Detection-and-Redaction-Only (passive masking), and the complete LogShield system.
+
+\begin{table*}[t]
+\caption{Comprehensive Architectural and Quantitative Comparison: LogShield vs. Industry Baselines}
+\label{tab:baseline_comparison}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\textwidth}{p{3.2cm}XXXp{3.6cm}}
+\toprule
+\textbf{Evaluation Dimension} & \textbf{Baseline 1 (Detection-Only)} & \textbf{Baseline 2 (Redaction-Only)} & \textbf{LogShield Complete System} & \textbf{Architectural Significance} \\
+\midrule
+In-Transit Log Sanitization & 0\% (Plaintext exposed) & Partial (Fails on split/hex) & \textbf{100\% In-Place Masking} & Plaintext credentials never reach central log storage \\
+Adversarial Evasion Bypass & 67.8\% bypass rate & 67.8\% bypass rate & \textbf{8.7\% bypass rate} & 59.1 percentage-point reduction in evasion bypass \\
+Evasion Recall ($N=2,400$) & 32.2\% & 32.2\% & \textbf{91.3\%} & Robust detection under active obfuscation \\
+Cross-Encoding Sprawl Linkage & 0\% (No sprawl tracking) & 0\% (Exact hash fragments) & \textbf{100\% Canonical Blind HMAC} & Unifies raw, Base64 \& URL replicas into single incident \\
+Mean Time to Containment (MTTC) & Hours to Days (Manual) & Undefined (Keys stay active) & \textbf{16.70 -- 26.67 ms} & Closed-loop automated mitigation in milliseconds \\
+Authorized Credential Ingestion & False alert pollution & Sprawl graph pollution & \textbf{0.0\% Pollution (Exemption Engine)} & Zero-sprawl guarantee for pre-seeded secrets \\
+Compromised Pod Isolation & None & None & \textbf{Autonomous \texttt{V1NetworkPolicy}} & Real-time egress exfiltration blockage \\
+Cryptographic Audit Trail & None & Plain text logs & \textbf{Forward-Secure HMAC Chain} & Tamper detection with exact broken record index \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Latency and Throughput Across Operational Regimes}\label{sec:latency}
+Latency varies with payload length and candidate token density. Table~\ref{tab:latency_regimes} reconciles processing latency and throughput across five distinct operational regimes.
+
+\begin{table}[t]
+\caption{Latency and Throughput Across Operational Regimes}
+\label{tab:latency_regimes}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabularx}{\linewidth}{lXccc}
+\toprule
+\textbf{Operational Regime} & \textbf{Payload Characteristics} & \textbf{Latency} & \textbf{1 Core} & \textbf{16 Cores} \\
+\midrule
+Pure Benign (Bypass) & 140 B, 0 keywords & 0.0056 ms & 178.6k/s & 2.86M/s \\
+Microservice Stream & 120 B, 65\% benign & 0.2089 ms & 4,786/s & 76.6k/s \\
+Single Candidate & 180 B, 1 candidate & 0.5864 ms & 1,705/s & 27.3k/s \\
+Real Ingest (\texttt{logs.txt}) & 238 B, 25\% secrets & 3.4837 ms & 287/s & 4,592/s \\
+Diagnostic Dump & 1,024 B, multi-token & 13.3406 ms & 75/s & 1,200/s \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig5_benchmark.png}
+\caption{Processing latency breakdown across stages (left) and throughput scaling across payload sizes from 256 B to 8 KB (right).}
+\label{fig:benchmark}
+\end{figure}
+
+Throughput scales inversely with latency: $\text{Throughput} = 1 / \text{Latency}$ (Fig.~\ref{fig:benchmark}). On typical Kubernetes microservice streams where 65\% of lines contain no candidate keywords, single-core throughput is \textbf{4,786 lines/s} (413 million lines/day), easily surpassing the peak output of enterprise containers (500--1,500 lines/s). Under complex multi-token streams requiring cryptographic vaulting, horizontal sidecar scaling across 16 cores sustains \textbf{4,592 lines/s}.
+
+Table~\ref{tab:crypto_benchmarks} details component-level cryptographic throughput.
+
+\begin{table}[t]
+\caption{Cryptographic \& Lineage Latency Profile}
+\label{tab:crypto_benchmarks}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\linewidth}{lXcc}
+\toprule
+\textbf{Component} & \textbf{Cryptographic Operation} & \textbf{Mean Time} & \textbf{Throughput} \\
+\midrule
+SecureReveal & AES-128-CBC Encrypt \& Vault Store & 18.09 ms & 55.3 ops/s \\
+SecureReveal & Vault Retrieve \& Fernet Decrypt & 18.36 ms & 54.5 ops/s \\
+SecureReveal & Audit Hash Chain Verification & 5.66 ms & 176.6 ops/s \\
+SecretLineage & Blind HMAC-SHA256 Fingerprint & 6.66 ms & 150.2 ops/s \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Hard-Negative Suppression}
+LogShield demonstrated 100\% true-negative suppression ($433/433 = 100.0\%$) across eight challenging non-secret identifier categories: UUIDv4 tokens (128), Git commit hashes (74), MD5 ETags (65), Docker SHA-256 digests (52), hex strings (44), JWT non-secrets (35), Base64 data (22), and high-entropy random strings (13). All were classified as benign ($S < 50$), eliminating the alert fatigue typical of heuristic scanners.
+
+\subsection{Isolated Five-Microservice Kubernetes Testbed}
+We deployed LogShield across an isolated 5-microservice Kubernetes test cluster: \texttt{auth-service} (FastAPI/JWT), \texttt{payment-service} (Stripe gateway), \texttt{user-service} (PostgreSQL), \texttt{inventory-service} (Redis), and \texttt{notification-service} (Email/Slack). A headless \texttt{traffic-generator} simulated continuous HTTP transactions while intermittently injecting real-world credential leaks. 
+
+Across 100,000 generated transactions, LogShield intercepted and masked all tested credentials that satisfied the operational threshold ($S \ge 80$). The dashboard visualized cluster metrics in real time, executing verified SecureReveal decryptions and mapping credential sprawl across \texttt{auth-service} and \texttt{payment-service}. Throughout testing, each sidecar maintained a memory footprint under \textbf{45 MB RSS} and consumed less than \textbf{2.5\% of a single vCPU}.
+
+
+\section{Security Analysis \& Failure Modes}
+
+\subsection{ReDoS Resistance}
+Regular Expression Denial of Service (ReDoS) occurs when an attacker inputs strings that trigger exponential backtracking in regular expression engines. LogShield protects against this vulnerability via three mechanisms:
+\begin{enumerate}
+    \item \textit{Static Regex Auditing:} All 1,361+ expressions were audited to eliminate nested quantifiers (e.g., \texttt{(a+)+}).
+    \item \textit{Automaton Keyword Gating:} Expensive expressions in Stage 4 run only when corresponding vendor keywords are verified in Stage 2.
+    \item \textit{Watchdog Timers:} Candidate regex evaluations are bounded by an asynchronous 5.0 ms watchdog timer. If an expression exceeds this window, it is terminated and routed to a fallback heuristic.
+\end{enumerate}
+
+\subsection{Fail-Open vs. Fail-Secure Policy}
+In the event of an unhandled exception or memory limit warning, LogShield defaults to \textbf{Fail-Open with Immediate Alerting}. Log streams continue flowing to prevent application service interruption, while a Prometheus metric (\texttt{logshield\_failopen\_active}) fires to alert security operations teams. For high-assurance compliance environments where confidentiality overrides availability, administrators can configure \texttt{FAIL\_SECURE=true}, dropping unparseable lines.
+
+\subsection{Adversarial Robustness \& Edge-Case Verification}
+We subjected LogShield to 14 automated adversarial tests covering four attack vectors:
+\begin{itemize}
+    \item \textit{Exemption Abuse Defense:} Attempts to inject short strings ($<8$ chars) or generic words (\texttt{password}, \texttt{bearer}) are rejected by the Exemption Engine. Ingestion attempts by unauthorized actors return \texttt{PermissionError}. Cryptographic blind HMACs maintain collision resistance across 1-bit variations.
+    \item \textit{Vault Tampering Detection:} Unauthorized retrievals return \texttt{False} and log \texttt{DENIED}. Direct SQLite ciphertext byte corruption is caught by Fernet HMAC checks, returning \texttt{False} and logging \texttt{TAMPER\_DETECTED}. Manipulating audit entries breaks hash chaining, causing \texttt{verify\_audit\_chain()} to pinpoint the exact tampered row.
+    \item \textit{Event Replay Defenses:} Replaying an already executed containment action returns \texttt{error\_code=409} and \texttt{status="ALREADY\_EXECUTED"}, preventing duplicate Kubernetes mutations.
+    \item \textit{Response Action Failure Recovery:} When the Kubernetes API returns HTTP 403 Forbidden or rotation webhooks return HTTP 500, LogShield updates event status to \texttt{FAILED\_EXECUTION} and logs diagnostic details, preserving audit integrity without false success claims.
+\end{itemize}
+
+
+\section{Discussion \& Future Work}
+While LogShield provides automated in-pod protection, several research avenues remain open:
+\begin{itemize}
+    \item \textit{Kernel-Space eBPF Probing:} Implementing log interception directly inside the Linux kernel using extended Berkeley Packet Filters (eBPF) via \texttt{sockops} hooks could eliminate container context switching entirely.
+    \item \textit{Confidential Computing Enclaves:} Binding SecureReveal Vault keys to hardware enclaves (such as Intel SGX or AMD SEV) would protect credentials even if the host worker node kernel is compromised.
+    \item \textit{Post-Quantum Lineage Graphing:} Integrating lattice-based cryptographic primitives into blind fingerprinting to guard against future quantum cryptanalysis.
+\end{itemize}
+
+
+\section{Conclusion}
+Accidental credential exposure in application logs poses severe security and regulatory risks to cloud-native systems. In this paper, we presented \textbf{LogShield}, an in-pod Kubernetes sidecar framework that transforms runtime log sanitization from a passive string filter into an active security control. By integrating an $O(N)$ Aho-Corasick prefilter, an adaptive sliding-window Token Fusion engine, a 6-factor Secret Confidence Score model, an ephemeral Fernet authenticated vault, canonical transformation-aware blind lineage tracking, and autonomous Kubernetes network policy containment, LogShield achieves an F1-score of \textbf{0.9997} on standard credentials ($N=9,205$), improves evasion recall from 32.20\% to \textbf{91.30\%} on a 2,400-sample adversarial corpus, and executes closed-loop pod egress quarantine policy dispatch in \textbf{16.7--26.7 ms} with verified zero impact on innocent workloads in the test cluster. These results establish that active, real-time credential protection can be embedded directly into microservices without degrading telemetry throughput or developer velocity.
+
+\section*{Acknowledgment}
+The authors thank the maintainers of SecretBench, TruffleHog, and Gitleaks, as well as the faculty advisors at the Department of Computer Engineering for their constructive feedback throughout this research.
+
+\balance
+\bibliographystyle{IEEEtran}
+\begin{thebibliography}{00}
+
+\bibitem{k8s_docs}
+Kubernetes Authors, ``Kubernetes Documentation: Pods and Sidecar Containers,'' \url{https://kubernetes.io/docs/concepts/workloads/pods/}, 2024.
+
+\bibitem{barik2016bones}
+T.~Barik, R.~DeLine, S.~Drucker, and D.~Fisher, ``The bones of the system: A case study of logging and telemetry at Microsoft,'' in \emph{Proc. 38th Int. Conf. Softw. Eng. Companion (ICSE-C)}, 2016, pp. 92--101.
+
+\bibitem{aghili2025protecting}
+R.~Aghili, H.~Li, and F.~Khomh, ``Protecting Privacy in Software Logs: What Should Be Anonymized?'' \emph{Proc. ACM Softw. Eng.}, vol.~2, no.~ISSTA, pp. 1317--1338, 2025.
+
+\bibitem{datadog2023logging}
+Datadog Inc., ``Observability Pipeline Sizing and Architecture Guidelines,'' Datadog Technical Documentation, \url{https://docs.datadoghq.com/observability_pipelines/}, 2024.
+
+\bibitem{zhi2020preliminary}
+C.~Zhi, J.~Yin, J.~Han, and S.~Deng, ``A Preliminary Study on Sensitive Information Exposure Through Logging,'' in \emph{Proc. 2020 IEEE 27th Asia-Pacific Softw. Eng. Conf. (APSEC)}, 2020, pp. 470--474.
+
+\bibitem{ahmed2025secret}
+Z.~Wahab, S.~Ahmed, M.~N. Rahman, R.~Shahriyar, and G.~Uddin, ``Secret Leak Detection in Software Issue Reports using LLMs: A Comprehensive Evaluation,'' in \emph{Proc. IEEE/ACM Int. Conf. Mining Softw. Repositories (MSR)}, 2025; also \emph{arXiv:2410.23657}, 2024.
+
+\bibitem{gitguardian2024sprawl}
+GitGuardian, ``The State of Secrets Sprawl Report 2024,'' GitGuardian Security Research, \url{https://www.gitguardian.com/state-of-secrets-sprawl-report-2024}, 2024.
+
+\bibitem{mitre2022cwe}
+MITRE Corporation, ``CWE-532: Insertion of Sensitive Information into Log File,'' Common Weakness Enumeration, \url{https://cwe.mitre.org/data/definitions/532.html}, 2022.
+
+\bibitem{portillo2020safelog}
+A.~O. Portillo-Dominguez and V.~Ayala-Rivera, ``Towards an Efficient Log Data Protection in Software Systems through Data Minimization and Anonymization,'' in \emph{Proc. 7th Int. Conf. Softw. Eng. Res. Innov. (CONISOFT)}, IEEE, 2019, pp. 107--115.
+
+\bibitem{khoje2023securing}
+M.~Khoje, ``Securing Data Platforms: Strategic Masking Techniques for Privacy and Security for B2B Enterprise Data,'' \emph{Int. J. Comput. Trends Technol. (IJCTT)}, vol.~71, no.~11, pp. 46--54, Nov. 2023.
+
+\bibitem{gitleaks}
+Z.~Rice, ``Gitleaks: Protect and Discover Secrets in Code,'' \url{https://github.com/gitleaks/gitleaks}, 2024.
+
+\bibitem{trufflehog}
+D.~Ayrey, ``TruffleHog: High Entropy Secret Finder,'' \url{https://github.com/trufflesecurity/trufflehog}, 2024.
+
+\bibitem{detect_secrets}
+Yelp Inc., ``detect-secrets: An Enterprise-Friendly Secrets Detection Module,'' \url{https://github.com/Yelp/detect-secrets}, 2024.
+
+\bibitem{shannon1948mathematical}
+C.~E. Shannon, ``A Mathematical Theory of Communication,'' \emph{Bell Syst. Tech. J.}, vol.~27, no.~3, pp. 379--423, Jul. 1948.
+
+\bibitem{saha2020secrets}
+A.~Saha, T.~Denning, V.~Srikumar, and S.~K. Kasera, ``Secrets in Source Code: Reducing False Positives Using Machine Learning,'' in \emph{Proc. 2020 12th Int. Conf. Commun. Syst. Netw. (COMSNETS)}, Bengaluru, India, IEEE, 2020, pp. 168--175.
+
+\bibitem{basak2023secretbench}
+S.~K. Basak, L.~Neil, B.~Reaves, and L.~Williams, ``SecretBench: A Dataset of Software Secrets,'' in \emph{Proc. IEEE/ACM 20th Int. Conf. Mining Softw. Repositories (MSR)}, 2023, pp. 347--351.
+
+\bibitem{slagell2004sharing}
+A.~J. Slagell and W.~Yurcik, ``Sharing Computer Network Logs for Security and Privacy: A Motivation for New Methodologies of Anonymization,'' \emph{arXiv preprint cs/0409005}, 2004.
+
+\bibitem{slagell2006flaim}
+A.~J. Slagell, K.~Lakkaraju, and K.~Luo, ``FLAIM: A Multi-level Anonymization Framework for Computer and Network Logs,'' in \emph{Proc. 20th USENIX Large Installation System Administration Conf. (LISA)}, 2006, pp. 3--8.
+
+\bibitem{meli2019bad}
+M.~Meli, M.~R. McNiece, and B.~Reaves, ``How Bad Can It Git? Characterizing Secret Leakage in Public GitHub Repositories,'' in \emph{Proc. Netw. Distrib. Syst. Security Symp. (NDSS)}, 2019, pp. 1--15.
+
+\bibitem{rahman2025secret}
+M.~N. Rahman, S.~Ahmed, Z.~Wahab, S.~M. Sohan, and R.~Shahriyar, ``Secret Breach Detection in Source Code with Large Language Models,'' in \emph{Proc. 19th ACM/IEEE Int. Symp. Empirical Softw. Eng. Meas. (ESEM)}, 2025; also \emph{arXiv:2504.18784}, 2025.
+
+\bibitem{huang2024your}
+Y.~Huang, Y.~Li, W.~Wu, J.~Zhang, and M.~R. Lyu, ``Your Code Secret Belongs to Me: Neural Code Completion Tools Can Memorize Hard-Coded Credentials,'' \emph{Proc. ACM Softw. Eng.}, vol.~1, no.~FSE, Article 111, pp. 1--23, Jul. 2024.
+
+\bibitem{zhu2023loghub}
+J.~Zhu, S.~He, P.~He, J.~Liu, and M.~R. Lyu, ``Loghub: A Large Collection of System Log Datasets for AI-Driven Log Analytics,'' in \emph{Proc. 34th IEEE Int. Symp. Softw. Reliab. Eng. (ISSRE)}, 2023, pp. 355--366.
+
+\bibitem{aho1975efficient}
+A.~V. Aho and M.~J. Corasick, ``Efficient String Matching: An Aid to Bibliographic Search,'' \emph{Commun. ACM}, vol.~18, no.~6, pp. 333--340, Jun. 1975.
+
+\bibitem{gdpr2016}
+European Parliament and Council of the European Union, ``Regulation (EU) 2016/679 on the protection of natural persons with regard to the processing of personal data (GDPR),'' \emph{Official Journal of the European Union}, L119, pp. 1--88, May 2016.
+
+\bibitem{hipaa1996}
+United States Congress, ``Health Insurance Portability and Accountability Act of 1996 (HIPAA),'' Public Law 104-191, 104th Congress, Aug. 1996.
+
+\bibitem{pcidss2022}
+PCI Security Standards Council, ``Payment Card Industry (PCI) Data Security Standard: Requirements and Testing Procedures, Version 4.0,'' PCI SSC, Mar. 2022.
+
+\bibitem{nist2020sp80053}
+Joint Task Force, ``Security and Privacy Controls for Information Systems and Organizations,'' NIST Special Publication 800-53, Revision 5, National Institute of Standards and Technology, Sep. 2020.
+
+\end{thebibliography}
+
+\end{document}

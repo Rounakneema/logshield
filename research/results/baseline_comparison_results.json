@@ -1,0 +1,64 @@
+{
+  "dimensions": [
+    {
+      "dimension": "In-Transit Log Sanitization",
+      "baseline_1_detection_only": "0% (Plaintext exposed)",
+      "baseline_2_redaction_only": "Partial (Fails on split/hex)",
+      "logshield_complete": "100% In-Place Masking",
+      "significance": "Zero sensitive byte leakage to central SIEM"
+    },
+    {
+      "dimension": "Adversarial Evasion Bypass Rate",
+      "baseline_1_detection_only": "67.8% bypass",
+      "baseline_2_redaction_only": "67.8% bypass",
+      "logshield_complete": "8.7% bypass",
+      "significance": "59.1 percentage-point reduction in evasion bypass"
+    },
+    {
+      "dimension": "Evasion Detection Recall (N=2,400)",
+      "baseline_1_detection_only": "32.2%",
+      "baseline_2_redaction_only": "32.2%",
+      "logshield_complete": "91.3%",
+      "significance": "+59.1% recall under active evasion"
+    },
+    {
+      "dimension": "Cross-Encoding Sprawl Linkage",
+      "baseline_1_detection_only": "0% (No sprawl tracking)",
+      "baseline_2_redaction_only": "0% (Exact hash fragments)",
+      "logshield_complete": "100% Canonical HMAC Unification",
+      "significance": "Tracks raw, Base64 & URL replicas as 1 incident"
+    },
+    {
+      "dimension": "Mean Time to Containment (MTTC)",
+      "baseline_1_detection_only": "Hours to Days (Manual triage)",
+      "baseline_2_redaction_only": "Undefined (Credentials remain active)",
+      "logshield_complete": "26.67 ms",
+      "significance": "Closed-loop automated mitigation in milliseconds"
+    },
+    {
+      "dimension": "Authorized Secret Ingestion",
+      "baseline_1_detection_only": "False alert pollution",
+      "baseline_2_redaction_only": "Sprawl graph false alarms",
+      "logshield_complete": "0.0% Pollution (Exemption Engine)",
+      "significance": "Zero-sprawl guarantee for pre-seeded secrets"
+    },
+    {
+      "dimension": "Compromised Pod Isolation",
+      "baseline_1_detection_only": "None",
+      "baseline_2_redaction_only": "None",
+      "logshield_complete": "Autonomous V1NetworkPolicy",
+      "significance": "Immediate egress exfiltration blockage"
+    },
+    {
+      "dimension": "Cryptographic Audit Trail",
+      "baseline_1_detection_only": "None",
+      "baseline_2_redaction_only": "Plain text logs",
+      "logshield_complete": "Forward-Secure HMAC Hash Chain",
+      "significance": "Mathematically verifiable tamper detection"
+    }
+  ],
+  "measured_latencies": {
+    "containment_mttc_ms": 26.669,
+    "token_fusion_latency_ms": 1.286
+  }
+}

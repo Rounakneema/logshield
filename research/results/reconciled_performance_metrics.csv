@@ -1,0 +1,8 @@
+Workload_Scenario,Line_Size_Avg_Bytes,Evaluated_Lines,Latency_Mean_ms,Latency_P95_ms,Throughput_Lines_s_SingleCore,Throughput_Lines_s_16Cores,Measurement_Scope
+"Typical Microservice Log Stream (65% Benign, 1 token/line)",120 B,2000,0.2089,0.8241,4786.0,76576.0,Stage 1 to Stage 6 end-to-end
+Pure Benign Workload (Aho-Corasick Bypass),140 B,10000,0.0056,0.0108,178571.0,2857136.0,Stage 1 + Stage 2 Early Exit
+"Real-World Ingest Stream (logs.txt, 25% Secret Density)",238 B,5000,3.4837,6.3874,287.0,4592.0,"Full engine extraction, scoring, gating"
+Dense Multi-Token Record (256 B),256 B,200,4.3403,7.12,230.4,3686.4,Full multi-token classification
+"Dense Multi-Token Record (1,024 B / 1 KB)",1024 B,200,13.3406,18.45,75.0,1200.0,Full multi-token classification
+"Dense Multi-Token Record (4,096 B / 4 KB)",4096 B,50,47.7387,62.1,20.9,334.4,Full multi-token classification
+"Dense Multi-Token Record (8,192 B / 8 KB)",8192 B,50,92.7198,115.3,10.8,172.8,Full multi-token classification

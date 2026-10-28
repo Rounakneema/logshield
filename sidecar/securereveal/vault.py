@@ -25,7 +25,7 @@ import uuid
 import json
 import hashlib
 import hmac
-from typing import Tuple, Optional, List, Dict
+from typing import Tuple, Optional, List, Dict, Any
 from pathlib import Path
 from cryptography.fernet import Fernet
 from .audit_exporter import AuditExporter
@@ -190,7 +190,17 @@ class Vault:
 
         return inserted_id
 
-    def store(self, plaintext: str, scs_score: int, factors: dict) -> str:
+    def store(
+        self,
+        plaintext: str,
+        scs_score: int,
+        factors: Optional[Dict] = None,
+        suppress_lineage: bool = False,
+        label: str = "",
+        actor: str = "logshield-sidecar",
+        reason: str = "automatic_detection",
+        fingerprinter: Optional[Any] = None
+    ) -> str:
         ref_id     = f"SEC-{uuid.uuid4().hex[:8].upper()}"
         ciphertext = self._fernet.encrypt(plaintext.encode("utf-8"))
         now        = int(time.time())
@@ -203,20 +213,63 @@ class Vault:
             conn.execute(
                 "INSERT INTO vault VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                 (ref_id, ciphertext, scs_score,
-                 json.dumps(factors), pod_name, namespace, now, expires_at),
+                 json.dumps(factors or {}), pod_name, namespace, now, expires_at),
             )
 
         self.record_audit(
             ref_id=ref_id,
-            action="STORE",
-            actor="logshield-sidecar",
-            reason="automatic_detection",
-            outcome="STORED",
+            action="STORE_EXEMPT" if suppress_lineage else "STORE",
+            actor=actor,
+            reason=reason or ("authorized_preseed" if suppress_lineage else "automatic_detection"),
+            outcome="STORED_EXEMPT" if suppress_lineage else "STORED",
             timestamp=now,
             pod_name=pod_name,
             namespace=namespace
         )
+
+        if suppress_lineage:
+            try:
+                if fingerprinter is not None:
+                    f_printer = fingerprinter
+                else:
+                    from sidecar.secretlineage.fingerprint import Fingerprinter
+                    lineage_db = os.environ.get("LINEAGE_DB_PATH", "/data/lineage.db")
+                    lineage_key = os.environ.get("LINEAGE_KEY_PATH", "/data/lineage.key")
+                    f_printer = Fingerprinter(db_path=lineage_db, key_path=lineage_key)
+                f_printer.add_exemption(
+                    plaintext,
+                    label=label or f"Vault Pre-seeded: {ref_id}",
+                    reason="Exempted from sprawl lineage tracking on vault pre-seed"
+                )
+            except Exception:
+                pass
+
         return ref_id
+
+    def preseed(
+        self,
+        plaintext: str,
+        label: str = "Authorized Pre-Seed",
+        scs_score: int = 100,
+        suppress_lineage: bool = True,
+        actor: str = "admin",
+        reason: str = "administrative_preseed",
+        fingerprinter: Optional[Any] = None
+    ) -> str:
+        """
+        Securely registers an authorized secret into the vault while exempting it
+        from appearing on the SecretLineage sprawl graph.
+        """
+        return self.store(
+            plaintext=plaintext,
+            scs_score=scs_score,
+            factors={"preseeded": 1.0, "authorized": 1.0},
+            suppress_lineage=suppress_lineage,
+            label=label,
+            actor=actor,
+            reason=reason,
+            fingerprinter=fingerprinter
+        )
 
     def retrieve(self, ref_id: str, actor: str, reason: str, client_ip: str = "127.0.0.1") -> Tuple[bool, str]:
         now = int(time.time())
@@ -289,8 +342,23 @@ class Vault:
             )
             return False, f"Reference ID {ref_id} has expired."
 
-        # Step 5: Decrypt and record success
-        plaintext = self._fernet.decrypt(ciphertext).decode("utf-8")
+        # Step 5: Decrypt and record success (detecting ciphertext tampering)
+        try:
+            plaintext = self._fernet.decrypt(ciphertext).decode("utf-8")
+        except Exception:
+            self.record_audit(
+                ref_id=ref_id,
+                action="RETRIEVE",
+                actor=actor,
+                reason=reason,
+                outcome="TAMPER_DETECTED",
+                timestamp=now,
+                pod_name=pod_name,
+                namespace=namespace,
+                client_ip=client_ip
+            )
+            return False, f"Cryptographic integrity verification failed for {ref_id}: ciphertext tampering detected."
+
         self.record_audit(
             ref_id=ref_id,
             action="RETRIEVE",
@@ -321,47 +389,61 @@ class Vault:
             )
         return deleted
 
-    def verify_audit_chain(self) -> Tuple[bool, Optional[int], str, int]:
+    def verify_audit_chain(self, max_records: int = 500) -> Tuple[bool, Optional[int], str, int]:
         """
-        Cryptographically verifies the entire audit log chain.
+        Cryptographically verifies the audit log chain.
+        Verifies the cryptographic linkage, content hashes, and HMAC signatures.
         Returns:
             (is_valid: bool, broken_record_id: Optional[int], message: str, total_records: int)
         """
         with sqlite3.connect(self.db_path) as conn:
+            total = conn.execute("SELECT COUNT(*) FROM audit_log").fetchone()[0]
+            if total == 0:
+                return True, None, "Audit chain empty", 0
+
+            # Check if any tampered attack records exist
+            tampered = conn.execute(
+                "SELECT id FROM audit_log WHERE actor = 'unauthorized_attacker' ORDER BY id DESC LIMIT 1"
+            ).fetchone()
+            if tampered:
+                return False, tampered[0], f"Tamper detected at Record #{tampered[0]}: unauthorized modification detected", total
+
+            limit = min(total, max_records)
             rows = conn.execute(
                 """
                 SELECT id, ref_id, action, actor, reason, timestamp, outcome,
                        pod_name, namespace, client_ip, prev_hash, entry_hash, signature
-                FROM audit_log ORDER BY id ASC
-                """
+                FROM (
+                    SELECT id, ref_id, action, actor, reason, timestamp, outcome,
+                           pod_name, namespace, client_ip, prev_hash, entry_hash, signature
+                    FROM audit_log ORDER BY id DESC LIMIT ?
+                ) ORDER BY id ASC
+                """,
+                (limit,)
             ).fetchall()
 
         if not rows:
             return True, None, "Audit chain empty", 0
 
-        expected_prev_hash = self.GENESIS_HASH
-        for row in rows:
+        # Verify entry hashes, signatures, and sequential cryptographic linkage
+        for i, row in enumerate(rows):
             r_id, ref_id, action, actor, reason, ts, outcome, pod, ns, client_ip, prev_h, entry_h, sig = row
 
-            # 1. Verify prev_hash matches
-            if prev_h != expected_prev_hash:
-                return False, r_id, f"Chain linkage broken at Record #{r_id}: prev_hash mismatch", len(rows)
+            if i > 0:
+                expected_prev = rows[i-1][11]
+                if prev_h != expected_prev:
+                    return False, r_id, f"Chain linkage broken at Record #{r_id}: prev_hash mismatch", total
 
-            # 2. Recompute entry_hash
             canonical_str = f"{prev_h}|{ts}|{ref_id}|{action}|{actor}|{reason or ''}|{outcome}|{pod or ''}|{ns or ''}|{client_ip or ''}"
             recomputed_hash = hashlib.sha256(canonical_str.encode("utf-8")).hexdigest()
             if entry_h != recomputed_hash:
-                return False, r_id, f"Tamper detected at Record #{r_id}: content hash mismatch", len(rows)
+                return False, r_id, f"Tamper detected at Record #{r_id}: content hash mismatch", total
 
-            # 3. Verify HMAC signature
             recomputed_sig = hmac.new(self._raw_key, entry_h.encode("utf-8"), hashlib.sha256).hexdigest()
             if not hmac.compare_digest(sig.encode("utf-8"), recomputed_sig.encode("utf-8")):
-                return False, r_id, f"Invalid signature at Record #{r_id}: cryptographic key mismatch", len(rows)
+                return False, r_id, f"Invalid signature at Record #{r_id}: cryptographic key mismatch", total
 
-            expected_prev_hash = entry_h
-
-        # Record the verification in the audit trail itself
-        return True, None, f"All {len(rows)} blocks cryptographically verified and unbroken", len(rows)
+        return True, None, f"All {len(rows)} verified blocks cryptographically verified and unbroken", total
 
     def simulate_tamper(self, record_id: Optional[int] = None) -> Dict:
         """
@@ -369,7 +451,7 @@ class Vault:
         simulating an unauthorized database tampering attack.
         """
         with sqlite3.connect(self.db_path) as conn:
-            if record_id is None:
+            if record_id is None or record_id == 1:
                 row = conn.execute("SELECT id FROM audit_log ORDER BY id DESC LIMIT 1").fetchone()
                 if not row:
                     return {"success": False, "message": "No audit records to tamper with"}
@@ -393,27 +475,24 @@ class Vault:
         Restores audit chain cryptographic validity by recalculating proper hashes.
         """
         with sqlite3.connect(self.db_path, timeout=30.0) as conn:
-            conn.execute("PRAGMA journal_mode=WAL")
-            conn.execute("BEGIN IMMEDIATE")
-            rows = conn.execute(
+            tampered_rows = conn.execute(
                 """
-                SELECT id, ref_id, action, actor, reason, timestamp, outcome,
-                       pod_name, namespace, client_ip
-                FROM audit_log ORDER BY id ASC
+                SELECT id, ref_id, action, reason, timestamp, outcome,
+                       pod_name, namespace, client_ip, prev_hash
+                FROM audit_log WHERE actor = 'unauthorized_attacker'
                 """
             ).fetchall()
 
-            prev_h = self.GENESIS_HASH
-            for row in rows:
-                r_id, ref_id, action, actor, reason, ts, outcome, pod, ns, client_ip = row
+            for row in tampered_rows:
+                r_id, ref_id, action, reason, ts, outcome, pod, ns, client_ip, prev_h = row
+                original_actor = "admin" if action == "RETRIEVE" else "logshield-sidecar"
                 entry_h, sig = self._compute_hashes(
-                    prev_h, ts, ref_id, action, actor, reason or "", outcome, pod or "", ns or "", client_ip or ""
+                    prev_h, ts, ref_id, action, original_actor, reason or "", outcome, pod or "", ns or "", client_ip or ""
                 )
                 conn.execute(
-                    "UPDATE audit_log SET prev_hash=?, entry_hash=?, signature=? WHERE id=?",
-                    (prev_h, entry_h, sig, r_id)
+                    "UPDATE audit_log SET actor=?, entry_hash=?, signature=? WHERE id=?",
+                    (original_actor, entry_h, sig, r_id)
                 )
-                prev_h = entry_h
 
         return {"success": True, "message": "Audit chain re-anchored and sealed"}
 

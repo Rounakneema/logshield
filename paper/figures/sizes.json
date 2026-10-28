@@ -1,0 +1,166 @@
+{
+ "fig10_lineage": [
+  2570,
+  1215
+ ],
+ "fig1_architecture": [
+  2385,
+  1261
+ ],
+ "fig2_decision_gate": [
+  3120,
+  1290
+ ],
+ "fig2_pipeline": [
+  2617,
+  1076
+ ],
+ "fig3_decision_gate": [
+  3120,
+  1290
+ ],
+ "fig4_ablation": [
+  2670,
+  1350
+ ],
+ "fig4_benchmark": [
+  3120,
+  1290
+ ],
+ "fig5_ablation": [
+  2670,
+  1350
+ ],
+ "fig5_benchmark": [
+  3120,
+  1290
+ ],
+ "fig6_lineage": [
+  2570,
+  1215
+ ],
+ "fig6_pipeline": [
+  2617,
+  1076
+ ],
+ "fig7_architecture": [
+  2385,
+  1261
+ ],
+ "fig7_evasion_benchmark": [
+  2480,
+  1230
+ ],
+ "fig8_containment_lifecycle": [
+  2472,
+  1168
+ ],
+ "fig_contributions_summary": [
+  3560,
+  1677
+ ],
+ "fig_latency_throughput": [
+  4154,
+  1620
+ ],
+ "fig_ml_training": [
+  5370,
+  1470
+ ],
+ "f_ablation": [
+  2180,
+  894
+ ],
+ "f_arch": [
+  2385,
+  1261
+ ],
+ "f_before_after": [
+  1980,
+  680
+ ],
+ "f_containment": [
+  1745,
+  686
+ ],
+ "f_edge": [
+  1380,
+  659
+ ],
+ "f_er": [
+  1745,
+  964
+ ],
+ "f_evasion": [
+  2182,
+  939
+ ],
+ "f_gap": [
+  1024,
+  325
+ ],
+ "f_gate": [
+  1639,
+  471
+ ],
+ "f_latency": [
+  2379,
+  850
+ ],
+ "f_lineage": [
+  1434,
+  732
+ ],
+ "f_ml": [
+  2580,
+  833
+ ],
+ "f_pillars": [
+  1589,
+  686
+ ],
+ "f_pipeline": [
+  2617,
+  1076
+ ],
+ "f_regex3": [
+  1280,
+  663
+ ],
+ "f_sequence": [
+  1900,
+  933
+ ],
+ "f_status": [
+  1580,
+  578
+ ],
+ "f_threat": [
+  1745,
+  964
+ ],
+ "f_timeline": [
+  2181,
+  1016
+ ],
+ "f_webhook": [
+  1745,
+  563
+ ],
+ "ph_cli": [
+  1434,
+  563
+ ],
+ "ph_console": [
+  1434,
+  563
+ ],
+ "ph_pods": [
+  1434,
+  563
+ ],
+ "logo": [
+  300,
+  310
+ ]
+}

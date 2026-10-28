@@ -1,0 +1,1195 @@
+[
+  {
+    "type": "p",
+    "text": "CHAPTER 7: CONCLUSION AND FUTURE WORK",
+    "style": "Heading 1"
+  },
+  {
+    "type": "p",
+    "text": "1. CONCLUSION",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "This project set out to address a specific gap: containerised applications accidentally log secrets, and no open-source, Kubernetes-native runtime engine was found in the reviewed literature that intercepts, sanitises and vaults secrets before the log line exits the pod.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "At the interim stage, the sidecar entry point, the six-factor scoring engine, the full pattern catalog, the encrypted vault (SecureReveal), the HMAC-based lineage tracker (SecretLineage) and all supporting scripts and tests are implemented, benchmarked on the 1,847-line labelled dataset, and functioning end to end. On this dataset the system achieves a precision of 0.942, a recall of 0.918, an F1-score of 0.930 and a throughput above 12,000 lines per second at sub-millisecond average latency. All three latency percentiles are comfortably within the 5 ms design target.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Fifteen critical engine-level edge cases have been enumerated and, for each, a current behaviour, a correct behaviour and a specific required fix have been identified, providing a concrete basis for the hardening work planned in the remaining phases. The four-way ablation experiment designed to test whether the multi-stage, multi-factor pipeline outperforms simpler baselines has been fully specified but not yet executed.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "The project's contribution is the combination, rather than any single mechanism. No existing open-source tool was found that unifies vendor-specific pattern matching, contextual signals, a learned confidence model, local encrypted vaulting and cross-application lineage tracking, all operating before a log line leaves its pod. The positioning of this contribution relative to Datadog Observability Pipelines and other pipeline-level redaction products is stated explicitly in Chapter 2: those products operate in a separate aggregation tier and do not provide a recoverable vault or a lineage store.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "2. ADVANTAGES, LIMITATIONS AND APPLICATIONS",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "i. Advantages",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Pre-ingestion protection: the secret never leaves the pod, so there is zero network traversal before detection.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Sub-5-millisecond latency: demonstrated on the benchmark; the Aho–Corasick early exit (Phase 3) will reduce average latency further.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "ML-calibrated confidence: weights are learned from labelled data rather than fixed as heuristics, so the model can be improved by adding training examples.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Context-aware: the context factor eliminates UUID and MD5-hash false positives that entropy alone would flag.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Recoverable vault: unlike a masking-only tool, LogShield keeps the original value encrypted and retrievable for incident response.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Secret lineage: the HMAC fingerprint tracks secret sprawl across pods and namespaces without exposing the secret again.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Zero-configuration developer experience: a namespace label triggers automatic injection via the mutating webhook (Phase 6).",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Open and auditable: all patterns, weights and scoring logic are visible, with no dependency on a third-party cloud service.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "ii. Limitations",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Validation to date is on a single 1,847-line dataset; behaviour on the 50,000-line ablation corpus and on novel secret formats is not yet established.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "The four-way ablation experiment, the primary research validation, has not yet been executed.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Lineage tracking currently operates at the level of a single node; cross-pod, cross-cluster aggregation requires the central aggregator of future work.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "No active credential-validity checking exists yet; the system detects format and context, not whether a credential is currently live.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "The system has been exercised on a demonstration deployment rather than hardened for production; webhook TLS automation is scheduled for Phase 6.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Context-keyword detection is English-centric; the generic, format-based detectors are language-agnostic but the keyword list would need extension for other languages.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "The implementation has not been independently audited.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "iii. Applications",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Table 7.1: Applications of LogShield",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Use case",
+        "Value delivered"
+      ],
+      [
+        "DevSecOps shift-left",
+        "Catches secrets at development and test runtime rather than after they reach production logs"
+      ],
+      [
+        "Compliance (PCI-DSS, SOC 2, HIPAA)",
+        "Demonstrates runtime secret protection with an auditable trail via the vault"
+      ],
+      [
+        "Incident response",
+        "SecureReveal allows an authorised engineer to retrieve a specific secret during an investigation"
+      ],
+      [
+        "Secret-sprawl remediation",
+        "The lineage report shows every pod and namespace sharing a leaked credential"
+      ],
+      [
+        "CI/CD pipeline guard",
+        "A sidecar in build pods prevents secret leakage into build logs"
+      ],
+      [
+        "Multi-tenant SaaS",
+        "Per-tenant namespace isolation prevents cross-tenant log contamination"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "3. FUTURE WORK",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "i. Ten-Week Phased Plan",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Table 7.2 and Figure 7.1 set out the ten-week plan for the remainder of the project.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 7.2: Phase-by-phase implementation plan",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Week",
+        "Phase",
+        "Key deliverable"
+      ],
+      [
+        "1",
+        "Phase 0: SecretBench integration",
+        "761-pattern JSON import and context-gated high-false-positive denylist"
+      ],
+      [
+        "2",
+        "Phase 1: Multi-stage pipeline",
+        "Preprocessor, Context Engine and Secret Classifier as explicit, separate modules"
+      ],
+      [
+        "3",
+        "Phase 2: ML weight optimisation",
+        "50,000-line labelled dataset, trained weights and the ablation experiment executed"
+      ],
+      [
+        "4",
+        "Phase 3: Performance hardening",
+        "Aho–Corasick prefilter, multi-line block buffering and asynchronous I/O"
+      ],
+      [
+        "5",
+        "Phase 4: Active validity checking",
+        "Analyzer module with AWS, Slack, GitHub and Stripe validity checks"
+      ],
+      [
+        "6",
+        "Phase 5: Vault and audit hardening",
+        "WAL mode, constant-time authentication, SIEM audit exporter, vault key in a Kubernetes Secret"
+      ],
+      [
+        "7",
+        "Phase 6: Kubernetes automation",
+        "Dockerfiles, mutating admission webhook and end-to-end test script"
+      ],
+      [
+        "8",
+        "Phase 7: Observability",
+        "Prometheus metrics endpoint and a Grafana dashboard"
+      ],
+      [
+        "9",
+        "Phase 8: Enterprise dashboard",
+        "Next.js lineage graph and SecureReveal retrieval portal"
+      ],
+      [
+        "10",
+        "Phase 9: Production readiness",
+        "Full 50,000-line benchmark, chaos testing and continuous-integration workflow"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "Figure 7.1: Ten-week implementation timeline (status at interim review: core built, phases scheduled)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ii. Longer-Term Research Directions",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "eBPF kernel hook: moving detection to kernel space for zero-copy, sidecar-less overhead; the sidecar would no longer be needed.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Rust rewrite: a Rust implementation for memory safety and higher throughput, potentially compiled to WebAssembly for portability.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Central lineage aggregator: a cross-cluster secret-sprawl graph that aggregates fingerprint records from multiple nodes and clusters.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Online retraining pipeline: a feedback loop that learns continuously from false-positive and false-negative reports from operators.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Policy-as-code layer: a LogShieldPolicy custom resource expressed as OPA/Rego rules per namespace, replacing the fixed threshold configuration.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Secrets manager integration: automated rotation of any credential found to be live via the Phase 4 Analyzer, using Vault or Sealed Secrets.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "REFERENCES",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[1].  MITRE Corporation, “CWE-532: Insertion of Sensitive Information into Log File”, Common Weakness Enumeration, online resource, https://cwe.mitre.org/data/definitions/532.html, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[2].  OWASP Foundation, “Logging Cheat Sheet”, OWASP Cheat Sheet Series, online resource, https://cheatsheetseries.owasp.org, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[3].  Fluent Bit Project, “Fluent Bit Documentation”, online resource, https://docs.fluentbit.io, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[4].  M. Meli, M. R. McNiece, B. Reaves, “How Bad Can It Git? Characterizing Secret Leakage in Public GitHub Repositories”, Network and Distributed System Security Symposium (NDSS), 2019.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[5].  S. K. Basak, L. Neil, B. Reaves, L. Williams, “SecretBench: A Dataset of Software Secrets”, 20th IEEE/ACM International Conference on Mining Software Repositories (MSR), 2023, DOI: 10.1109/MSR59073.2023.00053.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[6].  Gitleaks Contributors, “Gitleaks”, software repository, https://github.com/gitleaks/gitleaks, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[7].  Truffle Security, “TruffleHog”, software repository, https://github.com/trufflesecurity/trufflehog, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[8].  Yelp, “detect-secrets: An Enterprise Friendly Way of Detecting and Preventing Secrets in Code”, software repository, https://github.com/Yelp/detect-secrets, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[9].  HashiCorp, “Vault Documentation”, online resource, https://developer.hashicorp.com/vault/docs, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[10].  Amazon Web Services, “AWS Secrets Manager User Guide”, online resource, https://docs.aws.amazon.com/secretsmanager, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[11].  The Falco Project (CNCF), “Falco: Cloud Native Runtime Security”, online resource, https://falco.org, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[12].  Datadog, “Sensitive Data Scanner”, Datadog Documentation, online resource, https://docs.datadoghq.com/sensitive_data_scanner/, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[13].  Amazon Web Services, “Amazon Macie User Guide”, online resource, https://docs.aws.amazon.com/macie, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[14].  Google Cloud, “Sensitive Data Protection Documentation”, online resource, https://cloud.google.com/sensitive-data-protection/docs, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[15].  Datadog, “Redact Sensitive Data From Your Logs On-Prem by Using Observability Pipelines”, Datadog Blog, online resource, https://www.datadoghq.com/blog/observability-pipelines-sensitive-data-redaction, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[16].  Amazon Web Services, “Help Protect Sensitive Log Data with Masking” (CloudWatch Logs data protection policies), Amazon CloudWatch Logs User Guide, online resource, https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[17].  GitGuardian, “Secrets Detection and Specific Detectors”, GitGuardian Documentation, online resource, https://docs.gitguardian.com, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[18].  C. E. Shannon, “A Mathematical Theory of Communication”, Bell System Technical Journal, 1948, Vol. 27, No. 3, Page No. 379–423.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[19].  A. V. Aho, M. J. Corasick, “Efficient String Matching: An Aid to Bibliographic Search”, Communications of the ACM, 1975, Vol. 18, No. 6, Page No. 333–340.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[20].  D. W. Hosmer, S. Lemeshow, R. X. Sturdivant, “Applied Logistic Regression”, 3rd Edition, Wiley, 2013.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[21].  A. Niculescu-Mizil, R. Caruana, “Predicting Good Probabilities with Supervised Learning”, 22nd International Conference on Machine Learning (ICML), 2005, Page No. 625–632.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[22].  C. L. Lawson, R. J. Hanson, “Solving Least Squares Problems”, Classics in Applied Mathematics, SIAM, 1995.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[23].  F. Pedregosa et al., “Scikit-learn: Machine Learning in Python”, Journal of Machine Learning Research, 2011, Vol. 12, Page No. 2825–2830.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[24].  D. M. W. Powers, “Evaluation: From Precision, Recall and F-Measure to ROC, Informedness, Markedness and Correlation”, Journal of Machine Learning Technologies, 2011, Vol. 2, No. 1, Page No. 37–63.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[25].  R. Kohavi, “A Study of Cross-Validation and Bootstrap for Accuracy Estimation and Model Selection”, 14th International Joint Conference on Artificial Intelligence (IJCAI), 1995, Page No. 1137–1143.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[26].  S. He, J. Zhu, P. He, M. R. Lyu, “Loghub: A Large Collection of System Log Datasets towards Automated Log Analytics”, arXiv:2008.06448, 2020.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[27].  Python Cryptographic Authority, “Fernet (Symmetric Encryption)”, cryptography documentation, online resource, https://cryptography.io/en/latest/fernet/, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[28].  National Institute of Standards and Technology, “Advanced Encryption Standard (AES)”, Federal Information Processing Standard (FIPS) 197, 2001 (updated 2023), DOI: 10.6028/NIST.FIPS.197-upd1.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[29].  M. Dworkin, “Recommendation for Block Cipher Modes of Operation: Methods and Techniques”, NIST Special Publication 800-38A, December 2001.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[30].  Fernet Project, “Fernet Specification”, online resource, https://github.com/fernet/spec, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[31].  SQLite Consortium, “SQLite Documentation”, online resource, https://www.sqlite.org/docs.html, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[32].  H. Krawczyk, M. Bellare, R. Canetti, “HMAC: Keyed-Hashing for Message Authentication”, RFC 2104, Internet Engineering Task Force, February 1997.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[33].  National Institute of Standards and Technology, “The Keyed-Hash Message Authentication Code (HMAC)”, Federal Information Processing Standard (FIPS) 198-1, July 2008.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[34].  B. Burns, D. Oppenheimer, “Design Patterns for Container-based Distributed Systems”, 8th USENIX Workshop on Hot Topics in Cloud Computing (HotCloud), 2016.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[35].  The Kubernetes Authors, “Volumes (emptyDir)”, Kubernetes Documentation, online resource, https://kubernetes.io/docs/concepts/storage/volumes/, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[36].  The Kubernetes Authors, “Dynamic Admission Control (Mutating Admission Webhooks)”, Kubernetes Documentation, online resource, https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[37].  Prometheus Authors (CNCF), “Prometheus Client Libraries”, online resource, https://prometheus.io/docs/instrumenting/clientlibs/, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "APPENDIX A: SAMPLE CODE",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "The listings below are representative excerpts from the project repository. Comments have been shortened and some lines omitted; the repository is the authoritative source.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Sidecar entry point — tailing loop (sidecar/main.py)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "def tail_file(path: str, engine: SCSEngine, vault: VaultStore,",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "lineage: LineageTracker) -> None:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "with open(path, errors='replace') as f:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "f.seek(0, 2)          # start at end; avoid replaying old log",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "while True:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "raw = f.readline()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "if not raw:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "time.sleep(0.01); continue",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "process_line(raw.rstrip('\\n'), engine, vault, lineage)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "def process_line(line: str, engine, vault, lineage) -> None:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "if len(line) > MAX_LINE_LEN:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "line = line[:MAX_LINE_LEN] + ' [TRUNCATED]'",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "results = engine.score(line)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "for r in results:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "if r.decision == 'MASK':",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ref_id = vault.store(r.token, r.score, r.factors)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "lineage.record(r.token, current_pod_uid())",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "line = line.replace(r.token, f'[REDACTED:{ref_id}:SCS={r.score}]')",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "elif r.decision == 'FLAG':",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ref_id = vault.reserve_id()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "line = line.replace(r.token, f'[FLAGGED:{ref_id}:SCS={r.score}]')",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "print(line, flush=True)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Confidence model — feature construction (sidecar/logmask/scorer.py)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "def build_feature_vector(token: str, ctx: ContextResult,",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "regex: RegexResult) -> np.ndarray:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "return np.array([",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "regex.score,                       # pattern match quality",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "entropy(token),                    # Shannon entropy, normalised",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "varname_proximity(token, ctx.line),# distance to nearest key label",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "structural_score(token),           # length and charset check",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ctx.context_score,                 # Stage 3 output",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "encoding_signal(token),            # Base64 / URL / hex flag",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "length_norm(len(token)),            # 0-1 over typical key lengths",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "-dict_word_fraction(token),        # penalty for dictionary words",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "])",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "def score(self, token: str, ctx, regex) -> int:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "fv = build_feature_vector(token, ctx, regex)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "prob = self.model.predict_proba([fv])[0][1]",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "return int(round(calibrate(prob) * 100))",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Vault store — Fernet encrypt and persist (sidecar/securereveal/vault.py)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "def store(self, plaintext: str, score: int, factors: dict) -> str:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ref_id = self._make_ref_id()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ciphertext = self.fernet.encrypt(plaintext.encode()).decode()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "expiry = time.time() + self.ttl_seconds",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "self.db.execute(",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "'INSERT INTO vault VALUES (?,?,?,?,?,?,?)',",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "(ref_id, ciphertext, score, json.dumps(factors),",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "time.time(), expiry, self.pod_uid))",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "self.db.commit()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "return ref_id",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "def retrieve(self, ref_id: str, actor: str) -> str:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "row = self.db.execute(",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "'SELECT ciphertext FROM vault WHERE ref_id=? AND expiry>?',",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "(ref_id, time.time())).fetchone()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "if not row: raise KeyError(f'{ref_id} not found or expired')",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "self._audit(actor, 'retrieve', ref_id)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "return self.fernet.decrypt(row[0].encode()).decode()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Lineage fingerprint — HMAC-SHA256 record (sidecar/secretlineage/fingerprint.py)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "def record(self, plaintext: str, pod_uid: str, namespace: str) -> None:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "digest = hmac.new(self.key, plaintext.encode(), 'sha256').hexdigest()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "existing = self.db.execute(",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "'SELECT occurrences, pod_uids FROM fingerprints WHERE hmac_hash=?',",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "(digest,)).fetchone()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "if existing:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "pods = json.loads(existing[1])",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "if pod_uid not in pods: pods.append(pod_uid)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "self.db.execute(",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "'UPDATE fingerprints SET occurrences=occurrences+1,",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "pod_uids=?, last_seen=? WHERE hmac_hash=?',",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "(json.dumps(pods), time.time(), digest))",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "else:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "self.db.execute(",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "'INSERT INTO fingerprints VALUES (?,?,?,?,?,?)',",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "(digest, 1, json.dumps([pod_uid]), json.dumps([namespace]),",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "time.time(), time.time()))",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "self.db.commit()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "APPENDIX B: DATA SHEETS",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table B.1: Detection engine fixed size parameters",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Object or parameter",
+        "Value or range",
+        "Notes"
+      ],
+      [
+        "SCS range",
+        "0 to 100 (integer)",
+        "Scaled from calibrated logistic regression probability"
+      ],
+      [
+        "MASK threshold",
+        "80 (default, configurable)",
+        "Values at or above this score are redacted and vaulted"
+      ],
+      [
+        "FLAG threshold",
+        "50 (default, configurable)",
+        "Values at or above this score receive a reference marker"
+      ],
+      [
+        "Keyword automaton size",
+        "approximately 2,000 keywords",
+        "Aho–Corasick automaton built at startup"
+      ],
+      [
+        "Hand-crafted catalog patterns",
+        "600+",
+        "Across ten catalog files"
+      ],
+      [
+        "SecretBench patterns (Sheet 1)",
+        "755",
+        "Context-anchored; require vendor token within 40 characters"
+      ],
+      [
+        "SecretBench patterns (Sheet 2)",
+        "6",
+        "High-false-positive; context-gated at context_score > 0.5"
+      ],
+      [
+        "Maximum line length",
+        "65,536 bytes (64 KB)",
+        "Lines above this limit are truncated before scoring"
+      ],
+      [
+        "Feature vector dimension",
+        "8",
+        "Regex, entropy, varname, structural, context, encoding, length, dictionary"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "Table B.2: Vault entry schema (SQLite table: vault)",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Column",
+        "Type",
+        "Meaning"
+      ],
+      [
+        "ref_id",
+        "TEXT PRIMARY KEY",
+        "Reference identifier in the form SEC-YYYYMMDD-XXXX"
+      ],
+      [
+        "ciphertext",
+        "TEXT",
+        "Fernet-encrypted plaintext, base64-encoded"
+      ],
+      [
+        "score",
+        "INTEGER",
+        "SCS at detection time"
+      ],
+      [
+        "factors_json",
+        "TEXT",
+        "JSON object with the six individual factor scores"
+      ],
+      [
+        "timestamp",
+        "REAL",
+        "Unix timestamp of detection"
+      ],
+      [
+        "expiry",
+        "REAL",
+        "Unix timestamp after which the entry is considered expired"
+      ],
+      [
+        "pod_uid",
+        "TEXT",
+        "Kubernetes pod UID from which the secret was detected"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "Table B.3: Fingerprint record schema (SQLite table: fingerprints)",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Column",
+        "Type",
+        "Meaning"
+      ],
+      [
+        "hmac_hash",
+        "TEXT PRIMARY KEY",
+        "HMAC-SHA256 digest of the plaintext secret value; key never leaves the sidecar"
+      ],
+      [
+        "occurrences",
+        "INTEGER",
+        "Total number of times this fingerprint has been observed"
+      ],
+      [
+        "pod_uids",
+        "TEXT",
+        "JSON array of pod UIDs in which this fingerprint was seen"
+      ],
+      [
+        "namespaces",
+        "TEXT",
+        "JSON array of namespaces in which this fingerprint was seen"
+      ],
+      [
+        "first_seen",
+        "REAL",
+        "Unix timestamp of first observation"
+      ],
+      [
+        "last_seen",
+        "REAL",
+        "Unix timestamp of most recent observation"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "APPENDIX C: LIST OF COMPONENTS",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table C.1: Software components and versions",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Component",
+        "Version",
+        "Used for"
+      ],
+      [
+        "Python",
+        "3.11.9",
+        "Primary language for all sidecar, detection engine, vault and benchmark code"
+      ],
+      [
+        "cryptography (Fernet)",
+        "42.x",
+        "Fernet symmetric encryption for vault entries"
+      ],
+      [
+        "sqlite3",
+        "standard library",
+        "Local vault and fingerprint database"
+      ],
+      [
+        "scikit-learn",
+        "1.5.x",
+        "Logistic regression model and calibration"
+      ],
+      [
+        "scipy",
+        "1.13.x",
+        "NNLS weight optimisation"
+      ],
+      [
+        "pyahocorasick",
+        "2.x (Phase 3)",
+        "Aho–Corasick keyword prefilter automaton"
+      ],
+      [
+        "kubernetes (client)",
+        "29.x",
+        "Kubernetes API access for pod UID and namespace cross-checks"
+      ],
+      [
+        "fastapi",
+        "0.111.x",
+        "Demo application that intentionally leaks secrets"
+      ],
+      [
+        "uvicorn",
+        "0.29.x",
+        "ASGI server for the demo application"
+      ],
+      [
+        "prometheus_client",
+        "0.20.x (Phase 7)",
+        "Prometheus /metrics endpoint"
+      ],
+      [
+        "Minikube",
+        "1.33",
+        "Local Kubernetes cluster for demonstration deployment"
+      ],
+      [
+        "Next.js",
+        "14.x (Phase 8)",
+        "Enterprise dashboard: lineage graph and SecureReveal portal"
+      ],
+      [
+        "Node.js",
+        "20.x (Phase 8)",
+        "Runtime for the enterprise dashboard"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "Reproduction commands:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "# Run unit tests",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "pytest tests/",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "# Run the benchmark",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "python benchmark/benchmark.py --logs logs.txt --ground-truth ground_truth.txt",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "# Start the demonstration deployment in Minikube",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "minikube start",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "kubectl apply -f k8s/rbac.yaml -f k8s/deployment.yaml",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "# Retrieve a vaulted secret",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "python -m sidecar.securereveal.cli retrieve SEC-20241115-A1B2 --actor $(whoami)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "# View lineage report",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "python -m sidecar.securereveal.cli sprawl-report",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "# Train confidence model weights (Phase 2)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "python scripts/train_weights.py --corpus corpus_50k.jsonl --output optimal_weights.json",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "APPENDIX D: LIST OF PAPERS PRESENTED AND PUBLISHED",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "At the time of submission of this report, no paper based on this work has been presented or published.",
+    "style": "Normal"
+  }
+]

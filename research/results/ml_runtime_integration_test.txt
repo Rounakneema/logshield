@@ -1,0 +1,25 @@
+======================================================
+   LOGSHIELD SCSEngine RUNTIME INTEGRATION TEST LOG   
+======================================================
+Timestamp: 2026-10-21 15:59:36
+Runtime Script Path: D:\LOGSHEILD\research\scripts\verify_ml_training.py
+Model Weights Source: D:\LOGSHEILD\scripts\optimal_weights.json
+Weights in File   : {"varname": 0, "regex": 41, "entropy": 17, "token_struct": 13, "context": 29, "encoding": 0}
+Weights in Engine : {"varname": 0, "regex": 41, "entropy": 17, "token_struct": 13, "context": 29, "encoding": 0}
+Verification Check: PASSED (Exact Match)
+
+--- Test Case 1: Sensitive Log Entry with Stripe Secret Key ---
+Input Log Line: 2026-10-21T10:00:00Z ERROR auth-service payment_key=sk_test_51H7x8ABC123456789XYZ00000 status=failed
+Tokens Detected: 1
+  Token: sk_test_51H7x8ABC123456789XYZ00000
+  Score: 88
+  Decision: MASK
+  Factors: {"regex": 1.0, "varname": 0.0, "entropy": 1.0, "token_struct": 1.0, "context": 0.6, "encoding": 0.0}
+  Detector: Stripe Live Secret Key
+
+--- Test Case 2: Benign Log Entry with UUID Request ID ---
+Input Log Line: 2026-10-21T10:00:00Z INFO worker-service request_id=req_183fdb83323da7bad694e684 processed normal job
+Tokens Detected: 0 (Should be 0, all PASS)
+Decision: PASS (Sanitized / Zero False Alarm)
+
+Integration Test Exit Status: SUCCESS (Code 0)

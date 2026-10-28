@@ -1,0 +1,140 @@
+{
+  "audit_timestamp": "2026-10-21 15:59:48",
+  "audit_statuses": {
+    "check_1_recalculation": "PASS",
+    "check_2_auroc_attribution": "PASS",
+    "check_3_paired_mcnemar": "PASS",
+    "check_4_deployed_scorer_inspection": "PASS",
+    "check_5_norm_vs_raw_quantification": "PASS",
+    "check_6_validation_isolation": "PASS"
+  },
+  "evaluation_sample_size": 20000,
+  "positive_secrets": 5088,
+  "benign_negatives": 14912,
+  "models": {
+    "heuristic": {
+      "model_name": "Domain-Expert Heuristic (S >= 80)",
+      "score_column": "SCORE_HEURISTIC",
+      "prediction_column": "PRED_HEURISTIC",
+      "score_representation": "Normalized Integer Score [0, 100]",
+      "decision_rule": "S >= 80",
+      "confusion_matrix": {
+        "TP": 3595,
+        "FP": 0,
+        "TN": 14912,
+        "FN": 1493
+      },
+      "metrics": {
+        "precision": 1.0,
+        "recall": 0.706564,
+        "f1_score": 0.828055,
+        "f2_score": 0.750616,
+        "fpr": 0.0,
+        "auroc": 0.958003,
+        "auprc": 0.941612,
+        "brier_score": 0.091172
+      }
+    },
+    "nnls": {
+      "model_name": "ML-Trained NNLS (S >= 80)",
+      "score_column": "SCORE_NNLS",
+      "prediction_column": "PRED_NNLS",
+      "score_representation": "Normalized Integer Score [0, 100]",
+      "decision_rule": "S >= 80",
+      "confusion_matrix": {
+        "TP": 3578,
+        "FP": 0,
+        "TN": 14912,
+        "FN": 1510
+      },
+      "metrics": {
+        "precision": 1.0,
+        "recall": 0.703223,
+        "f1_score": 0.825756,
+        "f2_score": 0.747597,
+        "fpr": 0.0,
+        "auroc": 0.952443,
+        "auprc": 0.938919,
+        "brier_score": 0.05456
+      }
+    },
+    "logistic_norm": {
+      "model_name": "ML-Trained Logistic Normalized (S >= 80)",
+      "score_column": "SCORE_LOGISTIC_NORM",
+      "prediction_column": "PRED_LOGISTIC_NORM",
+      "score_representation": "Normalized Integer Score [0, 100]",
+      "decision_rule": "S >= 80",
+      "confusion_matrix": {
+        "TP": 3823,
+        "FP": 0,
+        "TN": 14912,
+        "FN": 1265
+      },
+      "metrics": {
+        "precision": 1.0,
+        "recall": 0.751376,
+        "f1_score": 0.858041,
+        "f2_score": 0.790693,
+        "fpr": 0.0,
+        "auroc": 0.957993,
+        "auprc": 0.938305,
+        "brier_score": 0.116161
+      }
+    },
+    "logistic_raw": {
+      "model_name": "ML-Trained Logistic Raw Prob (p >= 0.50)",
+      "score_column": "PROB_LOGISTIC_RAW",
+      "prediction_column": "PRED_LOGISTIC_RAW",
+      "score_representation": "Continuous Calibrated Probability [0.0, 1.0]",
+      "decision_rule": "p >= 0.50",
+      "confusion_matrix": {
+        "TP": 4553,
+        "FP": 198,
+        "TN": 14714,
+        "FN": 535
+      },
+      "metrics": {
+        "precision": 0.958325,
+        "recall": 0.894851,
+        "f1_score": 0.925501,
+        "f2_score": 0.906864,
+        "fpr": 0.013278,
+        "auroc": 0.960825,
+        "auprc": 0.946606,
+        "brier_score": 0.030477
+      }
+    }
+  },
+  "paired_discordance_mcnemar": {
+    "a_both_correct": 3595,
+    "b_heuristic_only": 0,
+    "c_ml_logistic_only": 228,
+    "d_neither_correct": 1265,
+    "mcnemar_chi2": 226.0044,
+    "p_value_chi2": 4.4335535603133485e-51,
+    "p_value_binomial_twosided": 4.636507688359277e-69,
+    "p_value_binomial_onesided": 2.3182538441796384e-69,
+    "binomial_formula_twosided": "2 * 0.5^228 = 2^-227",
+    "binomial_formula_onesided": "0.5^228 = 2^-228",
+    "delta_recall_percentage": 4.4811,
+    "delta_recall_95ci": [
+      3.8995,
+      5.0628
+    ]
+  },
+  "score_representation_comparison": {
+    "disagreements": 928,
+    "disagreement_rate_pct": 4.64,
+    "raw_pos_norm_neg_total": 928,
+    "raw_pos_norm_neg_secrets": 730,
+    "raw_pos_norm_neg_benign_fp": 198,
+    "brier_score_qualification": "Normalized SCS score / 100 is an operational ranking proxy, not a calibrated probability."
+  },
+  "validation_threshold_proof": {
+    "validation_benign_count": 15069,
+    "validation_max_benign_score": 66.9,
+    "minimum_zero_fp_integer_threshold": 67,
+    "operational_threshold": 80,
+    "safety_margin_points": 13.1
+  }
+}

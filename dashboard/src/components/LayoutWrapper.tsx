@@ -32,16 +32,26 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
       } catch (e) {}
     };
     checkMode();
-    const interval = setInterval(checkMode, 3000);
-    return () => clearInterval(interval);
+    const interval = setInterval(checkMode, 1500);
+
+    const handleModeEvt = (e: any) => {
+      if (e.detail) setModeState(e.detail);
+    };
+    window.addEventListener("logshield-mode-change", handleModeEvt);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("logshield-mode-change", handleModeEvt);
+    };
   }, []);
 
   const handleToggle = async () => {
     setToggling(true);
     const nextMode = mode === "protected" ? "bypass" : "protected";
+    setModeState(nextMode);
+    window.dispatchEvent(new CustomEvent("logshield-mode-change", { detail: nextMode }));
     try {
       await setMode(nextMode);
-      setModeState(nextMode);
     } catch (e) {
       console.error(e);
     } finally {

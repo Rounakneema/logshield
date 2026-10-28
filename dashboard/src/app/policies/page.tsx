@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { fetchPolicies, deployPolicies } from "@/lib/api";
 import { 
   FileText, 
   ShieldCheck, 
@@ -133,13 +134,24 @@ export default function PoliciesPage() {
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
+  useEffect(() => {
+    fetchPolicies().then((p) => {
+      if (p?.profile) setEnforcementMode(p.profile);
+    }).catch(() => {});
+  }, []);
+
   const toggleRule = (id: string) => {
     setRules(prev => prev.map(r => r.id === id ? { ...r, active: !r.active } : r));
   };
 
-  const handleDeploy = () => {
-    setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 3000);
+  const handleDeploy = async () => {
+    try {
+      await deployPolicies(enforcementMode, rules);
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3000);
+    } catch (err) {
+      alert("Failed to deploy policies to cluster");
+    }
   };
 
   const filteredRules = rules.filter(r => {

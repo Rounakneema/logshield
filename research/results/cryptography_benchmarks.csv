@@ -1,0 +1,5 @@
+Operation,Mean_Time_ms,P95_Time_ms,Ops_Per_Sec
+SecureReveal AES-128-CBC Encrypt & Vault Store,18.09,22.1056,55.3
+SecureReveal Vault Retrieve & Fernet Decrypt,18.3629,21.3272,54.5
+Cryptographic Audit Hash Chain Verification,5.6633,6.5706,176.6
+SecretLineage Blind HMAC-SHA256 Fingerprint & Record,6.657,11.4719,150.2

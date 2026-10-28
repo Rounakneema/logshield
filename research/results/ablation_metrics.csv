@@ -1,0 +1,5 @@
+Config,Architecture,TP,FP,TN,FN,Precision,Recall,F1,F2,FPR,Latency_Mean_ms,Latency_P95_ms,Latency_P99_ms
+A,Regex-Only Baseline (600 standard rules),4427,820,3958,0,0.8437,1.0,0.9152,0.9643,0.1716,6.5282,11.6466,34.212
+B,Regex + Shannon Entropy (H >= 3.5),4121,718,4060,306,0.8516,0.9309,0.8895,0.9139,0.1503,12.9478,23.1114,68.1966
+C,6-Factor SCS Baseline (Heuristic weights),4415,521,4257,12,0.8944,0.9973,0.9431,0.9749,0.109,18.6735,34.4726,97.0561
+D,LogShield Full Pipeline (AC + Context + SCS),4424,0,4778,3,1.0,0.9993,0.9997,0.9995,0.0,8.3713,14.3136,35.814

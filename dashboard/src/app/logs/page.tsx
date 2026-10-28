@@ -74,8 +74,20 @@ export default function LiveLogs() {
 
   useEffect(() => {
     loadLogs();
-    const interval = setInterval(loadLogs, 1500);
-    return () => clearInterval(interval);
+    const interval = setInterval(loadLogs, 800);
+
+    const handleModeEvt = (e: any) => {
+      if (e.detail) {
+        setModeState(e.detail);
+        loadLogs();
+      }
+    };
+    window.addEventListener("logshield-mode-change", handleModeEvt);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("logshield-mode-change", handleModeEvt);
+    };
   }, [service, isPaused]);
 
   useEffect(() => {
@@ -86,9 +98,10 @@ export default function LiveLogs() {
 
   const handleToggleMode = async () => {
     const newMode = mode === "protected" ? "bypass" : "protected";
+    setModeState(newMode);
+    window.dispatchEvent(new CustomEvent("logshield-mode-change", { detail: newMode }));
     try {
       await setMode(newMode);
-      setModeState(newMode);
       loadLogs();
     } catch (e) {
       console.error(e);
@@ -96,7 +109,7 @@ export default function LiveLogs() {
   };
 
   const isProtected = mode === "protected";
-  const displayLogs = isProtected ? logs : rawLogs;
+  const displayLogs = logs.length > 0 ? logs : (isProtected ? logs : rawLogs);
 
   const filteredLogs = displayLogs.filter((line) => {
     if (filterQuery && !line.toLowerCase().includes(filterQuery.toLowerCase())) {
@@ -323,24 +336,39 @@ export default function LiveLogs() {
             </div>
           ) : (
             filteredLogs.map((log, i) => {
+              const isModeMarker = log.includes("=== SHIELD MODE");
               const isRedacted = log.includes("[REDACTED");
               const isFlagged = log.includes("[FLAGGED");
-              const isRawExposed = !isProtected && (
+              const isBypass = log.includes("[BYPASS]") || (!isProtected && (
                 log.includes("postgres://") || 
                 log.includes("sk_test_") || 
                 log.includes("AKIA") || 
                 log.includes("eyJhbGci") || 
                 log.includes("AWS_SECRET_ACCESS_KEY")
-              );
+              ));
+
+              if (isModeMarker) {
+                return (
+                  <div 
+                    key={i} 
+                    className="my-2 py-1.5 px-3 rounded-lg bg-amber-950/80 border border-amber-500/80 text-amber-300 font-bold text-center text-xs tracking-wide shadow-xs flex items-center justify-center gap-2"
+                  >
+                    <AlertTriangle className="w-4 h-4 text-amber-400" />
+                    <span>{log}</span>
+                  </div>
+                );
+              }
+
+              const cleanLog = log.startsWith("[BYPASS] ") ? log.replace("[BYPASS] ", "") : log;
 
               return (
                 <div 
                   key={i} 
                   className={`group flex items-start gap-3 py-1 px-2.5 rounded transition-colors ${
-                    isRedacted 
-                      ? 'bg-emerald-950/30 hover:bg-emerald-950/50 border-l-2 border-emerald-500' 
-                      : isRawExposed 
-                        ? 'bg-rose-950/40 hover:bg-rose-950/60 border-l-2 border-rose-500 animate-pulse'
+                    isBypass 
+                      ? 'bg-rose-950/40 hover:bg-rose-950/60 border-l-2 border-rose-500' 
+                      : isRedacted 
+                        ? 'bg-emerald-950/30 hover:bg-emerald-950/50 border-l-2 border-emerald-500' 
                         : isFlagged
                           ? 'bg-amber-950/30 hover:bg-amber-950/50 border-l-2 border-amber-500'
                           : 'hover:bg-slate-800/60'
@@ -353,7 +381,7 @@ export default function LiveLogs() {
                   <div className="flex-1 break-all leading-relaxed">
                     {isRedacted ? (
                       <div>
-                        {log.split(/(\[REDACTED:[^:]+:SCS=\d+\])/).map((part, pIdx) => {
+                        {cleanLog.split(/(\[REDACTED:[^:]+:SCS=\d+\])/).map((part, pIdx) => {
                           if (part.startsWith("[REDACTED:")) {
                             return (
                               <span 
@@ -368,16 +396,16 @@ export default function LiveLogs() {
                           return <span key={pIdx}>{part}</span>;
                         })}
                       </div>
-                    ) : isRawExposed ? (
+                    ) : isBypass ? (
                       <div className="text-rose-300">
                         <span className="inline-flex items-center gap-1 bg-rose-500/20 text-rose-400 px-1.5 py-0.5 rounded font-bold border border-rose-500/50 mr-1.5 text-[10px]">
                           <AlertTriangle className="w-3 h-3 text-rose-400" />
-                          RAW EXPOSED SECRET
+                          BYPASS (RAW EXPOSED SECRET)
                         </span>
-                        {log}
+                        {cleanLog}
                       </div>
                     ) : (
-                      <span className="text-slate-300">{log}</span>
+                      <span className="text-slate-300">{cleanLog}</span>
                     )}
                   </div>
 

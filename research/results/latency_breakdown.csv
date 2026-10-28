@@ -1,0 +1,7 @@
+Stage,Pipeline Operation,Mean Time (ms),P95 Time (ms),Line Drop %
+Stage 1,Preprocessing & Token Isolation,0.0312,0.0534,0.0%
+Stage 2,Aho-Corasick Keyword Scan,0.0056,0.0113,20.0%
+Stage 3,Context Window Feature Extraction,0.0075,0.0107,0.0%
+Stage 4,Hierarchical Regex Classification,0.5361,0.8517,24.1%
+Stage 5,Bayesian SCS Confidence Model,0.0142,0.0235,0.0%
+Total,Average End-to-End Latency,0.5946,0.8517,100.0%

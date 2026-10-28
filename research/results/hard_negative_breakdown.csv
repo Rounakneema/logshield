@@ -1,0 +1,9 @@
+HardNegativeType,Total,TrueNegative_Suppressed,FalsePositive_Alarm,SuppressionRate
+BUILD_ID,54,54,0,1.0
+CHECKSUM,53,53,0,1.0
+COMMIT,52,52,0,1.0
+ENTROPY,55,55,0,1.0
+RANDOM_IDENTIFIER,59,59,0,1.0
+SHA256,51,51,0,1.0
+TRACE_ID,44,44,0,1.0
+UUID,65,65,0,1.0

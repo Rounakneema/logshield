@@ -2,6 +2,7 @@
 LogMask — Secret Confidence Score (SCS) Engine
 ===============================================
 Stage 5 & 6: Engine Pipeline Orchestrator
+Includes Adaptive Evasion Defense & Token Fusion support
 """
 
 from dataclasses import dataclass
@@ -32,6 +33,8 @@ class SCSResult:
     vendor:        str  = "Unknown"    # e.g. "Stripe"
     category:      str  = "other"      # e.g. "payment"
     detector_type: str  = "generic"    # 'specific' | 'generic' | 'heuristic'
+    raw_slice:     Optional[str] = None  # Original raw text before de-obfuscation/fusion
+    evasion_type:  Optional[str] = None  # 'delimiter_split' | 'base64' | 'url_encoded' | 'hex_escaped'
 
 
 class SCSEngine:
@@ -39,13 +42,13 @@ class SCSEngine:
     Stage 5 & 6: Orchestrates the multi-stage detection pipeline.
     """
     
-    # ── Temporary Hardcoded Weights (Will be replaced by ML model) ──────
+    # ── Default / Initial Weights ──────────────────────────────────────
     WEIGHTS = {
         "varname": 0,
-        "regex": 35,
-        "entropy": 14,
-        "token_struct": 9,
-        "context": 42,
+        "regex": 41,
+        "entropy": 17,
+        "token_struct": 13,
+        "context": 29,
         "encoding": 0,
     }
 
@@ -80,13 +83,14 @@ class SCSEngine:
         """
         results: List[SCSResult] = []
 
-        # ── Stage 1: Preprocessor ──────────────────────────────────────────
+        # ── Stage 1: Preprocessor & Token Fusion ───────────────────────────
         preprocessed = self.preprocessor.process(line)
         if not preprocessed.tokens:
             return results
 
         # ── Stage 2: Candidate Finder (Early Exit) ─────────────────────────
-        if not self.candidate_finder.is_candidate(line):
+        has_evasion_or_token_match = any(t.evasion_type for t in preprocessed.tokens) or self.candidate_finder.is_candidate(line)
+        if not has_evasion_or_token_match:
             return results
 
         INFRA_KEYS = {
@@ -107,9 +111,15 @@ class SCSEngine:
                 start = max(0, idx - 100)
                 end = min(len(line), idx + len(token) + 100)
                 window = line[start:end]
+            elif token_obj.raw_slice and line.find(token_obj.raw_slice) != -1:
+                idx = line.find(token_obj.raw_slice)
+                start = max(0, idx - 100)
+                end = min(len(line), idx + len(token_obj.raw_slice) + 100)
+                window = line[start:end]
             else:
                 window = line
             surrounding = f"{source_key} {window}"
+            
             # Extract log level simply if present
             import re
             m_log = re.match(r'^\s*(DEBUG|INFO|WARN(?:ING)?|ERROR|FATAL|CRITICAL)\b', line, re.IGNORECASE)
@@ -147,7 +157,7 @@ class SCSEngine:
             if source_key in INFRA_KEYS and not (classification.is_specific and classification.confidence >= 0.85):
                 continue
 
-# Exact-format specific detector override
+            # Exact-format specific detector override
             if classification.is_specific and not classification.is_context_gated:
                 if classification.confidence >= 1.0:
                     score = max(score, 80)
@@ -156,6 +166,7 @@ class SCSEngine:
             elif classification.confidence == 0.0 and factors["varname"] == 0.0 and context_score < 0.8:
                 # Require high confidence before flagging unidentified tokens
                 score = min(score, 45)
+
             # ── Stage 6: Decision Gate ───────────────────────────────────────
             if score >= 80:
                 decision = "MASK"
@@ -174,9 +185,11 @@ class SCSEngine:
                 factors=factors,
                 decision=decision,
                 detector_name=classification.regex_matched,
-                vendor="Unknown", # To be mapped properly later if needed
+                vendor="Unknown",
                 category=classification.secret_type,
-                detector_type="specific" if classification.is_specific else "generic"
+                detector_type="specific" if classification.is_specific else "generic",
+                raw_slice=token_obj.raw_slice,
+                evasion_type=token_obj.evasion_type
             ))
 
         return results

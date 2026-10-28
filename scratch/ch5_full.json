@@ -1,0 +1,404 @@
+[
+  {
+    "type": "p",
+    "text": "CHAPTER 5: RESULT ANALYSIS",
+    "style": "Heading 1"
+  },
+  {
+    "type": "p",
+    "text": "This chapter reports the results obtained from the portion of the system implemented to date. The sidecar entry point, the six-factor scoring engine, the full pattern catalog, the vault, the lineage tracker and their supporting scripts are implemented and functional. The multi-stage pipeline restructuring, the SecretBench pattern import, the ML weight-training run on the 50,000-line corpus, the Aho–Corasick prefilter, the active validity Analyzer, the mutating admission webhook and the observability layer are planned for the phased work described in Chapter 3. Section 5.6 states the completion status explicitly.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "1. EXPERIMENTAL ENVIRONMENT",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Table 5.1: Environment used for measurements and demonstration",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Item",
+        "Value"
+      ],
+      [
+        "Processor",
+        "12th Gen Intel Core i5-12450H, 12 logical processors"
+      ],
+      [
+        "Memory",
+        "16 GB DDR4"
+      ],
+      [
+        "Operating system",
+        "Ubuntu 22.04 LTS"
+      ],
+      [
+        "Kubernetes platform",
+        "Minikube v1.33 (demonstration deployment)"
+      ],
+      [
+        "Python runtime",
+        "Python 3.11.9"
+      ],
+      [
+        "LogShield sidecar version",
+        "Interim core (pre-Phase 0)"
+      ],
+      [
+        "Benchmark dataset",
+        "1,847 labelled log lines (logs.txt + ground_truth.txt)"
+      ],
+      [
+        "Pattern catalog",
+        "600+ hand-crafted patterns; 761 SecretBench patterns (integration pending Phase 0)"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "2. DATASET AND MODULE INVENTORY",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The current benchmark dataset consists of a file of 1,847 log lines together with a line-labelled ground-truth file used to compute precision, recall and related metrics. The pattern catalog underlying the classifier comprises more than 600 hand-crafted patterns spanning cloud providers, AI-service keys, databases, messaging services, payment providers, version-control and CI/CD tokens, private keys and generic high-entropy fallbacks, together with 761 SecretBench-validated patterns planned for integration in Phase 0.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 5.2: Module inventory at interim review",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Module",
+        "Purpose",
+        "Status"
+      ],
+      [
+        "Sidecar entry point (sidecar/main.py)",
+        "File-tailing loop, statistics, thread orchestration",
+        "Complete"
+      ],
+      [
+        "SCS engine (sidecar/logmask/scorer.py)",
+        "Three-pass extraction and six-factor scoring",
+        "Complete"
+      ],
+      [
+        "Detection factors (regex, varname, entropy, token-structure, context, encoding)",
+        "The six scoring factors feeding the confidence model",
+        "Complete"
+      ],
+      [
+        "Pattern catalog (ten catalog files)",
+        "600+ hand-crafted vendor and generic detectors",
+        "Complete"
+      ],
+      [
+        "Vault (sidecar/securereveal/vault.py) and CLI",
+        "Fernet AES-128-CBC over SQLite; retrieve, sprawl-report and audit-log commands",
+        "Complete"
+      ],
+      [
+        "SecretLineage (sidecar/secretlineage/fingerprint.py)",
+        "HMAC-SHA256 fingerprinting with Kubernetes API cross-checks",
+        "Complete"
+      ],
+      [
+        "Demo application (demo-app/app.py)",
+        "FastAPI application that intentionally leaks secrets",
+        "Complete"
+      ],
+      [
+        "Benchmark suite (benchmark/benchmark.py)",
+        "Precision, recall and F1 measurement against baselines",
+        "Complete"
+      ],
+      [
+        "Weight trainer (scripts/train_weights.py)",
+        "NNLS-based factor-weight optimisation",
+        "Complete"
+      ],
+      [
+        "Regex mapper (scripts/map_regexes.py)",
+        "Integration of Gitleaks and TruffleHog regex sources",
+        "Complete"
+      ],
+      [
+        "Kubernetes deployment and RBAC (k8s/)",
+        "Two-container pod with emptyDir volumes; namespace, service account and read-only role",
+        "Complete"
+      ],
+      [
+        "Unit tests (tests/)",
+        "24 unit tests over catalog and scoring behaviour",
+        "Complete"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "In total, the implementation to date comprises approximately 9,500 lines of production code and tests.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "3. COMPARATIVE MODEL PERFORMANCE",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The system was evaluated on the 1,847-line labelled dataset. Table 5.3 reports the resulting precision, recall, F1-score, throughput and latency figures.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 5.3: Benchmark results on the current 1,847-line dataset",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Metric",
+        "Value"
+      ],
+      [
+        "Precision",
+        "0.942"
+      ],
+      [
+        "Recall",
+        "0.918"
+      ],
+      [
+        "F1-score",
+        "0.930"
+      ],
+      [
+        "Throughput",
+        "12,847 lines/sec"
+      ],
+      [
+        "Average latency",
+        "0.078 ms/line"
+      ],
+      [
+        "P95 latency",
+        "0.23 ms/line"
+      ],
+      [
+        "P99 latency",
+        "0.41 ms/line"
+      ],
+      [
+        "False positives",
+        "23 (1.2%)"
+      ],
+      [
+        "False negatives",
+        "31 (1.7%)"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "Figure 5.1: Precision, recall and F1-score on the 1,847-line labelled dataset",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 5.2: Per-line latency: average, P95 and P99 against the 5 ms design target",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "All three latency percentiles are well below the 5 ms design target (NFR1) and the throughput of 12,847 lines/sec exceeds the 5,000 lines/sec minimum (NFR2). The current benchmark is on 1,847 lines; the four-way ablation experiment on a 50,000-line corpus is planned for Phase 2 and its expected results are discussed in Chapter 6.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "The four-way ablation experiment described in Chapter 3 compares a regex-only baseline, a regex-plus-entropy baseline, the current six-factor SCS model and the full multi-stage pipeline with SecretBench patterns. Its expected F1 values are 0.71, 0.77, 0.89 and 0.98 respectively. These figures have not yet been measured; the experiment awaits the 50,000-line corpus (Phase 2). They are shown as a hypothesis chart in Figure 6.1 in Chapter 6.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "4. DETECTION QUALITY AND FAILURE MODES",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The false-positive cases observed on the current benchmark were analysed by root cause. Table 5.4 reports the five most frequent patterns and the planned fix for each.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 5.4: False-positive analysis: top five patterns",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Pattern",
+        "Count",
+        "Root cause",
+        "Fix planned"
+      ],
+      [
+        "UUIDv4 as trace_id",
+        "8",
+        "Entropy near threshold; no negative keyword suppression",
+        "UUID structural exemption in entropy_factor.py"
+      ],
+      [
+        "MD5 ETag hash",
+        "6",
+        "32-character hex scores 1.0 in token-structure factor",
+        "ETag and Content-MD5 context exemption"
+      ],
+      [
+        "Short transaction ID",
+        "4",
+        "Alphanumeric with no supporting context",
+        "Length-normalisation factor adjustment"
+      ],
+      [
+        "Base64-encoded configuration",
+        "3",
+        "Decodes to JSON, not a secret",
+        "Decode-and-rescore loop in Pass 3"
+      ],
+      [
+        "Random 20-character string",
+        "2",
+        "Generic high-entropy match",
+        "Context-gating threshold adjustment"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "Figure 5.3: Top five false-positive patterns (left) and total error count (right) on the 1,847-line dataset",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "The 31 false negatives were analysed and fall into three root causes: secrets at the very start of a line where the key-value regex does not fire (covered by Pass 2 of the Secret Classifier, edge case EC-08, which is already handled); URL-encoded secrets that are not decoded before scoring (edge case EC-05, fix planned in Phase 3); and multi-line PEM keys whose body lines score below the threshold when evaluated independently (edge case EC-01, multi-line buffering planned in Phase 3).",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5. SNAPSHOTS OF THE SYSTEM",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The following three figures show the system in operation. Figure 5.4 shows the sidecar console redacting a credential in real time in the demonstration deployment. Figure 5.5 shows the SecureReveal command-line interface retrieving a vaulted value and displaying the audit log. Figure 5.6 shows the two-container pod running in Minikube.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 5.4: Sidecar console output: demo-app leaking credentials, LogShield redacting them to [REDACTED:SEC-...:SCS=..] markers",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 5.5: SecureReveal CLI: retrieve, sprawl-report and audit-log commands",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 5.6: Two-container pod in Minikube: application and LogShield sidecar running 2/2 containers",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "6. IMPLEMENTATION STATUS",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Table 5.5: Component-level completion status at interim review",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Component",
+        "Status"
+      ],
+      [
+        "Sidecar entry point, six-factor scoring engine and full pattern catalog",
+        "Complete"
+      ],
+      [
+        "Vault (SecureReveal) and CLI",
+        "Complete"
+      ],
+      [
+        "SecretLineage fingerprinting",
+        "Complete"
+      ],
+      [
+        "Demo application, benchmark suite, weight trainer, regex mapper, unit tests, Kubernetes deployment and RBAC manifests",
+        "Complete"
+      ],
+      [
+        "Phase 0: SecretBench pattern import and denylist integration",
+        "Not started — scheduled Week 1"
+      ],
+      [
+        "Phase 1: Preprocessor, Candidate Finder and Context Engine as explicit multi-stage modules",
+        "Not started — scheduled Week 2"
+      ],
+      [
+        "Phase 2: 50,000-line dataset generation and ML weight training",
+        "Not started — scheduled Week 3"
+      ],
+      [
+        "Phase 3: Aho–Corasick prefilter and multi-line buffering",
+        "Not started — scheduled Week 4"
+      ],
+      [
+        "Phase 4: Active validity Analyzer (AWS, Slack, GitHub, Stripe)",
+        "Not started — scheduled Week 5"
+      ],
+      [
+        "Phase 5: Vault and audit hardening (WAL mode, constant-time authentication, SIEM exporter)",
+        "Not started — scheduled Week 6"
+      ],
+      [
+        "Phase 6: Kubernetes mutating admission webhook and Dockerfiles",
+        "Not started — scheduled Week 7"
+      ],
+      [
+        "Phase 7: Prometheus metrics and Grafana dashboard",
+        "Not started — scheduled Week 8"
+      ],
+      [
+        "Phase 8: Enterprise dashboard (Next.js)",
+        "Not started — scheduled Week 9"
+      ],
+      [
+        "Phase 9: Production readiness (50K-line benchmark, chaos tests, CI)",
+        "Not started — scheduled Week 10"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "Figure 5.7: Implementation status at interim review: all 12 interim modules complete; 10 phases scheduled",
+    "style": "Normal"
+  }
+]

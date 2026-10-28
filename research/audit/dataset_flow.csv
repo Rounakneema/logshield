@@ -1,0 +1,8 @@
+Dataset_Stage,File,Total_Records,Positive_Secrets,Hard_Negatives,Normal_Logs,Adversarial,Role
+Master Ground Truth,ground_truth.txt,100000,21857,6975,68164,3004,Complete repository corpus
+Train Split (60%),train_60k.csv,60000,13114,4185,40901,1800,Weight fitting & rule derivation
+Validation Split (20%),val_20k.csv,20000,4369,1395,13636,600,Threshold sweep & tuning
+Test Split (20%),test_20k.csv,20000,4374,1395,13627,604,Unbiased held-out evaluation
+Balanced Benchmark Corpus,benchmark_50k.csv,50000,21857,2231,22769,3143,Balanced comparative benchmarking
+Ablation Study (Standard),benchmark_50k.csv (Sample),9205,4427,443,4335,0,Table 1A: In-the-wild standard credentials
+Ablation Study (Adversarial Stress),benchmark_50k.csv (Sample),10000,4427,443,4335,795,Table 1B: Combined evasion stress test

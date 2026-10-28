@@ -1,0 +1,17 @@
+Feature_Category,Feature_Name,Code_Location,Status,Verification_Evidence
+Detection,LogPreprocessor,sidecar/logmask/preprocessor.py,VERIFIED,Extracts JSON/KV/raw tokens, strips escape chars
+Detection,AhoCorasickPrefilter,sidecar/logmask/prefilter.py,VERIFIED,PyAhocorasick automaton with 200+ vendor and keyword roots
+Detection,ContextEngine,sidecar/logmask/factors/context_factor.py,VERIFIED,Windowed +-100 char evaluation and log level weighting
+Detection,SecretClassifier,sidecar/logmask/classifier.py,VERIFIED,Two-tier 600+ specific regexes + SecretBench fallback
+Detection,SCSScorer,sidecar/logmask/scorer.py,VERIFIED,Weighted Bayesian multi-factor confidence aggregation
+Detection,DecisionGate,sidecar/logmask/scorer.py,VERIFIED,Tri-state gating (MASK >=80, FLAG 50-79, PASS <50)
+Vault,SecureRevealEncryption,sidecar/securereveal/vault.py,VERIFIED,Fernet AES-128-CBC + HMAC-SHA256 authenticated encryption
+Vault,VaultStorage,sidecar/securereveal/vault.py,VERIFIED,SQLite WAL journal mode with SEC-[HEX8] primary key indexing
+Vault,CryptographicAuditChain,sidecar/securereveal/vault.py,VERIFIED,SHA-256 hash chaining + node HMAC-SHA256 signature
+Lineage,SecretLineageFingerprint,sidecar/secretlineage/fingerprint.py,VERIFIED,HMAC-SHA256 blind fingerprint with local 256-bit key
+Lineage,SprawlTrackingDB,sidecar/secretlineage/fingerprint.py,VERIFIED,Cross-pod and cross-namespace recurrence tracking
+Runtime,SidecarLogTailer,sidecar/main.py,VERIFIED,Async file and stream tailing with non-blocking redaction
+Runtime,SidecarRESTAPI,sidecar/api.py,VERIFIED,FastAPI endpoints for reveal, audit, and health checks
+Deployment,InPodSidecarSpec,k8s/deployment.yaml,VERIFIED,Multi-container pod spec with emptyDir volume sharing
+Deployment,MutatingWebhook,k8s/mutating_webhook.yaml,PARTIAL,Manual pod injection working; auto-mutating webhook blueprint
+Dashboard,NextJSControlPlane,dashboard/src/app/,VERIFIED,Next.js frontend with live log monitoring and lineage graph

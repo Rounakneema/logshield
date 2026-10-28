@@ -177,7 +177,7 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
         - name: STRIPE_SECRET_KEY
-          value: "sk_live_paymentabc1234567890abcdef123"
+          value: "sk_test_paymentabc1234567890abcdef123"
         volumeMounts:
         - name: shared-logs
           mountPath: /shared

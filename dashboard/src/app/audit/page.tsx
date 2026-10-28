@@ -14,16 +14,21 @@ import {
   Activity,
   History,
   Lock,
-  Download
+  Download,
+  KeyRound,
+  Check,
+  Copy
 } from "lucide-react";
-import { fetchAuditLogs, verifyAudit, simulateTamper } from "@/lib/api";
+import { fetchAuditLogs, fetchRecentReveals, verifyAudit, simulateTamper } from "@/lib/api";
 
 export default function AuditPage() {
   const [logs, setLogs] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
+  const [recentReveals, setRecentReveals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [verifying, setVerifying] = useState(false);
   const [tampering, setTampering] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
   
   // Verification State
   const [chainStatus, setChainStatus] = useState<{
@@ -39,25 +44,43 @@ export default function AuditPage() {
     total_records: 0
   });
 
-  // Filter States
+  // Filter States - Default to "all" so user immediately sees all system events in real-time order!
   const [searchActor, setSearchActor] = useState("");
   const [actionFilter, setActionFilter] = useState("all");
   const [outcomeFilter, setOutcomeFilter] = useState("all");
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get("q") || params.get("ref_id");
+      if (q) {
+        setSearchActor(q);
+        setActionFilter("all"); // If a specific secret is queried, show all events for it
+      }
+    }
+  }, []);
+
   const loadLogs = async () => {
     try {
-      const res = await fetchAuditLogs({
-        limit: 100,
-        actor: searchActor || undefined,
-        action: actionFilter !== "all" ? actionFilter : undefined,
-        outcome: outcomeFilter !== "all" ? outcomeFilter : undefined
-      });
+      setLoading(true);
+      const [res, reveals] = await Promise.all([
+        fetchAuditLogs({
+          limit: 100,
+          q: searchActor.trim() || undefined,
+          action: actionFilter !== "all" ? actionFilter : undefined,
+          outcome: outcomeFilter !== "all" ? outcomeFilter : undefined
+        }),
+        fetchRecentReveals()
+      ]);
       if (res?.entries) {
         setLogs(res.entries);
         setTotal(res.total);
       } else if (Array.isArray(res)) {
         setLogs(res);
         setTotal(res.length);
+      }
+      if (reveals && Array.isArray(reveals)) {
+        setRecentReveals(reveals);
       }
     } catch (err) {
       console.error("Failed to load audit logs:", err);
@@ -124,6 +147,12 @@ export default function AuditPage() {
     a.download = `logshield-audit-ledger-${Date.now()}.json`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const copyRefId = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(text);
+    setTimeout(() => setCopiedId(null), 2000);
   };
 
   return (
@@ -237,6 +266,96 @@ export default function AuditPage() {
         </div>
       </div>
 
+      {/* High-Priority Secret Decryption Activity Banner */}
+      {recentReveals.length > 0 && (
+        <div className="bg-purple-50/50 border border-purple-200/80 rounded-xl p-4 shadow-xs">
+          <div className="flex items-center justify-between mb-2.5">
+            <div className="flex items-center gap-2">
+              <KeyRound className="w-4 h-4 text-purple-700" />
+              <h3 className="text-xs font-bold text-purple-950 uppercase tracking-wider">
+                Recent Secret Access & Reveal Audits (Guaranteed Non-Repudiation)
+              </h3>
+            </div>
+            <span className="text-[11px] text-purple-700 font-medium">
+              Chained & Signed
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
+            {recentReveals.slice(0, 3).map((rev: any) => (
+              <div 
+                key={rev.id} 
+                className="bg-white border border-purple-200 rounded-lg p-2.5 text-xs flex flex-col justify-between shadow-2xs hover:border-purple-400 transition-colors cursor-pointer"
+                onClick={() => {
+                  setSearchActor(rev.ref_id);
+                  setActionFilter("all");
+                }}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-mono font-bold text-purple-700 text-xs">{rev.ref_id}</span>
+                  <span className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${
+                    rev.outcome === "SUCCESS"
+                      ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                      : "bg-amber-50 text-amber-700 border border-amber-200"
+                  }`}>
+                    {rev.outcome}
+                  </span>
+                </div>
+                <div className="text-[11px] text-slate-500 mt-1 truncate">
+                  <strong className="text-slate-800">{rev.actor}</strong> ({rev.pod_name})
+                </div>
+                <div className="text-[10px] text-slate-400 mt-0.5 flex items-center justify-between">
+                  <span>Block #{rev.id}</span>
+                  <span>{new Date(rev.timestamp * 1000).toLocaleTimeString()}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Quick Navigation Tabs */}
+      <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-2">
+        <button
+          onClick={() => { setActionFilter("RETRIEVE"); setOutcomeFilter("all"); }}
+          className={`px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all ${
+            actionFilter === "RETRIEVE"
+              ? "bg-purple-600 text-white shadow-xs"
+              : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"
+          }`}
+        >
+          <KeyRound className="w-3.5 h-3.5" />
+          <span>Secret Access / Reveal Audits</span>
+          <span className="px-1.5 py-0.2 rounded text-[10px] bg-white/20 font-mono">
+            {actionFilter === "RETRIEVE" ? total : ""}
+          </span>
+        </button>
+
+        <button
+          onClick={() => { setActionFilter("all"); setOutcomeFilter("all"); }}
+          className={`px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all ${
+            actionFilter === "all"
+              ? "bg-blue-600 text-white shadow-xs"
+              : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"
+          }`}
+        >
+          <Activity className="w-3.5 h-3.5" />
+          <span>All System Events</span>
+        </button>
+
+        <button
+          onClick={() => { setActionFilter("STORE"); setOutcomeFilter("all"); }}
+          className={`px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all ${
+            actionFilter === "STORE"
+              ? "bg-slate-800 text-white shadow-xs"
+              : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"
+          }`}
+        >
+          <Database className="w-3.5 h-3.5" />
+          <span>In-Pod Vault Ingestions</span>
+        </button>
+      </div>
+
       {/* Filter and Search Bar */}
       <div className="flex flex-col md:flex-row gap-3 items-center justify-between">
         <div className="flex flex-1 gap-2 w-full">
@@ -244,17 +363,17 @@ export default function AuditPage() {
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search by actor or reference ID..."
+              placeholder="Search reference token (SEC-XXXX), actor, or reason..."
               value={searchActor}
               onChange={(e) => setSearchActor(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && loadLogs()}
-              className="w-full bg-white border border-slate-200 rounded-lg pl-9 pr-4 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors"
+              className="w-full bg-white border border-slate-200 rounded-lg pl-9 pr-4 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors"
             />
           </div>
 
           <button
             onClick={loadLogs}
-            className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors shadow-xs"
+            className="px-4 py-2 rounded-lg text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors shadow-xs"
           >
             Search
           </button>
@@ -265,23 +384,26 @@ export default function AuditPage() {
           <select
             value={actionFilter}
             onChange={(e) => setActionFilter(e.target.value)}
-            className="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-blue-500 font-medium"
+            className="bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-700 focus:outline-none focus:border-blue-500 font-medium"
           >
             <option value="all">All Actions</option>
-            <option value="VAULT_STORE">VAULT_STORE</option>
-            <option value="REVEAL_REQUEST">REVEAL_REQUEST</option>
-            <option value="TAMPER_TEST">TAMPER_TEST</option>
+            <option value="RETRIEVE">Secret Decryption (RETRIEVE)</option>
+            <option value="STORE">In-Pod Stream Stores (STORE)</option>
+            <option value="TAMPER_TEST">Integrity Tests (TAMPER_TEST)</option>
           </select>
 
           {/* Outcome Filter */}
           <select
             value={outcomeFilter}
             onChange={(e) => setOutcomeFilter(e.target.value)}
-            className="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-blue-500 font-medium"
+            className="bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-700 focus:outline-none focus:border-blue-500 font-medium"
           >
             <option value="all">All Outcomes</option>
-            <option value="SUCCESS">SUCCESS</option>
-            <option value="DENIED">DENIED</option>
+            <option value="ATTEMPTED">ATTEMPTED (Pre-Auth Intent Logged)</option>
+            <option value="SUCCESS">SUCCESS (Decrypted & Released)</option>
+            <option value="DENIED">DENIED (RBAC Blocked)</option>
+            <option value="NOT_FOUND">NOT_FOUND</option>
+            <option value="TAMPER_DETECTED">TAMPER_DETECTED</option>
           </select>
         </div>
       </div>
@@ -303,11 +425,11 @@ export default function AuditPage() {
             <thead className="bg-slate-50/50 text-slate-500 uppercase font-semibold text-[11px] border-b border-slate-200">
               <tr>
                 <th className="px-5 py-3">Block #</th>
-                <th className="px-5 py-3">Captured Timestamp</th>
+                <th className="px-5 py-3">Timestamp</th>
                 <th className="px-5 py-3">Actor & Identity</th>
                 <th className="px-5 py-3">Action</th>
                 <th className="px-5 py-3">Vault Ref ID</th>
-                <th className="px-5 py-3">Outcome</th>
+                <th className="px-5 py-3">Audit Outcome</th>
                 <th className="px-5 py-3">SHA-256 Hash Chaining</th>
               </tr>
             </thead>
@@ -334,53 +456,93 @@ export default function AuditPage() {
                     ? new Date(log.timestamp * 1000).toLocaleString() 
                     : "N/A";
 
+                  const isRetrieve = log.action === "RETRIEVE" || log.action === "REVEAL_REQUEST";
+
                   return (
                     <tr 
                       key={log.id} 
                       className={`transition-colors ${
                         isCorrupted 
                           ? "bg-rose-50/80 text-rose-900 border-y border-rose-300 font-bold" 
+                          : isRetrieve
+                          ? "bg-purple-50/30 hover:bg-purple-50/60 text-slate-800 border-l-4 border-purple-500"
                           : "hover:bg-slate-50/80 text-slate-700"
                       }`}
                     >
                       <td className="px-5 py-3.5 font-bold text-slate-900">
-                        #{log.id}
-                        {isCorrupted && (
-                          <span className="ml-1.5 px-1.5 py-0.5 rounded bg-rose-600 text-white text-[9px] font-sans font-bold">
-                            TAMPERED
-                          </span>
-                        )}
+                        <div className="flex items-center gap-1.5">
+                          <span>#{log.id}</span>
+                          {isRetrieve && (
+                            <span className="px-1.5 py-0.2 rounded bg-purple-100 text-purple-800 text-[9px] font-sans font-bold border border-purple-200">
+                              REVEAL ACCESS
+                            </span>
+                          )}
+                          {isCorrupted && (
+                            <span className="ml-1.5 px-1.5 py-0.5 rounded bg-rose-600 text-white text-[9px] font-sans font-bold">
+                              TAMPERED
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="px-5 py-3.5 text-slate-500 text-[11px] whitespace-nowrap">
                         {dateStr}
                       </td>
                       <td className="px-5 py-3.5">
                         <span className="font-semibold text-slate-900 block font-sans">{log.actor}</span>
-                        <span className="text-[10px] text-slate-400 block">{log.client_ip || "127.0.0.1"} • {log.pod_name || "default"}</span>
+                        <span className="text-[10px] text-slate-400 block font-mono">
+                          {log.client_ip || "127.0.0.1"} • {log.pod_name || "default"}
+                        </span>
+                        {log.reason && log.reason !== "automatic_detection" && (
+                          <span className="text-[10px] text-slate-500 italic block font-sans mt-0.5">
+                            "{log.reason}"
+                          </span>
+                        )}
                       </td>
                       <td className="px-5 py-3.5">
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
-                          log.action === "VAULT_STORE"
-                            ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                            : log.action === "REVEAL_REQUEST"
-                            ? "bg-amber-50 text-amber-700 border-amber-200"
-                            : "bg-blue-50 text-blue-700 border-blue-200"
+                        <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold border ${
+                          log.action === "RETRIEVE" || log.action === "REVEAL_REQUEST"
+                            ? "bg-purple-50 text-purple-700 border-purple-200 font-mono"
+                            : log.action === "STORE" || log.action === "VAULT_STORE"
+                            ? "bg-blue-50 text-blue-700 border-blue-200 font-mono"
+                            : "bg-slate-50 text-slate-700 border-slate-200 font-mono"
                         }`}>
                           {log.action}
                         </span>
                       </td>
                       <td className="px-5 py-3.5">
-                        <span className="font-mono text-blue-700 font-bold">
-                          {log.ref_id || "N/A"}
-                        </span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-mono text-blue-700 font-bold">
+                            {log.ref_id || "N/A"}
+                          </span>
+                          {log.ref_id && (
+                            <button
+                              onClick={() => copyRefId(log.ref_id)}
+                              className="text-slate-400 hover:text-slate-600 p-0.5"
+                              title="Copy Ref ID"
+                            >
+                              {copiedId === log.ref_id ? (
+                                <Check className="w-3 h-3 text-emerald-600" />
+                              ) : (
+                                <Copy className="w-3 h-3" />
+                              )}
+                            </button>
+                          )}
+                        </div>
                       </td>
                       <td className="px-5 py-3.5">
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                        <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1 w-fit ${
                           log.outcome === "SUCCESS"
                             ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                            : "bg-rose-50 text-rose-700 border border-rose-200"
+                            : log.outcome === "ATTEMPTED"
+                            ? "bg-amber-50 text-amber-700 border border-amber-200"
+                            : log.outcome === "DENIED"
+                            ? "bg-rose-50 text-rose-700 border border-rose-200"
+                            : "bg-slate-50 text-slate-600 border border-slate-200"
                         }`}>
-                          {log.outcome}
+                          {log.outcome === "SUCCESS" && <CheckCircle2 className="w-3 h-3 text-emerald-600" />}
+                          {log.outcome === "ATTEMPTED" && <Lock className="w-3 h-3 text-amber-600" />}
+                          {log.outcome === "DENIED" && <ShieldAlert className="w-3 h-3 text-rose-600" />}
+                          <span>{log.outcome}</span>
                         </span>
                       </td>
                       <td className="px-5 py-3.5 text-[11px]">

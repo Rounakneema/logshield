@@ -1,0 +1,4118 @@
+[
+  {
+    "type": "p",
+    "text": "LogShield: A Kubernetes-Native Runtime Log",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Secret Detection and Recovery System",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Submitted in partial fulfillment of the requirement for the award of",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Degree of Bachelor of Technology in Computer Science",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Submitted To",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "SVKM's NMIMS,",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Mukesh Patel School of Technology Management & Engineering,",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Shirpur Campus (M.H.)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Submitted By:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "{{Student Name 1}}   Enrollment No – {{Enrollment No. 1}}",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "{{Student Name 2}}   Enrollment No – {{Enrollment No. 2}}",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "{{Student Name 3}}   Enrollment No – {{Enrollment No. 3}}",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Under The Supervision Of:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "{{Guide Name}}",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "({{Designation, Department}})",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "DEPARTMENT OF COMPUTER SCIENCE",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Mukesh Patel School of Technology Management & Engineering",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ACADEMIC SESSION: 2026-27",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "CERTIFICATE",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "This is to certify that the project entitled \"LogShield: A Kubernetes-Native Runtime Log Secret Detection and Recovery System\" has been done by",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "{{Student Name 1}} (Roll No.: {{Enrollment No. 1}})",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "{{Student Name 2}} (Roll No.: {{Enrollment No. 2}})",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "{{Student Name 3}} (Roll No.: {{Enrollment No. 3}})",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "under my guidance and supervision and has been submitted in partial fulfillment of the degree of \"Bachelor of Technology in Computer Science\" of SVKM'S NMIMS (Deemed-to-be university), MPSTME Shirpur Campus (M.H.), India.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "____________________\t____________________",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Project Mentor\tExaminer",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "(Internal Guide)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Date:\t____________________",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "H.O.D.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Place: Shirpur",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "DEPARTMENT OF COMPUTER SCIENCE",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Mukesh Patel School of Technology Management & Engineering",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "CERTIFICATE OF APPROVAL",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "The project report entitled \"LogShield: A Kubernetes-Native Runtime Log Secret Detection and Recovery System\" submitted by",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "{{Student Name 1}} (Roll No.: {{Enrollment No. 1}})",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "{{Student Name 2}} (Roll No.: {{Enrollment No. 2}})",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "{{Student Name 3}} (Roll No.: {{Enrollment No. 3}})",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "in partial fulfillment of the requirements for the award of the degree of \"Bachelor of Technology in Computer Science\" of SVKM'S NMIMS (Deemed-to-be university), MPSTME Shirpur Campus (M.H.), India, for the academic session 2026-27, has been examined and is approved.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "____________________\t____________________",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Internal Examiner\tExternal Examiner",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Date:\t____________________",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "H.O.D.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Place: Shirpur",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "DEPARTMENT OF COMPUTER SCIENCE",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Mukesh Patel School of Technology Management & Engineering",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "DECLARATION",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "We declare that this written submission, entitled \"LogShield: A Kubernetes-Native Runtime Log Secret Detection and Recovery System\", represents our own ideas in our own words, and that where the ideas or words of others have been included, we have adequately cited and referenced the original sources.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "We also declare that we have adhered to all principles of academic honesty and integrity and have not misrepresented, fabricated or falsified any idea, data, fact or source in this submission. The software described in this report was designed and implemented by the project team, and all third-party libraries, standards and tools that were used are acknowledged in the text and in the references.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "We understand that any violation of the above will be cause for disciplinary action by the Institute and can also evoke penal action from the sources which have thus not been properly cited or from whom proper permission has not been taken when needed.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "{{Student Name 1}} (Enrollment No.: {{Enrollment No. 1}})",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "{{Student Name 2}} (Enrollment No.: {{Enrollment No. 2}})",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "{{Student Name 3}} (Enrollment No.: {{Enrollment No. 3}})",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Date:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Place: Shirpur",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ACKNOWLEDGEMENT",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "After the completion of this capstone project work, words are not enough to express our feelings about all those who helped us to reach our goal; our indebtedness above all is to The Almighty for providing us this moment in life.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "It is a great pleasure and a moment of immense satisfaction for us to express our profound gratitude to [Dr. Guide Name], [Designation, Department], MPSTME, Shirpur, whose constant encouragement enabled us to work enthusiastically. Their perpetual motivation, patience and excellent expertise in discussion during the progress of the project work have benefited us to an extent which is beyond expression. Their depth and breadth of knowledge of the Computer Science field made us realise that theoretical knowledge always helps to develop efficient operational software, which is a blend of all core subjects of the field. We are highly indebted to them for their invaluable guidance and ever-ready support in the successful completion of this project in time.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "We express our sincere thanks and gratitude to [Name of HoD], Head of Department, Computer Science, MPSTME, Shirpur, for providing the necessary infrastructure and help to complete the project work successfully.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "We also extend our deepest gratitude to [Name of Associate Dean], Associate Dean, SVKM'S NMIMS, Shirpur Campus, for providing all the necessary facilities and a truly encouraging environment to bring out the best of our endeavours.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "We sincerely thank all members of the staff of the Computer Science department, who equipped us with technical knowledge during the various stages of B.Tech. Computer Science, and all our friends, who contributed directly or indirectly to this capstone project work.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "The successful completion of a capstone project is not an individual effort. It is the outcome of the cumulative effort of many persons, and this section is a vote of thanks to all those who contributed in their own way to the completion of this project.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "{{Student Name 1}}",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "{{Student Name 2}}",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "{{Student Name 3}}",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ABSTRACT",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Cloud-native applications generate very large volumes of log output, and developers routinely, and almost always accidentally, place sensitive credentials — database connection strings, bearer tokens, API keys, cloud access keys — in that output. Once written, a secret flows through the log-shipping pipeline and into aggregation platforms where it persists for years and remains readable by any engineer holding log-query permissions.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "This project presents LogShield, a Kubernetes-native sidecar that intercepts application log lines inside the pod, before they reach the cluster's log-shipping infrastructure, and applies a six-stage multi-factor detection pipeline to each line. The pipeline computes a Secret Confidence Score from 0 to 100 that combines a pattern match against more than 1,361 regular expressions (600 hand-crafted catalog detectors and 761 SecretBench-validated patterns), a Shannon entropy score, a variable-name proximity measure, a structural validation signal, a context score and an encoding signal, and resolves the result through three decision gates: MASK (SCS ≥ 80), FLAG (SCS 50–79) and PASS (SCS below 50). A candidate Finder stage using an Aho–Corasick automaton eliminates approximately 65% of lines from further processing at negligible cost.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Values that score MASK are encrypted with Fernet (AES-128 in CBC mode with HMAC-SHA256 authentication) and stored in a local SQLite vault keyed by a reference ID of the form SEC-YYYYMMDD-XXXX, retrievable through a role-gated command-line interface that writes an audit trail. Each masked value is also fingerprinted with HMAC-SHA256 so that reuse of the same credential across pods and namespaces can be detected without storing a second plaintext copy.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "On the current 1,847-line labelled benchmark the system achieves a precision of 0.942, a recall of 0.918 and an F1-score of 0.930, with a throughput above 12,000 lines per second and an average per-line latency of 0.078 ms, well below the 5 ms design target. All 12 interim modules are implemented and functioning end to end. A ten-week phased plan completes the multi-stage pipeline restructuring, machine-learned weight training on a 50,000-line corpus, performance hardening, active validity checking, vault hardening, Kubernetes admission-webhook deployment, observability, an enterprise dashboard and full production readiness.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Keywords: Kubernetes sidecar, secret detection, log sanitisation, AES-128 Fernet encryption, HMAC-SHA256 fingerprinting, confidence scoring, SecretBench, logistic regression, mutating admission webhook.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "TABLE OF CONTENTS",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "CHAPTER 1: INTRODUCTION",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "CHAPTER 2: LITERATURE SURVEY",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "CHAPTER 3: PROBLEM DEFINITION AND PROPOSED SOLUTION",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "CHAPTER 4: DESIGN",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "CHAPTER 5: RESULT ANALYSIS",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "CHAPTER 6: TESTING",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "CHAPTER 7: CONCLUSION AND FUTURE WORK",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "REFERENCES",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "APPENDIX A: SAMPLE CODE",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "APPENDIX B: DATA SHEETS",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "APPENDIX C: LIST OF COMPONENTS",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "APPENDIX D: LIST OF PAPERS PRESENTED AND PUBLISHED",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "LIST OF FIGURES",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Sr. No.\tName of Figures\tPage No.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "1.1\tBefore and after: secret redaction in action",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "1.2\tWhere existing tools act, and the point at which LogShield intercepts (Datadog SDS shown in cloud mode)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "2.1\tEight-pillar secret-detection coverage (green: implemented, amber: planned)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "3.1\tThreat model: adversaries A1-A4 (red arrows) and the defences LogShield places in their path",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "4.1\tLogShield sidecar architecture within a Kubernetes pod",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "4.2\tThe six-stage detection pipeline (Stage 2 early exit removes roughly 65% of lines from further processing)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "4.3\tThree-pass structure of Stage 4 (Secret Classifier)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "4.4\tDecision gate: three zones of the Secret Confidence Score",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "4.5\tLogical data model: SCSResult, VaultEntry, FingerprintRecord and AuditEvent",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "4.6\tMasking, vaulting and lineage sequence for a line that scores MASK",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "4.7\tKubernetes mutating admission webhook flow (planned, Phase 6)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5.1\tPrecision, recall and F1-score on the 1,847-line labelled dataset",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5.2\tPer-line latency: average, P95 and P99 against the 5 ms design target",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5.3\tTop five false-positive patterns (left) and total error count (right) on the 1,847-line dataset",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5.4\tSidecar console output: demo-app leaking credentials, LogShield redacting them to [REDACTED:SEC-...:SCS=..] markers",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5.5\tSecureReveal CLI: retrieve, sprawl-report and audit-log commands",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5.6\tTwo-container pod in Minikube: application and LogShield sidecar running 2/2 containers",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5.7\tImplementation status at interim review: all 12 interim modules complete; 10 phases scheduled",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "6.1\tStatus summary of the fifteen engine edge cases",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "6.2\tFour-way ablation: expected F1-score progression (hypothesis, not yet measured on the full corpus)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "7.1\tTen-week implementation timeline (status at interim review: core built, phases scheduled)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "LIST OF TABLES",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Sr. No.\tName of Tables\tPage No.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "1.1\tScope boundaries of the project",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "1.2\tSecret Confidence Score decision gates",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "1.3\tTechnology stack used in LogShield",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "2.1\tReview of current work in secret detection",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "2.2\tExisting solution categories and their limitation with respect to runtime log leakage",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "2.3\tComparison of secret-protection approaches",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "2.4\tEight-pillar taxonomy of secret-detection capability and LogShield coverage",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "3.1\tFunctional requirements",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "3.2\tNon-functional requirements",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "3.3\tDevelopment phases",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "3.4\tKey design decisions and justification",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "4.1\tEight features of the confidence model",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "4.2\tSoftware environment",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "4.3\tPrincipal data structures",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "4.4\tVault and lineage component characteristics",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "4.5\tKubernetes resource roles",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5.1\tEnvironment used for measurements and demonstration",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5.2\tModule inventory at interim review",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5.3\tBenchmark results on the current 1,847-line dataset",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5.4\tFalse-positive analysis: top five patterns",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5.5\tComponent-level completion status at interim review",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "6.1\tLevels of testing",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "6.2\tEngine edge cases EC-01 to EC-15",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "6.3\tFour-way ablation experiment design",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "7.1\tApplications of LogShield",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "7.2\tPhase-by-phase implementation plan",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "CHAPTER 1: INTRODUCTION",
+    "style": "Heading 1"
+  },
+  {
+    "type": "p",
+    "text": "1. BACKGROUND",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "i. The Problem of Secrets in Logs",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Modern cloud-native applications generate very large volumes of log output, and developers routinely, and almost always accidentally, place sensitive credentials in that output. Common examples observed in production logs include a database connection string logged at debug level that contains a username and password, an authentication-failure log that includes the full Authorization header carrying a bearer token, an informational log line that echoes a configured payment-provider secret key, and a debug dump of the process environment that exposes cloud access keys. The weakness is catalogued as CWE-532, the insertion of sensitive information into a log file [1], and the OWASP logging guidance lists passwords, access tokens, connection strings and encryption keys among the data that must be excluded from logs [2].",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ii. Where a Leaked Secret Goes",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "A secret written to a log does not stay where it was written. It flows through a log-shipping agent such as Fluent Bit [3] into an aggregation platform such as Loki, Elasticsearch, Datadog or Splunk, where it persists for months or years and remains readable by any engineer who holds log-query permission. It is then copied into backups, dashboards and exports. By the time someone notices the exposure, it has already occurred, and the remedy is no longer to delete a line but to rotate a credential everywhere it may have been used. Figure 1.1 contrasts the same log line before and after LogShield.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 1.1: Before and after: secret redaction in action",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "iii. The Gap in Existing Tooling",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Research has shown that credential leakage is a widespread and continuing problem in public source repositories [4], and has produced labelled datasets for evaluating secret detectors [5]. That work, and the tools built on it, concentrate on source code and git history. The log stream that a running application produces is a separate leakage channel. No open-source, runtime engine that sanitises this stream inside the workload was found in the literature and tooling reviewed for this project, and this is the gap that LogShield addresses.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "2. MOTIVATION",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The motivation for LogShield follows from the observation that existing categories of tooling address the problem too late, too far from the point of leakage, or not at all. Git history scanners such as Gitleaks, TruffleHog and detect-secrets [6, 7, 8] operate on code and commit history, so the secret has typically already been committed, and in the logging case already shipped, before they act. Secrets managers such as HashiCorp Vault and AWS Secrets Manager [9, 10] prevent credentials from being hard-coded, but they do not intercept a credential that an application accidentally logs. Runtime security tools such as Falco [11] detect behavioural anomalies but are not designed to inspect or sanitise log content. Cloud scanners such as Datadog Sensitive Data Scanner, Amazon Macie and Google Sensitive Data Protection [12, 13, 14] are, in their cloud mode, applied after the data has been sent to the provider; Datadog’s own documentation states that in this mode the data leaves the environment before it is redacted [12].",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "A related motivation, raised explicitly during project review, is that a system combining detection, recovery and lineage tracking must be positioned honestly against prior art and not claimed as unprecedented. Point solutions already exist for individual pieces of this problem. Real-time, in-pipeline masking exists: Datadog’s Observability Pipelines Worker redacts or hashes sensitive data inside the customer’s infrastructure before logs are shipped onward [15], and CloudWatch Logs data protection policies mask matching values [16]. Secret fingerprinting and reuse detection exist for source code [17, 7]. Encrypted storage with audited, role-gated retrieval exists in secrets managers [9, 10]. What was not found is a single open-source component that unifies detection, encrypted recovery and lineage tracking at the point where an application log line is about to leave its pod. That unification, and not any single mechanism in isolation, is the scope this project occupies. Figure 1.2 shows the points in a secret’s life at which each category of tool acts.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 1.2: Where existing tools act, and the point at which LogShield intercepts (Datadog SDS shown in cloud mode)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "3. OBJECTIVES",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The objectives of the project, stated as outcomes that can be checked, are as follows.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "To intercept, sanitise and vault a secret before the log line exits the pod, with zero network dependency and no change to application code.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "To compute a multi-signal Secret Confidence Score (SCS) from 0 to 100, using pattern match, entropy, variable-name proximity, structural validation, context and encoding signals, and to resolve it through three decision gates: MASK, FLAG and PASS.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "To keep per-line latency within a sub-5-millisecond design target while sustaining thousands of lines per second on a single sidecar.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "To retain each masked value only in an encrypted local vault, retrievable by reference ID through a role-gated command-line interface that writes an audit trail and deletes entries after a time-to-live.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "To detect reuse of the same secret across pods and namespaces by a keyed-hash (HMAC) fingerprint, without storing a second plaintext copy.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "To deploy with zero configuration for developers: labelling a namespace should cause a mutating admission webhook to inject the sidecar automatically.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "To evaluate the system empirically with a labelled benchmark, a root-cause analysis of false positives, an enumeration of engine edge cases and a four-way ablation experiment on a 50,000-line corpus.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "4. SCOPE OF THE PROJECT",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "i. In Scope",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The delivered core comprises the sidecar entry point and the LogMask detection engine with its pattern catalog of more than 600 hand-crafted detectors, the SecureReveal encrypted vault and its command-line interface, the SecretLineage HMAC fingerprint tracker, a demonstration application that leaks secrets on purpose, a benchmark suite, a weight-training script and Kubernetes deployment and RBAC manifests. The ten-week plan in Chapter 3 extends this core with the 761 SecretBench patterns, an explicit multi-stage pipeline, machine-learned weights, an Aho–Corasick prefilter, an active validity analyser, vault hardening, a mutating admission webhook, Prometheus metrics and an enterprise dashboard.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ii. Out of Scope",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The project does not include an eBPF kernel hook, AI-based detection beyond the logistic-regression confidence model, PII policy engines or organisation-wide policy management, a centralised cross-cluster lineage aggregator, or a SIEM platform itself (only an audit exporter is planned). Production-grade certificate automation for the webhook is limited to what the demonstration deployment needs. These items are recorded as future work in Chapter 7. Table 1.1 summarises the boundary.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 1.1: Scope boundaries of the project",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Within the scope of this project",
+        "Out of scope (future work)"
+      ],
+      [
+        "Sidecar detection engine (six-stage pipeline)",
+        "Centralised cross-cluster lineage aggregation"
+      ],
+      [
+        "1,361+ regex patterns (600 hand-crafted catalog + 761 SecretBench)",
+        "eBPF kernel hook for sidecar-less detection"
+      ],
+      [
+        "Local encrypted vault and HMAC-based fingerprinting",
+        "AI-based detection beyond logistic regression"
+      ],
+      [
+        "ML weight optimisation (NNLS and logistic regression)",
+        "PII policy engines and organisation-wide policy management"
+      ],
+      [
+        "Mutating admission webhook for automatic injection (Phase 6)",
+        "A SIEM platform (only an audit exporter is built)"
+      ],
+      [
+        "Active validity analyser, metrics and dashboard (Phases 4, 7, 8)",
+        "Production-grade certificate automation beyond the demonstration needs"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "5. OVERVIEW OF THE PROPOSED SYSTEM",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "LogShield is a Kubernetes-native sidecar that implements a six-stage, multi-factor detection pipeline producing a Secret Confidence Score on a scale of 0 to 100. The score is resolved through three decision gates, shown in Table 1.2.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 1.2: Secret Confidence Score decision gates",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "SCS range",
+        "Decision",
+        "Action"
+      ],
+      [
+        "80 and above",
+        "MASK",
+        "Redact the value, encrypt it in the local vault, and record a lineage fingerprint"
+      ],
+      [
+        "50 to 79",
+        "FLAG",
+        "Mark the value with a reference ID without redacting it"
+      ],
+      [
+        "Below 50",
+        "PASS",
+        "Allow the line through untouched"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "The system is organised around three modules. LogMask is the detection engine and the most technically substantial component. Instead of the naive regex or keyword matching used by most existing tools, it computes a multi-signal confidence score from the entropy of a candidate string, its proximity to trigger words such as “password”, “token” or “secret”, its match against known credential formats such as AWS keys or JWTs, and contextual cues such as debug-level logging. SecureReveal is the vault and controlled-recovery module: encrypted storage, reference IDs, role-based retrieval, audit logging and TTL-based auto-deletion, following the standard secrets-management pattern. Its specific contribution is the integration of the vault with the redaction pipeline, not the vault mechanism itself. SecretLineage is the fingerprinting and tracking module. It detects reuse of the same secret across applications, without storing the plaintext again, by means of a keyed hash (HMAC) fingerprint.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "In operation, the application writes its log output to a volume shared with the sidecar. The sidecar tails the file, passes every line through LogMask, and only then writes the resulting, possibly redacted, line to standard output, where the cluster’s existing log-shipping agent collects it as usual. Masked values are simultaneously written to the vault and fingerprinted. The deployment principle is zero configuration for application developers: labelling a namespace with logshield.io/enabled=true causes a mutating admission webhook to inject the sidecar together with its shared volumes, after which logs are redacted without any change to application code. The design is described fully in Chapter 4.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "6. TECHNOLOGY STACK",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Table 1.3: Technology stack used in LogShield",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Concern",
+        "Choice",
+        "Role in the system"
+      ],
+      [
+        "Language",
+        "Python 3.11",
+        "Sidecar, detection engine, vault, lineage, benchmark and training scripts"
+      ],
+      [
+        "Keyword prefilter",
+        "pyahocorasick (Aho–Corasick automaton)",
+        "Stage 2 early exit on lines with no candidate keyword (Phase 3)"
+      ],
+      [
+        "Pattern matching",
+        "Python regular expressions; 600+ catalog and 761 SecretBench patterns",
+        "Stage 4 secret classification in three passes"
+      ],
+      [
+        "Confidence model",
+        "scikit-learn, scipy (logistic regression, NNLS)",
+        "Weight optimisation and calibrated scoring"
+      ],
+      [
+        "Encryption",
+        "cryptography library (Fernet)",
+        "Encrypts each masked value in the vault"
+      ],
+      [
+        "Storage",
+        "SQLite",
+        "Local vault database and audit records"
+      ],
+      [
+        "Fingerprinting",
+        "HMAC-SHA256",
+        "Keyed fingerprint for lineage tracking"
+      ],
+      [
+        "Orchestration",
+        "Kubernetes; YAML manifests; kubernetes client library",
+        "Two-container pod, RBAC, webhook; API cross-checks"
+      ],
+      [
+        "Deployment targets",
+        "Minikube (demo); EKS or GKE (production)",
+        "Local demonstration and production-scale operation"
+      ],
+      [
+        "Demo application",
+        "FastAPI",
+        "Intentionally leaks secrets for demonstration and benchmarking"
+      ],
+      [
+        "Observability",
+        "prometheus_client; Grafana (planned)",
+        "Metrics endpoint and dashboard (Phase 7)"
+      ],
+      [
+        "Dashboard",
+        "Next.js (planned)",
+        "Lineage graph and SecureReveal retrieval portal (Phase 8)"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "7. ORGANISATION OF THE REPORT",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Chapter 2 surveys the existing landscape of secret-detection tooling and the building blocks used, and states the gap the project occupies. Chapter 3 defines the problem, lists requirements, states the threat model and explains the proposed solution and the development methodology. Chapter 4 presents the architecture, the detection pipeline, the confidence model, the data design and the deployment design. Chapter 5 reports the results obtained from the implementation completed to date, including the module inventory, benchmark results, false-positive analysis and implementation status. Chapter 6 describes the testing strategy, the edge-case analysis and the planned validation. Chapter 7 concludes, states advantages, limitations and applications, and sets out future work. References and appendices follow.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "CHAPTER 2: LITERATURE SURVEY",
+    "style": "Heading 1"
+  },
+  {
+    "type": "p",
+    "text": "This chapter reviews the work on which LogShield builds. It follows the argument of the project: why secrets leak into logs, how existing detectors work and where they fall short, and which established constructions make a pre-ingestion log sanitiser with a recoverable vault and lineage tracking possible.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "1. SECRET LEAKAGE IN SOFTWARE SYSTEMS AND LOGS",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Meli et al. measured the leakage of API keys and other credentials in public GitHub repositories and showed that it is widespread and continuous [4]. The underlying cause is human: developers place credentials where they do not belong. The same cause operates in logging, where a debug statement that prints a connection string or a request header is enough to put a credential in a log stream. This is why logging guidance and weakness catalogues treat sensitive data in logs as a distinct defect class [1, 2]. The leakage channel differs from source code in two ways that matter for design. A log line is produced at runtime, so the secret can be a live value rather than a committed one, and a log line is shipped within seconds to systems that many people can query.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "2. SECRET DETECTION APPROACHES",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "i. Pattern-Based Detection",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Tools such as Gitleaks, TruffleHog and detect-secrets, and the vendor-specific detectors of commercial services, identify secrets by matching regular expressions that encode the format of a known credential [6, 7, 8, 17]. Pattern matching is precise for credentials with a distinctive prefix or structure, such as cloud access keys or personal access tokens, but it cannot recognise a credential that has no fixed format, such as a password.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ii. Entropy-Based Detection",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "To catch secrets without a fixed format, several tools measure the Shannon entropy [18] of a candidate string as a proxy for randomness and flag strings above a threshold. The proxy is crude. UUIDs, content hashes and Base64-encoded blobs are also high-entropy but are not secrets, so entropy alone produces many false positives. This failure mode is observed directly on the LogShield benchmark (Chapter 5).",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "iii. Context and Machine-Learning Approaches",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The scale of the false-positive problem is documented by SecretBench, a labelled dataset in which 97,479 candidate secrets were extracted from 818 public repositories by two detection tools and manual inspection confirmed only 15,084 as true secrets, about one in six [5]. The dataset was created because no public benchmark existed for evaluating detectors that emit many false-positive warnings. The implication for LogShield is that a pattern match or an entropy score alone is not a sufficient basis for redaction; context and several independent signals must be combined.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "iv. Runtime Log Sanitisation",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Redaction of logs is offered by managed services and pipeline products: Datadog Sensitive Data Scanner [12], its on-premises Observability Pipelines Worker [15], and CloudWatch Logs data protection policies [16]. These apply library or custom rules to log data. Log shippers can also be scripted to rewrite records, for example with the Lua filter of Fluent Bit [3], but each rule is written by hand. No open-source engine was found that scores each candidate with a calibrated confidence, runs inside the pod, and couples redaction to a recoverable vault. Table 2.1 summarises the review.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 2.1: Review of current work in secret detection",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Category",
+        "Key studies and tools",
+        "Approach",
+        "Key limitation"
+      ],
+      [
+        "Regex-based scanners",
+        "Gitleaks, TruffleHog, detect-secrets",
+        "Pattern matching on source code and git history",
+        "Post-commit; no runtime log protection"
+      ],
+      [
+        "Entropy-based",
+        "Entropy thresholds in Gitleaks and detect-secrets",
+        "High Shannon entropy as a proxy for secrets",
+        "High false-positive rate on UUIDs, hashes and Base64 blobs"
+      ],
+      [
+        "Dataset and benchmark",
+        "SecretBench (Basak et al., 2023)",
+        "Labelled corpus with candidate-secret ground truth",
+        "Source-code corpus; not a runtime engine"
+      ],
+      [
+        "Managed log redaction",
+        "Datadog Sensitive Data Scanner, CloudWatch Logs data protection",
+        "Library and custom rules on log data",
+        "Cloud mode acts after data leaves the workload; no recoverable vault"
+      ],
+      [
+        "In-environment pipelines",
+        "Datadog Observability Pipelines Worker",
+        "Redact or hash in an aggregation tier inside the infrastructure",
+        "Separate tier, not pod-local; redact or hash only"
+      ],
+      [
+        "Runtime log sanitisation inside the pod",
+        "None found",
+        "-",
+        "This is the gap LogShield fills"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "3. EXISTING APPROACHES TO PROTECTING SECRETS",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "i. Categories of Tooling",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Table 2.2 groups the tools that bear on the problem and states, for each category, why it does not by itself prevent a secret from reaching a log platform.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 2.2: Existing solution categories and their limitation with respect to runtime log leakage",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Solution category",
+        "Representative tools",
+        "Limitation"
+      ],
+      [
+        "Git history scanners",
+        "Gitleaks, TruffleHog, detect-secrets",
+        "Scan after commit; the log aggregator has already received the secret"
+      ],
+      [
+        "Secrets managers",
+        "HashiCorp Vault, AWS Secrets Manager",
+        "Prevent hard-coding; do not intercept accidental logging"
+      ],
+      [
+        "Runtime security",
+        "Falco, Sysdig, Aqua",
+        "Detect behavioural anomalies; do not inspect or sanitise log content"
+      ],
+      [
+        "Cloud log scanners",
+        "Datadog Sensitive Data Scanner (cloud mode), Amazon Macie, Google Sensitive Data Protection",
+        "Data is sent to the provider first; the secret leaves the workload before detection"
+      ],
+      [
+        "In-environment log pipelines",
+        "Datadog Observability Pipelines Worker",
+        "Redact before leaving the infrastructure, but in a separate aggregation tier and without a recoverable vault or lineage"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "ii. Comparison",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Table 2.3 compares the approaches on the properties most relevant to this project. The comparison is based on the public documentation of each category and describes documented or default capabilities.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 2.3: Comparison of secret-protection approaches",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Property",
+        "Git history scanners",
+        "Cloud and pipeline log redaction",
+        "LogShield"
+      ],
+      [
+        "Primary target",
+        "Source code and git history",
+        "Logs and events",
+        "Application log lines"
+      ],
+      [
+        "Point of action",
+        "After commit",
+        "After the line leaves the pod (cloud: after it leaves the environment)",
+        "Inside the pod, before the line reaches stdout"
+      ],
+      [
+        "Decision model",
+        "Regex plus entropy; tool-dependent",
+        "Library and custom rules",
+        "Learned confidence over multiple features; three gates"
+      ],
+      [
+        "Recoverable encrypted vault",
+        "No",
+        "No (redact or hash)",
+        "Yes, with reference IDs and audit trail"
+      ],
+      [
+        "Reuse tracking of a leaked secret",
+        "Tool-dependent, for code",
+        "No",
+        "Yes, by HMAC fingerprint"
+      ],
+      [
+        "Network needed to protect a line",
+        "Not applicable",
+        "Yes (cloud) or an aggregation tier",
+        "No"
+      ],
+      [
+        "Source availability",
+        "Largely open source",
+        "Managed or platform products",
+        "Open and auditable"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "4. SECRETBENCH AND PATTERN CORPORA",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "LogShield’s pattern catalog has two sources. The first is a hand-crafted catalog of more than 600 vendor and generic detectors spanning cloud providers, AI-service keys, databases, messaging services, payment providers, version-control and CI/CD tokens, private keys and generic high-entropy fallbacks, with PII detectors, organised in ten catalog files. The second is a spreadsheet of regular expressions from the SecretBench work [5], whose rules draw on TruffleHog’s vendor detectors [7]. The spreadsheet has two sheets. Sheet 1 holds 755 patterns, each anchored by context in the form (?i)(?:VENDOR)(?:.|[\\n\\r]){0,40}\\b(SECRET)\\b, which requires a vendor token within 40 characters of the candidate secret. Sheet 2 holds 6 patterns that carry a high false-positive risk and are ranked by the number of repositories in which they were observed. Together the two sheets give the 761 patterns referred to in this report.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "This integration is safe by construction. Because Sheet 1 patterns require a vendor name nearby, they cannot fire on a random UUID or MD5 hash, and Sheet 2 patterns are context-gated so that they fire only when the context stage has already detected a positive signal.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5. MULTI-PATTERN MATCHING: THE AHO–CORASICK AUTOMATON",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Running more than a thousand regular expressions over every line would be too slow for a sidecar that must keep per-line latency in the sub-millisecond range. The Aho–Corasick algorithm [19] builds a single finite automaton from a set of keywords and finds every occurrence of every keyword in one pass over the text, in time linear in the length of the text plus the number of matches, independent of the number of keywords. LogShield uses this automaton as its candidate finder over roughly 2,000 vendor names and sensitive field names. A line that contains no keyword exits the pipeline immediately, which is the design basis for the early-exit architecture described in Chapter 4. Approximately 65% of real Kubernetes log lines are expected to leave at this stage.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "6. CONFIDENCE SCORING AND WEIGHT LEARNING",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "A single rule is brittle, so LogShield combines several signals into one score. Logistic regression [20] models the probability of a binary outcome as a logistic function of a weighted sum of features, which makes each weight interpretable as the influence of one signal. The raw output of a classifier is not necessarily a well-calibrated probability, and calibration methods exist to correct this [21], which matters here because the output is compared with fixed thresholds. Where weights are constrained to be non-negative, the non-negative least squares (NNLS) method [22] provides a stable way to fit them. Both fitting routines are available in scikit-learn and scipy [23].",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Evaluation uses the standard measures of precision, recall and F1-score [24]. The planned validation uses stratified k-fold cross-validation [25] over a labelled corpus whose negative lines are drawn partly from LogHub, a collection of real system logs [26], so that the negative class reflects genuine log text and not only synthetic sentences.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "7. ENCRYPTED STORAGE, KEYED HASHING AND SECRETS MANAGEMENT",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The vault uses Fernet, a symmetric authenticated-encryption recipe in which the plaintext is encrypted with AES-128 in CBC mode [27, 28, 29] and the ciphertext is authenticated with HMAC-SHA256, so that any modification is detected on decryption [30]. Records are stored in SQLite [31], a serverless database that needs no network service and therefore fits the zero-network-dependency goal. For lineage, a plain hash of a secret would allow an attacker who obtains the fingerprint table to test guesses offline, especially for low-entropy secrets. A keyed hash, HMAC [32, 33], depends on a key the attacker does not have, so a fingerprint can be compared across pods without revealing or enabling recovery of the secret.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Encrypted storage with audited, role-gated retrieval is the established pattern of HashiCorp Vault and AWS Secrets Manager [9, 10]. LogShield does not claim to reinvent it. Its contribution is the integration of such a vault with a redaction pipeline that decides, at ingestion time, which values require vaulting.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "8. KUBERNETES SIDECARS AND ADMISSION CONTROL",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "A sidecar is a second container that shares the lifecycle, network and volumes of the main container in the same pod; the pattern is described by Burns and Oppenheimer as a way to extend an application without changing it [34]. LogShield uses a shared emptyDir volume [35] through which the application writes its log file and the sidecar reads it. To remove the burden of declaring the sidecar in every manifest, Kubernetes mutating admission webhooks can intercept pod creation requests and modify the pod specification before it is persisted, and can be limited to namespaces carrying a particular label [36]. This is the mechanism behind the zero-configuration goal. Downstream, the sidecar’s standard output is collected by the cluster’s existing agent [3], and operational counters can be exposed to Prometheus [37].",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "9. RESEARCH GAP AND CONTRIBUTION",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Existing tools address individual pieces of the problem but not their combination. Git history scanners and entropy-based tools operate on source code and repository history rather than on live log streams. Managed log scanners and pipeline products perform real-time masking, but in cloud mode only after the log has left the workload, and in pipeline mode in a separate tier and without a recoverable vault. Fingerprinting and reuse detection exist for source code but not for cross-application runtime log secrets. Encrypted storage with audited retrieval exists but is not coupled to a redaction pipeline.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "The consolidated gap is that no open-source, Kubernetes-native runtime log sanitiser was found that combines vendor-specific patterns, contextual signals, machine-learning-calibrated confidence scoring, local encrypted vaulting and secret lineage tracking, all operating before ingestion at a latency in the low milliseconds or below. Framing this contribution requires care. The contribution is the synthesis of detection, recovery and lineage at the log-egress boundary, and not the invention of any one mechanism in isolation.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Thematic analysis of the reviewed tools and literature produced an eight-pillar taxonomy of secret-detection capability. Table 2.4 and Figure 2.1 show the extent to which LogShield covers each pillar.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 2.4: Eight-pillar taxonomy of secret-detection capability and LogShield coverage",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Pillar",
+        "What it provides",
+        "Coverage"
+      ],
+      [
+        "Pattern specificity",
+        "Vendor-specific formats from the catalog and SecretBench",
+        "Implemented"
+      ],
+      [
+        "Generic heuristics",
+        "High-entropy and generic key-value fallbacks",
+        "Implemented"
+      ],
+      [
+        "Contextual signals",
+        "Trigger words, negative words and log level",
+        "Implemented"
+      ],
+      [
+        "Structural validation",
+        "Length, character set and format checks on a token",
+        "Implemented"
+      ],
+      [
+        "Encoding awareness",
+        "URL-encoded and Base64 values",
+        "Implemented as a scoring factor; decoding pre-pass planned (EC-05, EC-06)"
+      ],
+      [
+        "Variable-name proximity",
+        "Nearness of the value to words such as password or token",
+        "Implemented"
+      ],
+      [
+        "Multi-line assembly",
+        "Buffering of PEM keys and JSON blocks as one unit",
+        "Planned: Phase 3"
+      ],
+      [
+        "Active validation",
+        "Checking with the issuer whether a credential is live",
+        "Planned: Phase 4"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "Figure 2.1: Eight-pillar secret-detection coverage (green: implemented, amber: planned)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "CHAPTER 3: PROBLEM DEFINITION AND PROPOSED SOLUTION",
+    "style": "Heading 1"
+  },
+  {
+    "type": "p",
+    "text": "1. PROBLEM STATEMENT",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Containerised applications leak secrets into log streams at ingestion time. Existing solutions operate too late, as with git scanners that act after a commit; too far from the leak, as with cloud log scanners that require the secret to leave the pod before it can be inspected; or not at all, as with runtime log sanitisers, a category in which no comparable open-source engine was found in the literature reviewed.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "The problem addressed by this project is therefore stated as follows: to design and implement a Kubernetes-native sidecar that intercepts application log lines inside the pod, computes a multi-signal confidence score for each candidate secret, and, for high-confidence values, redacts the log line, stores the plaintext in an encrypted local vault retrievable by reference ID, and records a keyed-hash fingerprint for cross-application lineage tracking, all before the line reaches the cluster's log-shipping infrastructure, at sub-5-millisecond per-line latency and with zero application-side configuration changes.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "2. REQUIREMENTS ANALYSIS",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "i. Functional Requirements",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Table 3.1: Functional requirements",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "ID",
+        "Requirement"
+      ],
+      [
+        "FR1",
+        "Every raw log line produced by the application reaches the sidecar before it is forwarded to the cluster log-shipping agent."
+      ],
+      [
+        "FR2",
+        "Each line is scored by the LogMask engine and receives a Secret Confidence Score of 0 to 100 and a decision of MASK, FLAG or PASS."
+      ],
+      [
+        "FR3",
+        "A line scoring MASK is redacted and a reference marker is substituted; the plaintext is written to the vault simultaneously."
+      ],
+      [
+        "FR4",
+        "A line scoring FLAG carries a reference ID without being redacted; the value is not written to the vault."
+      ],
+      [
+        "FR5",
+        "Each vaulted entry is encrypted with Fernet (AES-128-CBC with HMAC authentication) and keyed by a reference ID of the form SEC-YYYYMMDD-XXXX."
+      ],
+      [
+        "FR6",
+        "An authorised user can retrieve a vaulted value by reference ID, view a lineage report and inspect an audit log of all retrievals through a command-line interface."
+      ],
+      [
+        "FR7",
+        "Each masked value is fingerprinted with HMAC-SHA256 and the occurrence count, pod UIDs and namespaces are recorded without storing a second plaintext copy."
+      ],
+      [
+        "FR8",
+        "A namespace labelled logshield.io/enabled=true causes a mutating admission webhook to inject the sidecar container and shared volume into pods automatically (Phase 6)."
+      ],
+      [
+        "FR9",
+        "The sidecar exposes a Prometheus metrics endpoint with detection counts and latency histograms (Phase 7)."
+      ],
+      [
+        "FR10",
+        "Vault entries are automatically deleted after a configurable time-to-live."
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "ii. Non-Functional Requirements",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Table 3.2: Non-functional requirements",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "ID",
+        "Category",
+        "Requirement"
+      ],
+      [
+        "NFR1",
+        "Latency",
+        "Average per-line latency must not exceed 5 ms; P99 must not exceed 10 ms."
+      ],
+      [
+        "NFR2",
+        "Throughput",
+        "The sidecar must sustain at least 5,000 lines per second on a single node without backpressure."
+      ],
+      [
+        "NFR3",
+        "Precision",
+        "The precision of the detection engine must be at or above 0.90 on the benchmark corpus to limit operational noise."
+      ],
+      [
+        "NFR4",
+        "Recall",
+        "The recall of the detection engine must be at or above 0.90 to catch the large majority of leaks."
+      ],
+      [
+        "NFR5",
+        "Confidentiality",
+        "No plaintext secret may appear in the sidecar's own log output, the lineage store or the audit log."
+      ],
+      [
+        "NFR6",
+        "Availability",
+        "A failure of the vault or lineage module must not prevent lines from being forwarded; the pipeline must fail open rather than block."
+      ],
+      [
+        "NFR7",
+        "Portability",
+        "The sidecar must run on any Kubernetes cluster with no dependency beyond a Python 3.11 runtime."
+      ],
+      [
+        "NFR8",
+        "Deployability",
+        "Application teams must not change application manifests manually to enable protection; namespace labelling is the only action required."
+      ],
+      [
+        "NFR9",
+        "Auditability",
+        "Every retrieval of a vaulted value must produce an audit record carrying actor, operation and timestamp."
+      ],
+      [
+        "NFR10",
+        "Maintainability",
+        "Patterns, weights and thresholds must be expressed as configuration, not hard-coded constants, so they can be updated without code changes."
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "3. THREAT MODEL",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "A security design is only meaningful relative to the adversary it targets. The threat model used for LogShield is stated explicitly so that the tests in Chapter 6 can be mapped to it.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "i. Assets",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The assets to protect are the plaintext secret values that appear in log lines, the vault contents where those values are stored after detection, and the lineage records that associate fingerprints with pods and namespaces.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ii. Adversaries",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Engineer with log-query access: holds valid credentials to the log platform and can read any shipped log line. If a secret is redacted before shipping, this adversary sees only the reference marker.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Compromised log aggregator or backup: the log aggregator or one of its backups is obtained by an attacker. Because lines arrive already redacted, the attacker obtains only markers, not values.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Attacker who reads the pod filesystem: obtains the SQLite vault file from the node. The file is encrypted with Fernet; without the vault key the ciphertext is opaque.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Insider who abuses SecureReveal retrieval: holds legitimate access to the CLI and retrieves vault entries beyond their authorisation. The audit log records every retrieval with actor and timestamp, and role-based access controls are the gate.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "iii. Assumptions and Exclusions",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "It is assumed that the sidecar container and its image are not compromised, that the vault encryption key is kept in a Kubernetes Secret with appropriate RBAC restrictions, and that the underlying Fernet construction is sound. The model does not defend against malware on the node that can read process memory, denial-of-service attacks that flood the log volume, or a compromised Kubernetes control plane.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 3.1: Threat model: adversaries A1-A4 (red arrows) and the defences LogShield places in their path",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "4. PROPOSED SOLUTION",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The proposed solution rests on five principles, each of which answers a specific part of the problem statement.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "i. Pre-Ingestion Interception",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The sidecar reads the application log before the line exits the pod. Because the shared emptyDir volume is in the same pod, no network packet carrying a plaintext secret is ever produced; the only outbound data is the redacted line. This property cannot be achieved by any tool that acts on data after it has been shipped.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ii. Multi-Signal Confidence Model",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "A single detector rule is brittle. LogShield combines a pattern match, a Shannon entropy score, a variable-name proximity measure, a structural validation signal, a context score, an encoding signal, a length normalisation and a dictionary-word penalty into one calibrated probability, trained by logistic regression. Redaction is triggered only when this probability exceeds a threshold, not when any single signal fires.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "iii. Encrypted Local Vault with Reference IDs",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "A masked value is stored in encrypted form locally on the node. The redacted log line carries a reference ID that an authorised engineer can use to retrieve the value during an incident. This means the original value is not permanently destroyed and the system is useful for incident response, not only for prevention.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "iv. Privacy-Preserving Lineage Tracking",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "A keyed hash of the masked value is recorded together with the pod UIDs and namespaces in which it was observed. This allows an analyst to determine that a credential has leaked into logs across several applications without holding a second copy of the value. The key prevents offline guessing of the value from the fingerprint.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "v. Zero-Configuration Injection",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Rather than requiring every application team to change their manifests, a mutating admission webhook intercepts pod creation and adds the sidecar container together with the shared volume. Application developers need only label their namespace.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5. FEASIBILITY STUDY",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Technical feasibility: the required libraries are available for Python 3.11. The Aho–Corasick automaton, logistic regression, Fernet encryption, HMAC-SHA256 and SQLite are all standard, mature components. Kubernetes admission webhooks are a stable, documented feature. The latency targets have been demonstrated to be achievable on the 1,847-line benchmark (Section 5.2).",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Economic feasibility: the stack consists entirely of open-source software. The sidecar adds one container per pod; its resource footprint is dominated by the Python runtime and is estimated at 50-100 MB of memory. No third-party service is required.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Operational feasibility: the system requires no change to application code. Developers continue to write logs normally. The only operational concept they encounter is the reference marker in the log output, which identifies a redacted value they can retrieve through the CLI.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "6. METHODOLOGY",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The project followed an incremental, phase-based approach in which each phase produced a working, tested slice of the system before the next began. Table 3.3 summarises the phases.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 3.3: Development phases",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Phase",
+        "Work delivered"
+      ],
+      [
+        "Interim core",
+        "Sidecar entry point; six-factor scoring engine; full pattern catalog; SecureReveal vault and CLI; SecretLineage fingerprinting; demonstration application; benchmark suite; weight trainer; Kubernetes deployment manifests; unit tests."
+      ],
+      [
+        "Phase 0  (Week 1)",
+        "SecretBench pattern import: 761-pattern JSON import and context-gated high-false-positive denylist."
+      ],
+      [
+        "Phase 1  (Week 2)",
+        "Multi-stage pipeline: Preprocessor, Context Engine and Secret Classifier as explicit, separate modules."
+      ],
+      [
+        "Phase 2  (Week 3)",
+        "ML weight optimisation: 50,000-line labelled dataset, trained weights and the four-way ablation table executed."
+      ],
+      [
+        "Phase 3  (Week 4)",
+        "Performance hardening: Aho–Corasick prefilter, multi-line block buffering and asynchronous I/O."
+      ],
+      [
+        "Phase 4  (Week 5)",
+        "Active validity analyser with AWS, Slack, GitHub and Stripe validity checks."
+      ],
+      [
+        "Phase 5  (Week 6)",
+        "Vault and audit hardening: WAL mode, constant-time authentication, SIEM audit exporter, vault key stored in a Kubernetes Secret."
+      ],
+      [
+        "Phase 6  (Week 7)",
+        "Kubernetes automation: Dockerfiles, mutating admission webhook and end-to-end test script."
+      ],
+      [
+        "Phase 7  (Week 8)",
+        "Observability: Prometheus metrics endpoint and a Grafana dashboard."
+      ],
+      [
+        "Phase 8  (Week 9)",
+        "Enterprise dashboard: Next.js lineage graph and SecureReveal retrieval portal."
+      ],
+      [
+        "Phase 9  (Week 10)",
+        "Production readiness: full 50,000-line benchmark, chaos testing and continuous-integration workflow."
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "7. KEY DESIGN DECISIONS",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Table 3.4: Key design decisions and justification",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Decision",
+        "Justification"
+      ],
+      [
+        "Three-gate decision (MASK, FLAG, PASS) rather than binary",
+        "Allows an operator to see uncertain cases (FLAG) without suppressing them or creating vault noise from them."
+      ],
+      [
+        "Logistic regression over a fixed-weight heuristic",
+        "A trained model can be improved by providing labelled data; a fixed heuristic cannot adapt without code changes."
+      ],
+      [
+        "Fernet for vault encryption over raw AES-GCM",
+        "Fernet is a complete recipe with a key-rotation protocol; using a raw mode would require implementing authentication and rotation by hand."
+      ],
+      [
+        "HMAC fingerprint over a plain hash for lineage",
+        "A plain SHA-256 of a short secret can be reversed by brute force; HMAC requires the key and is standard practice for keyed fingerprinting."
+      ],
+      [
+        "emptyDir shared volume over network socket for log transfer",
+        "Avoids a network dependency; the volume is in the pod and requires no service discovery or connection management."
+      ],
+      [
+        "Fail-open on vault or lineage error",
+        "A crash of a secondary module must not stop lines from being forwarded; the application's observability is more important than perfect vaulting."
+      ],
+      [
+        "Configurable thresholds (50 and 80) rather than constants",
+        "Operators tuning for higher precision or higher recall must be able to change the gates without a code change."
+      ],
+      [
+        "NNLS for initial weight estimation before logistic regression",
+        "Non-negative constraints prevent any single factor from carrying a negative weight at training time, which is desirable when all factors are intended to contribute positively."
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "CHAPTER 4: DESIGN",
+    "style": "Heading 1"
+  },
+  {
+    "type": "p",
+    "text": "1. SYSTEM ARCHITECTURE",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "LogShield is built in layers so that each concern is implemented once. The overall sidecar architecture within a Kubernetes pod is shown in Figure 4.1. The application and the sidecar share an emptyDir log volume. The sidecar's three main subsystems are LogMask, which implements the detection pipeline; SecureReveal, which manages encrypted vault storage and retrieval; and SecretLineage, which maintains the HMAC fingerprint store. The sidecar's standard output is the only channel through which log data leaves the pod and is collected by the existing log-shipping agent. Nothing else changes in the cluster.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 4.1: LogShield sidecar architecture within a Kubernetes pod",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "The architecture is motivated directly by the requirements of Chapter 3. Pre-ingestion interception (NFR1 of the threat model) is achieved because the sidecar reads the log file from the shared volume before any line reaches standard output. Zero-configuration deployment (NFR8) follows from the admission webhook, which modifies the pod specification before it is persisted, so application teams see no change to their manifests. Fail-open behaviour (NFR6) is enforced at the stage boundary: if the vault or lineage module raises an exception, the decision gate falls back to forwarding the original line rather than blocking.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "2. THE SIX-STAGE DETECTION PIPELINE",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Every raw log line is passed through six stages in sequence. The pipeline is designed so that the large majority of lines exit at the earliest possible stage, keeping average latency low. Figure 4.2 shows the full pipeline; Figure 4.3 shows the three-pass structure of the Secret Classifier at Stage 4.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 4.2: The six-stage detection pipeline (Stage 2 early exit removes roughly 65% of lines from further processing)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "i. Stage 1 — Preprocessor",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The Preprocessor runs on every line at O(n) cost. It performs JSON field extraction for semantic key-value detection, URL-decoding of percent-encoded tokens, Base64-decoding of suspicious blobs, assembly of multi-line blocks such as PEM keys or JSON objects (planned for Phase 3; edge case EC-01), and enforces a line-length guard capped at 64 KB (edge case EC-11). Its output is a PreprocessedLine object carrying an array of tokens and a map of decoded values.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ii. Stage 2 — Candidate Finder",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The Candidate Finder runs on every line using an Aho–Corasick automaton built from approximately 2,000 keywords covering vendor names and sensitive field names. If no keyword is found, the line exits immediately as a pass-through. This early exit is the primary latency control: approximately 65% of real Kubernetes log lines are expected to carry no candidate keyword and exit here at effectively zero marginal cost (Phase 3, performance hardening).",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "iii. Stage 3 — Context Engine",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The Context Engine runs on the remaining lines. It applies positive signals such as the presence of the words password, secret or api_key, negative signals such as trace_id, uuid or etag, and a log-level signal, since DEBUG and ERROR output is treated as more suspicious than INFO. Its output is a context_score in the range 0.0 to 1.0.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "iv. Stage 4 — Secret Classifier",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The Secret Classifier applies pattern matching in three passes. Pass 1 checks the 600+ hand-crafted catalog regexes. Pass 2 checks the 755 non-false-positive SecretBench patterns (Sheet 1). Pass 3 checks the 6 high-false-positive SecretBench patterns (Sheet 2), gated so that they fire only when the context score exceeds 0.5. The stage outputs a secret_type, a regex_score and a flag indicating whether the match was context-gated. Figure 4.3 shows the three-pass structure.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 4.3: Three-pass structure of Stage 4 (Secret Classifier)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "v. Stage 5 — Confidence Model",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The Confidence Model constructs an eight-dimensional feature vector and passes it through a logistic regression model, producing a calibrated probability that is scaled to the SCS integer from 0 to 100. Table 4.1 describes each feature.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 4.1: Eight features of the confidence model",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Feature",
+        "What it measures",
+        "High value suggests"
+      ],
+      [
+        "Regex score",
+        "Whether the token matches a known credential format and the specificity of the matching pattern",
+        "Recognised credential type"
+      ],
+      [
+        "Entropy",
+        "Shannon entropy per character of the token, normalised to 0-1",
+        "Randomly generated key material"
+      ],
+      [
+        "Variable-name proximity",
+        "Distance in characters from the token to the nearest sensitive field name (password, token, key, secret)",
+        "Context near a sensitive field"
+      ],
+      [
+        "Structural validation",
+        "Whether the token length, character set and format match known credential specifications",
+        "Well-formed credential"
+      ],
+      [
+        "Context score",
+        "Output of Stage 3: presence of positive trigger words, absence of negative words, log level",
+        "Debug or error output near a sensitive label"
+      ],
+      [
+        "Encoding signal",
+        "Whether the token is Base64, URL-encoded or hex-encoded",
+        "Encoded credential in transit"
+      ],
+      [
+        "Length normalisation",
+        "Normalised token length; very short and very long tokens are down-weighted",
+        "Length consistent with known key material"
+      ],
+      [
+        "Dictionary-word penalty",
+        "Whether the token is composed of common English words, which are unlikely to be secrets",
+        "Not a secret (e.g. a descriptive string)"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "vi. Stage 6 — Decision Gate",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The Decision Gate applies the three-way decision described in Table 1.2: SCS below 50 passes the line untouched; SCS from 50 to 79 flags it with a reference marker without redacting it; SCS of 80 or above redacts the token, writes the plaintext to the vault, and records a lineage fingerprint. An optional asynchronous validity check by the Analyzer module (Phase 4) may subsequently upgrade the severity of a flagged value found to correspond to a live credential. Figure 4.4 shows the three decision zones.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 4.4: Decision gate: three zones of the Secret Confidence Score",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "3. SOFTWARE ENVIRONMENT",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Table 4.2: Software environment",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Category",
+        "Tools and libraries",
+        "Role in the system"
+      ],
+      [
+        "Primary language",
+        "Python 3.11",
+        "Sidecar, detection engine, vault, lineage, benchmark and training scripts"
+      ],
+      [
+        "Infrastructure",
+        "YAML, Kubernetes client library",
+        "Kubernetes deployment, RBAC and webhook manifests"
+      ],
+      [
+        "Core detection",
+        "Python re (standard library), pyahocorasick",
+        "Regex matching; Aho–Corasick keyword prefilter"
+      ],
+      [
+        "Confidence model",
+        "scikit-learn, scipy",
+        "Logistic regression, calibration and NNLS weight optimisation"
+      ],
+      [
+        "Encryption",
+        "cryptography (Fernet)",
+        "AES-128-CBC with HMAC; vault entry encryption"
+      ],
+      [
+        "Storage",
+        "sqlite3 (standard library)",
+        "Local vault and audit-log database"
+      ],
+      [
+        "Fingerprinting",
+        "hmac (standard library)",
+        "HMAC-SHA256 lineage fingerprint"
+      ],
+      [
+        "Demo application",
+        "FastAPI",
+        "Intentionally leaks secrets for demonstration"
+      ],
+      [
+        "Metrics",
+        "prometheus_client",
+        "Prometheus /metrics endpoint (Phase 7)"
+      ],
+      [
+        "Dashboard",
+        "JavaScript / Node.js (planned)",
+        "Next.js enterprise dashboard (Phase 8)"
+      ],
+      [
+        "Deployment targets",
+        "Minikube (demo); EKS or GKE (production)",
+        "Local demonstration and production-scale operation"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "4. ALGORITHMS AND DATA STRUCTURES",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "i. Core Data Structures",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Three data structures carry state through the pipeline, the vault and the lineage tracker, and together they constitute the data design of the system.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 4.3: Principal data structures",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Structure",
+        "Key fields",
+        "Purpose"
+      ],
+      [
+        "SCSResult",
+        "token, score (0–100), factors (6 factor scores), decision (MASK/FLAG/PASS), detector_name, vendor, category, detector_type",
+        "Full scoring result for a single extracted token; transient, never persisted"
+      ],
+      [
+        "VaultEntry",
+        "ref_id (e.g. SEC-20241115-A1B2), ciphertext (Fernet AES-128-CBC), score, factors_json, timestamp, expiry, pod_uid",
+        "Encrypted record of a masked secret keyed by reference ID; persisted in the local SQLite vault"
+      ],
+      [
+        "FingerprintRecord",
+        "hmac_hash (HMAC-SHA256 of the secret value), occurrences, pod_uids, namespaces, first_seen, last_seen",
+        "Tracks reuse of the same secret across pods and namespaces without storing the plaintext; persisted in the local SQLite fingerprint store"
+      ],
+      [
+        "AuditEvent",
+        "actor, operation, ref_id, timestamp",
+        "Immutable audit record written on every retrieval through the SecureReveal CLI; persisted to the audit log"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "Figure 4.5 shows the logical relationships among the four structures. The vault and fingerprint records are created together when the Decision Gate fires a MASK decision; neither the SCSResult nor the AuditEvent carries the plaintext.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 4.5: Logical data model: SCSResult, VaultEntry, FingerprintRecord and AuditEvent",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ii. Decision Gate Algorithm",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The Decision Gate resolves the calibrated SCS produced by Stage 5 into one of three actions. Scores below 50 pass the line untouched. Scores from 50 to 79 flag the value with a reference marker. Scores of 80 or above trigger redaction together with a synchronous vault write and lineage fingerprint. The two thresholds are configuration parameters stored in the sidecar environment, not constants, and their effect on precision and recall is examined in Chapter 5.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "iii. Confidence Model Formulation",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "The SCS is produced by a logistic regression model over the eight-dimensional feature vector of Table 4.1. The model's weights are trained rather than fixed by hand, using the NNLS-based weight trainer on a labelled corpus. The output probability is calibrated and scaled onto the integer 0–100 range consumed by the Decision Gate. This design is deliberate: replacing a single-factor rule with a learned combination of eight independent signals is the basis for the accuracy improvement expected in the four-way ablation experiment.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5. MASKING AND VAULTING SEQUENCE",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Figure 4.6 shows the sequence of operations from the moment a log line arrives at the sidecar to the moment the redacted line is forwarded to standard output.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 4.6: Masking, vaulting and lineage sequence for a line that scores MASK",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "The sidecar tails the shared volume file and reads each line (steps 1 and 2). Stages 1 to 5 of the detection pipeline compute the SCS (step 3). If the score is 80 or above, the Confidence Model calls SecureReveal to encrypt and store the value, which returns a reference ID (step 4), and SecretLineage to update the HMAC fingerprint record (step 5). The sidecar then writes the redacted line to standard output (step 6). Vault and lineage operations are both synchronous so that the reference ID is available before the redacted line is forwarded. Steps 4 and 5 raise exceptions only if the storage engine fails, and the exception handler falls back to forwarding the line rather than blocking.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "6. VAULT AND LINEAGE DESIGN",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "SecureReveal implements the vault and controlled-recovery module. Each masked value is encrypted with Fernet (AES-128 in CBC mode with HMAC-SHA256 authentication) and stored in a local SQLite database together with its reference ID, the SCS at detection time, the individual factor scores, a timestamp, a TTL-based expiry and the pod UID from which it was detected. A command-line interface exposes three operations: retrieve recovers a specific secret by reference ID; sprawl-report lists every fingerprint whose occurrence count exceeds one; and audit-log shows the complete access history.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "SecretLineage implements the fingerprinting and cross-application tracking module. Rather than storing the plaintext again, it computes an HMAC-SHA256 fingerprint of the value and records the number of occurrences, the list of pod UIDs and namespaces, and first- and last-seen timestamps. This allows LogShield to detect that the same credential has leaked from more than one application without holding a second copy. Cross-cluster aggregation of lineage records remains future work.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 4.4: Vault and lineage component characteristics",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Property",
+        "Value"
+      ],
+      [
+        "Encryption scheme",
+        "Fernet symmetric encryption (AES-128, CBC mode, HMAC-SHA256 authentication)"
+      ],
+      [
+        "Storage backend",
+        "Local SQLite database"
+      ],
+      [
+        "Reference identifier format",
+        "SEC-YYYYMMDD-XXXX (for example SEC-20241115-A1B2)"
+      ],
+      [
+        "Retention",
+        "TTL-based auto-deletion; default configurable at deployment time"
+      ],
+      [
+        "Retrieval interface",
+        "Command-line interface: retrieve, sprawl-report, audit-log"
+      ],
+      [
+        "Lineage fingerprint",
+        "HMAC-SHA256 of the secret value; plaintext never duplicated"
+      ],
+      [
+        "Lineage scope (current)",
+        "Single node; cross-pod aggregation recorded via pod UID and namespace fields"
+      ],
+      [
+        "Fail-open behaviour",
+        "On vault or lineage exception, the redacted line is forwarded and the exception is logged"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "7. DEPLOYMENT DESIGN",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The sidecar is declared in the Kubernetes pod specification alongside the application container, sharing an emptyDir volume mounted at a common path. In the current demonstration deployment, this declaration is supplied in the manifests under k8s/deployment.yaml and k8s/rbac.yaml. In the planned Phase 6, a mutating admission webhook intercepts pod creation for labelled namespaces and adds the sidecar and volume automatically, so that the application team needs only to apply the namespace label. Figure 4.7 shows the webhook admission flow.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 4.7: Kubernetes mutating admission webhook flow (planned, Phase 6)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 4.5: Kubernetes resource roles",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Resource",
+        "Purpose"
+      ],
+      [
+        "Pod (two containers: app + sidecar)",
+        "Application and LogShield share a lifecycle; log volume is a shared emptyDir mount"
+      ],
+      [
+        "emptyDir volume",
+        "Carries the raw log file from the application container to the sidecar"
+      ],
+      [
+        "Namespace label (logshield.io/enabled=true)",
+        "Selector for the admission webhook; controls which namespaces receive automatic injection"
+      ],
+      [
+        "ServiceAccount, Role, RoleBinding",
+        "Grant the sidecar read-only access to pod metadata for lineage cross-checks"
+      ],
+      [
+        "MutatingWebhookConfiguration (Phase 6)",
+        "Intercepts pod creation and injects sidecar container and volume mount"
+      ],
+      [
+        "Kubernetes Secret (Phase 5)",
+        "Holds the vault encryption key; restricts access to the sidecar service account only"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "8. ERROR HANDLING DESIGN",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Errors that affect a single log line do not stop the pipeline. A scoring exception at any stage falls back to a PASS decision and the original line is forwarded, with the exception logged at WARNING level. A vault write failure is logged but does not block the redacted line from being emitted; the reference marker is written to the line with a note that retrieval may be unavailable. A lineage update failure is swallowed after logging; losing a fingerprint increment is less harmful than losing a line. Long lines above the 64 KB guard are truncated to the guard length before scoring and the truncation is flagged in the output. Binary and non-UTF-8 content is decoded with errors=\"replace\" so the pipeline does not crash on corrupt input.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "CHAPTER 5: RESULT ANALYSIS",
+    "style": "Heading 1"
+  },
+  {
+    "type": "p",
+    "text": "This chapter reports the results obtained from the portion of the system implemented to date. The sidecar entry point, the six-factor scoring engine, the full pattern catalog, the vault, the lineage tracker and their supporting scripts are implemented and functional. The multi-stage pipeline restructuring, the SecretBench pattern import, the ML weight-training run on the 50,000-line corpus, the Aho–Corasick prefilter, the active validity Analyzer, the mutating admission webhook and the observability layer are planned for the phased work described in Chapter 3. Section 5.6 states the completion status explicitly.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "1. EXPERIMENTAL ENVIRONMENT",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Table 5.1: Environment used for measurements and demonstration",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Item",
+        "Value"
+      ],
+      [
+        "Processor",
+        "12th Gen Intel Core i5-12450H, 12 logical processors"
+      ],
+      [
+        "Memory",
+        "16 GB DDR4"
+      ],
+      [
+        "Operating system",
+        "Ubuntu 22.04 LTS"
+      ],
+      [
+        "Kubernetes platform",
+        "Minikube v1.33 (demonstration deployment)"
+      ],
+      [
+        "Python runtime",
+        "Python 3.11.9"
+      ],
+      [
+        "LogShield sidecar version",
+        "Interim core (pre-Phase 0)"
+      ],
+      [
+        "Benchmark dataset",
+        "1,847 labelled log lines (logs.txt + ground_truth.txt)"
+      ],
+      [
+        "Pattern catalog",
+        "600+ hand-crafted patterns; 761 SecretBench patterns (integration pending Phase 0)"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "2. DATASET AND MODULE INVENTORY",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The current benchmark dataset consists of a file of 1,847 log lines together with a line-labelled ground-truth file used to compute precision, recall and related metrics. The pattern catalog underlying the classifier comprises more than 600 hand-crafted patterns spanning cloud providers, AI-service keys, databases, messaging services, payment providers, version-control and CI/CD tokens, private keys and generic high-entropy fallbacks, together with 761 SecretBench-validated patterns planned for integration in Phase 0.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 5.2: Module inventory at interim review",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Module",
+        "Purpose",
+        "Status"
+      ],
+      [
+        "Sidecar entry point (sidecar/main.py)",
+        "File-tailing loop, statistics, thread orchestration",
+        "Complete"
+      ],
+      [
+        "SCS engine (sidecar/logmask/scorer.py)",
+        "Three-pass extraction and six-factor scoring",
+        "Complete"
+      ],
+      [
+        "Detection factors (regex, varname, entropy, token-structure, context, encoding)",
+        "The six scoring factors feeding the confidence model",
+        "Complete"
+      ],
+      [
+        "Pattern catalog (ten catalog files)",
+        "600+ hand-crafted vendor and generic detectors",
+        "Complete"
+      ],
+      [
+        "Vault (sidecar/securereveal/vault.py) and CLI",
+        "Fernet AES-128-CBC over SQLite; retrieve, sprawl-report and audit-log commands",
+        "Complete"
+      ],
+      [
+        "SecretLineage (sidecar/secretlineage/fingerprint.py)",
+        "HMAC-SHA256 fingerprinting with Kubernetes API cross-checks",
+        "Complete"
+      ],
+      [
+        "Demo application (demo-app/app.py)",
+        "FastAPI application that intentionally leaks secrets",
+        "Complete"
+      ],
+      [
+        "Benchmark suite (benchmark/benchmark.py)",
+        "Precision, recall and F1 measurement against baselines",
+        "Complete"
+      ],
+      [
+        "Weight trainer (scripts/train_weights.py)",
+        "NNLS-based factor-weight optimisation",
+        "Complete"
+      ],
+      [
+        "Regex mapper (scripts/map_regexes.py)",
+        "Integration of Gitleaks and TruffleHog regex sources",
+        "Complete"
+      ],
+      [
+        "Kubernetes deployment and RBAC (k8s/)",
+        "Two-container pod with emptyDir volumes; namespace, service account and read-only role",
+        "Complete"
+      ],
+      [
+        "Unit tests (tests/)",
+        "24 unit tests over catalog and scoring behaviour",
+        "Complete"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "In total, the implementation to date comprises approximately 9,500 lines of production code and tests.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "3. COMPARATIVE MODEL PERFORMANCE",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The system was evaluated on the 1,847-line labelled dataset. Table 5.3 reports the resulting precision, recall, F1-score, throughput and latency figures.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 5.3: Benchmark results on the current 1,847-line dataset",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Metric",
+        "Value"
+      ],
+      [
+        "Precision",
+        "0.942"
+      ],
+      [
+        "Recall",
+        "0.918"
+      ],
+      [
+        "F1-score",
+        "0.930"
+      ],
+      [
+        "Throughput",
+        "12,847 lines/sec"
+      ],
+      [
+        "Average latency",
+        "0.078 ms/line"
+      ],
+      [
+        "P95 latency",
+        "0.23 ms/line"
+      ],
+      [
+        "P99 latency",
+        "0.41 ms/line"
+      ],
+      [
+        "False positives",
+        "23 (1.2%)"
+      ],
+      [
+        "False negatives",
+        "31 (1.7%)"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "Figure 5.1: Precision, recall and F1-score on the 1,847-line labelled dataset",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 5.2: Per-line latency: average, P95 and P99 against the 5 ms design target",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "All three latency percentiles are well below the 5 ms design target (NFR1) and the throughput of 12,847 lines/sec exceeds the 5,000 lines/sec minimum (NFR2). The current benchmark is on 1,847 lines; the four-way ablation experiment on a 50,000-line corpus is planned for Phase 2 and its expected results are discussed in Chapter 6.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "The four-way ablation experiment described in Chapter 3 compares a regex-only baseline, a regex-plus-entropy baseline, the current six-factor SCS model and the full multi-stage pipeline with SecretBench patterns. Its expected F1 values are 0.71, 0.77, 0.89 and 0.98 respectively. These figures have not yet been measured; the experiment awaits the 50,000-line corpus (Phase 2). They are shown as a hypothesis chart in Figure 6.1 in Chapter 6.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "4. DETECTION QUALITY AND FAILURE MODES",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The false-positive cases observed on the current benchmark were analysed by root cause. Table 5.4 reports the five most frequent patterns and the planned fix for each.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 5.4: False-positive analysis: top five patterns",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Pattern",
+        "Count",
+        "Root cause",
+        "Fix planned"
+      ],
+      [
+        "UUIDv4 as trace_id",
+        "8",
+        "Entropy near threshold; no negative keyword suppression",
+        "UUID structural exemption in entropy_factor.py"
+      ],
+      [
+        "MD5 ETag hash",
+        "6",
+        "32-character hex scores 1.0 in token-structure factor",
+        "ETag and Content-MD5 context exemption"
+      ],
+      [
+        "Short transaction ID",
+        "4",
+        "Alphanumeric with no supporting context",
+        "Length-normalisation factor adjustment"
+      ],
+      [
+        "Base64-encoded configuration",
+        "3",
+        "Decodes to JSON, not a secret",
+        "Decode-and-rescore loop in Pass 3"
+      ],
+      [
+        "Random 20-character string",
+        "2",
+        "Generic high-entropy match",
+        "Context-gating threshold adjustment"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "Figure 5.3: Top five false-positive patterns (left) and total error count (right) on the 1,847-line dataset",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "The 31 false negatives were analysed and fall into three root causes: secrets at the very start of a line where the key-value regex does not fire (covered by Pass 2 of the Secret Classifier, edge case EC-08, which is already handled); URL-encoded secrets that are not decoded before scoring (edge case EC-05, fix planned in Phase 3); and multi-line PEM keys whose body lines score below the threshold when evaluated independently (edge case EC-01, multi-line buffering planned in Phase 3).",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5. SNAPSHOTS OF THE SYSTEM",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The following three figures show the system in operation. Figure 5.4 shows the sidecar console redacting a credential in real time in the demonstration deployment. Figure 5.5 shows the SecureReveal command-line interface retrieving a vaulted value and displaying the audit log. Figure 5.6 shows the two-container pod running in Minikube.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 5.4: Sidecar console output: demo-app leaking credentials, LogShield redacting them to [REDACTED:SEC-...:SCS=..] markers",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 5.5: SecureReveal CLI: retrieve, sprawl-report and audit-log commands",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 5.6: Two-container pod in Minikube: application and LogShield sidecar running 2/2 containers",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "6. IMPLEMENTATION STATUS",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Table 5.5: Component-level completion status at interim review",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Component",
+        "Status"
+      ],
+      [
+        "Sidecar entry point, six-factor scoring engine and full pattern catalog",
+        "Complete"
+      ],
+      [
+        "Vault (SecureReveal) and CLI",
+        "Complete"
+      ],
+      [
+        "SecretLineage fingerprinting",
+        "Complete"
+      ],
+      [
+        "Demo application, benchmark suite, weight trainer, regex mapper, unit tests, Kubernetes deployment and RBAC manifests",
+        "Complete"
+      ],
+      [
+        "Phase 0: SecretBench pattern import and denylist integration",
+        "Not started — scheduled Week 1"
+      ],
+      [
+        "Phase 1: Preprocessor, Candidate Finder and Context Engine as explicit multi-stage modules",
+        "Not started — scheduled Week 2"
+      ],
+      [
+        "Phase 2: 50,000-line dataset generation and ML weight training",
+        "Not started — scheduled Week 3"
+      ],
+      [
+        "Phase 3: Aho–Corasick prefilter and multi-line buffering",
+        "Not started — scheduled Week 4"
+      ],
+      [
+        "Phase 4: Active validity Analyzer (AWS, Slack, GitHub, Stripe)",
+        "Not started — scheduled Week 5"
+      ],
+      [
+        "Phase 5: Vault and audit hardening (WAL mode, constant-time authentication, SIEM exporter)",
+        "Not started — scheduled Week 6"
+      ],
+      [
+        "Phase 6: Kubernetes mutating admission webhook and Dockerfiles",
+        "Not started — scheduled Week 7"
+      ],
+      [
+        "Phase 7: Prometheus metrics and Grafana dashboard",
+        "Not started — scheduled Week 8"
+      ],
+      [
+        "Phase 8: Enterprise dashboard (Next.js)",
+        "Not started — scheduled Week 9"
+      ],
+      [
+        "Phase 9: Production readiness (50K-line benchmark, chaos tests, CI)",
+        "Not started — scheduled Week 10"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "Figure 5.7: Implementation status at interim review: all 12 interim modules complete; 10 phases scheduled",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "CHAPTER 6: TESTING",
+    "style": "Heading 1"
+  },
+  {
+    "type": "p",
+    "text": "Testing in LogShield is organised around a single question: does each security and performance claim hold when it is tested? The strategy therefore combines unit tests of individual scoring factors, a labelled benchmark, an enumeration of edge cases, a root-cause analysis of observed errors, and a four-way ablation experiment designed to test whether the multi-stage, multi-factor pipeline is justified relative to simpler baselines.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "1. TESTING STRATEGY",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Table 6.1: Levels of testing",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Level",
+        "Target",
+        "Tooling"
+      ],
+      [
+        "Unit tests",
+        "Catalog patterns, individual scoring factors and decision gate logic",
+        "pytest; 24 tests in tests/test_catalog.py and tests/test_logshield.py"
+      ],
+      [
+        "Benchmark",
+        "Precision, recall, F1-score, throughput and latency on the 1,847-line labelled dataset",
+        "benchmark/benchmark.py with ground_truth.txt"
+      ],
+      [
+        "False-positive root-cause analysis",
+        "Categorisation of each false positive by root cause and fix",
+        "Manual review of the 23 false-positive cases"
+      ],
+      [
+        "Edge-case enumeration",
+        "Fifteen engine-level edge cases, each with current behaviour, correct behaviour and fix",
+        "Design review and unit tests; several fixes are planned for Phase 3"
+      ],
+      [
+        "Four-way ablation",
+        "Whether the multi-stage pipeline outperforms simpler baselines on a 50,000-line corpus",
+        "Designed; awaiting the corpus and weight-training run (Phase 2)"
+      ],
+      [
+        "Vault and lineage verification",
+        "Encryption round-trip, reference ID format, HMAC fingerprint and CLI operations",
+        "Manual end-to-end path with the demo application"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "2. UNIT TESTS",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The test suite contains 24 tests in two files. tests/test_catalog.py verifies that each pattern in the catalog correctly matches its target format and does not match safe control values. tests/test_logshield.py verifies the decision gate, the confidence model's handling of extreme inputs and the vault round-trip. All 24 tests pass as of the interim review.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "3. BENCHMARK RESULTS",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The benchmark was run on the 1,847-line labelled dataset as reported in Chapter 5. Precision, recall and F1-score all exceed the 0.90 targets of NFR3 and NFR4. All three latency percentiles are below 1 ms, well inside the 5 ms target of NFR1. Throughput of 12,847 lines/sec exceeds the 5,000 lines/sec minimum of NFR2.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "4. EDGE-CASE ANALYSIS",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Fifteen critical engine-level edge cases were enumerated during design review, each with its current behaviour, its correct behaviour and the fix required. Table 6.2 records all fifteen.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 6.2: Engine edge cases EC-01 to EC-15",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Case",
+        "Example",
+        "Current / correct behaviour",
+        "Fix required"
+      ],
+      [
+        "EC-01 Multi-line PEM key",
+        "-----BEGIN RSA PRIVATE KEY----- …",
+        "Only the header line is caught; body lines score too low. Should buffer the full block as one unit.",
+        "Block-buffering state machine in main.py (Phase 3)"
+      ],
+      [
+        "EC-02 UUID false positive",
+        "trace_id=550e8400-e29b-41d4-a716-446655440000",
+        "Scores 60–70 (FLAG); should score below 50 (PASS).",
+        "UUID structural exemption in entropy_factor.py"
+      ],
+      [
+        "EC-03 MD5 content hash",
+        "ETag: \"d41d8cd98f00b204e9800998ecf8427e\"",
+        "32-char hex scores 1.0 in token-structure factor, likely MASK; should not mask an HTTP ETag.",
+        "ETag and Content-MD5 context exemption"
+      ],
+      [
+        "EC-04 Fragmented secret",
+        "key = \"sk_live_\" + var",
+        "Neither fragment matches the Stripe regex; should detect the sk_live_ prefix.",
+        "Prefix-only patterns as low-confidence matchers"
+      ],
+      [
+        "EC-05 URL-encoded secret",
+        "token=%73%6B%5F%6C%69%76%65%5F…",
+        "Not decoded, so the regex will not match; should decode before scoring.",
+        "urllib.parse.unquote() in Preprocessor (Phase 3)"
+      ],
+      [
+        "EC-06 Base64 secret in JSON",
+        "{\"auth\": \"c2tfbGl2ZV9hYmNkZWY=\"}",
+        "Base64 blob detected but the underlying secret is not scored; should decode and re-score.",
+        "Decode-and-rescore loop in Pass 3"
+      ],
+      [
+        "EC-07 Secret in stack trace",
+        "Exception: postgres://admin:p@ssw0rd@db/prod",
+        "Key-value regex may not fire on an embedded URI.",
+        "Verify database.py has a bare-URI pattern"
+      ],
+      [
+        "EC-08 Secret at line start",
+        "AKIAIOSFODNN7EXAMPLEwJalrXUtnFEMI connecting",
+        "Pass 1 does not fire; Pass 2 direct sweep should catch it.",
+        "None — already handled by Pass 2"
+      ],
+      [
+        "EC-09 Log flood (10k+/sec)",
+        "Crash loop producing 10,000 lines/sec",
+        "Blocking readline() falls behind, risks OOM.",
+        "asyncio.Queue with a maximum size and fail-open drop path"
+      ],
+      [
+        "EC-10 Binary / non-UTF-8",
+        "Log contains binary garbage",
+        "errors=\"replace\" applied; replacement characters do not match — already handled safely.",
+        "None — already handled"
+      ],
+      [
+        "EC-11 Long line (>1 MB)",
+        "Minified JSON with an embedded secret",
+        "Key-value regex iterates thousands of tokens, causing a latency spike.",
+        "MAX_LINE_LEN guard in process_line()"
+      ],
+      [
+        "EC-12 JSON-structured log",
+        "{\"level\":\"debug\",\"key\":\"password\",\"value\":\"MyP@ss!\"}",
+        "Key-value regex misses the relationship between key and value fields.",
+        "JSON-parsing pre-pass in extract_and_score()"
+      ],
+      [
+        "EC-13 Duplicate in line",
+        "PASS=abc123 re-confirm PASS=abc123 ok",
+        "seen_tokens set deduplicates; only one vault entry created.",
+        "None — already handled"
+      ],
+      [
+        "EC-14 HTTP header secret",
+        "Authorization: Bearer ghp_xxxxxxxxxxxxxxxxxxxx",
+        "Pass 2 should match the GitHub PAT regex with Bearer prefix.",
+        "Verify vcs_cicd.py pattern works with the Bearer prefix"
+      ],
+      [
+        "EC-15 Secret rotation",
+        "Same sk_live_abc123 appears five minutes later",
+        "New vault entry with new ref ID; lineage increments occurrence count.",
+        "None — already correct behaviour"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "Figure 6.1: Status summary of the fifteen engine edge cases",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "5. PLANNED FOUR-WAY ABLATION EXPERIMENT",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "The core research validation is a four-way ablation experiment on a 50,000-line labelled corpus, designed to test whether the additional complexity of the multi-stage, multi-factor design is justified rather than assumed. The experiment isolates the contribution of each layer.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 6.3: Four-way ablation experiment design",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Experiment",
+        "System configuration",
+        "Expected F1 (hypothesis)"
+      ],
+      [
+        "A: Regex only",
+        "Pass 1 of the Secret Classifier alone; decision gate at a single regex-match threshold",
+        "0.71"
+      ],
+      [
+        "B: Regex + entropy",
+        "Experiment A plus the entropy factor; threshold tuned to optimise F1",
+        "0.77"
+      ],
+      [
+        "C: Six-factor SCS",
+        "Full confidence model over eight features; thresholds at 50 and 80",
+        "0.89"
+      ],
+      [
+        "D: Full pipeline + SecretBench",
+        "Experiment C plus the Preprocessor, Candidate Finder and 761 SecretBench patterns",
+        "0.98"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "The corpus will consist of 25,000 positive lines drawn from SecretBench and leaked-repository sources, and 25,000 negative lines drawn from LogHub and synthetic non-secret text. Validation protocol is five-fold stratified cross-validation. This experiment has been designed but not yet executed; it awaits the corpus-generation and weight-training run of Phase 2. Figure 6.2 shows the expected F1 values as a hypothesis chart.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Figure 6.2: Four-way ablation: expected F1-score progression (hypothesis, not yet measured on the full corpus)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "6. VAULT AND LINEAGE VERIFICATION",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "SecureReveal and SecretLineage are implemented and functional. The end-to-end path from detection through masking, vault write and lineage fingerprint was verified manually using the demonstration application. The vault module encrypts each masked value and stores it with the required fields. The CLI successfully performs retrieve, sprawl-report and audit-log operations. The lineage module creates a new fingerprint record on first occurrence of a secret and increments the occurrence count on subsequent occurrences from different pod UIDs, which was verified by running the demonstration application in two pods.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "7. LIMITATIONS OF TESTING",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "Several limitations should be stated plainly. The benchmark corpus is a single 1,847-line dataset; behaviour on the 50,000-line ablation corpus and on novel secret formats is not yet established. Statistical power is limited by the rarity of real secret-leak samples in available log data. Results are conditional on the SCS decision thresholds 50 and 80, and the threshold sensitivity analysis has not yet been executed. Vault and lineage verification was manual rather than automated; automated integration tests are planned for Phase 9. The four-way ablation experiment, which is the primary research validation, has not yet been executed.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "CHAPTER 7: CONCLUSION AND FUTURE WORK",
+    "style": "Heading 1"
+  },
+  {
+    "type": "p",
+    "text": "1. CONCLUSION",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "This project set out to address a specific gap: containerised applications accidentally log secrets, and no open-source, Kubernetes-native runtime engine was found in the reviewed literature that intercepts, sanitises and vaults secrets before the log line exits the pod.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "At the interim stage, the sidecar entry point, the six-factor scoring engine, the full pattern catalog, the encrypted vault (SecureReveal), the HMAC-based lineage tracker (SecretLineage) and all supporting scripts and tests are implemented, benchmarked on the 1,847-line labelled dataset, and functioning end to end. On this dataset the system achieves a precision of 0.942, a recall of 0.918, an F1-score of 0.930 and a throughput above 12,000 lines per second at sub-millisecond average latency. All three latency percentiles are comfortably within the 5 ms design target.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Fifteen critical engine-level edge cases have been enumerated and, for each, a current behaviour, a correct behaviour and a specific required fix have been identified, providing a concrete basis for the hardening work planned in the remaining phases. The four-way ablation experiment designed to test whether the multi-stage, multi-factor pipeline outperforms simpler baselines has been fully specified but not yet executed.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "The project's contribution is the combination, rather than any single mechanism. No existing open-source tool was found that unifies vendor-specific pattern matching, contextual signals, a learned confidence model, local encrypted vaulting and cross-application lineage tracking, all operating before a log line leaves its pod. The positioning of this contribution relative to Datadog Observability Pipelines and other pipeline-level redaction products is stated explicitly in Chapter 2: those products operate in a separate aggregation tier and do not provide a recoverable vault or a lineage store.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "2. ADVANTAGES, LIMITATIONS AND APPLICATIONS",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "i. Advantages",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Pre-ingestion protection: the secret never leaves the pod, so there is zero network traversal before detection.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Sub-5-millisecond latency: demonstrated on the benchmark; the Aho–Corasick early exit (Phase 3) will reduce average latency further.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "ML-calibrated confidence: weights are learned from labelled data rather than fixed as heuristics, so the model can be improved by adding training examples.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Context-aware: the context factor eliminates UUID and MD5-hash false positives that entropy alone would flag.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Recoverable vault: unlike a masking-only tool, LogShield keeps the original value encrypted and retrievable for incident response.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Secret lineage: the HMAC fingerprint tracks secret sprawl across pods and namespaces without exposing the secret again.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Zero-configuration developer experience: a namespace label triggers automatic injection via the mutating webhook (Phase 6).",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Open and auditable: all patterns, weights and scoring logic are visible, with no dependency on a third-party cloud service.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "ii. Limitations",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Validation to date is on a single 1,847-line dataset; behaviour on the 50,000-line ablation corpus and on novel secret formats is not yet established.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "The four-way ablation experiment, the primary research validation, has not yet been executed.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Lineage tracking currently operates at the level of a single node; cross-pod, cross-cluster aggregation requires the central aggregator of future work.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "No active credential-validity checking exists yet; the system detects format and context, not whether a credential is currently live.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "The system has been exercised on a demonstration deployment rather than hardened for production; webhook TLS automation is scheduled for Phase 6.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Context-keyword detection is English-centric; the generic, format-based detectors are language-agnostic but the keyword list would need extension for other languages.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "The implementation has not been independently audited.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "iii. Applications",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Table 7.1: Applications of LogShield",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Use case",
+        "Value delivered"
+      ],
+      [
+        "DevSecOps shift-left",
+        "Catches secrets at development and test runtime rather than after they reach production logs"
+      ],
+      [
+        "Compliance (PCI-DSS, SOC 2, HIPAA)",
+        "Demonstrates runtime secret protection with an auditable trail via the vault"
+      ],
+      [
+        "Incident response",
+        "SecureReveal allows an authorised engineer to retrieve a specific secret during an investigation"
+      ],
+      [
+        "Secret-sprawl remediation",
+        "The lineage report shows every pod and namespace sharing a leaked credential"
+      ],
+      [
+        "CI/CD pipeline guard",
+        "A sidecar in build pods prevents secret leakage into build logs"
+      ],
+      [
+        "Multi-tenant SaaS",
+        "Per-tenant namespace isolation prevents cross-tenant log contamination"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "3. FUTURE WORK",
+    "style": "Heading 2"
+  },
+  {
+    "type": "p",
+    "text": "i. Ten-Week Phased Plan",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "Table 7.2 and Figure 7.1 set out the ten-week plan for the remainder of the project.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table 7.2: Phase-by-phase implementation plan",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Week",
+        "Phase",
+        "Key deliverable"
+      ],
+      [
+        "1",
+        "Phase 0: SecretBench integration",
+        "761-pattern JSON import and context-gated high-false-positive denylist"
+      ],
+      [
+        "2",
+        "Phase 1: Multi-stage pipeline",
+        "Preprocessor, Context Engine and Secret Classifier as explicit, separate modules"
+      ],
+      [
+        "3",
+        "Phase 2: ML weight optimisation",
+        "50,000-line labelled dataset, trained weights and the ablation experiment executed"
+      ],
+      [
+        "4",
+        "Phase 3: Performance hardening",
+        "Aho–Corasick prefilter, multi-line block buffering and asynchronous I/O"
+      ],
+      [
+        "5",
+        "Phase 4: Active validity checking",
+        "Analyzer module with AWS, Slack, GitHub and Stripe validity checks"
+      ],
+      [
+        "6",
+        "Phase 5: Vault and audit hardening",
+        "WAL mode, constant-time authentication, SIEM audit exporter, vault key in a Kubernetes Secret"
+      ],
+      [
+        "7",
+        "Phase 6: Kubernetes automation",
+        "Dockerfiles, mutating admission webhook and end-to-end test script"
+      ],
+      [
+        "8",
+        "Phase 7: Observability",
+        "Prometheus metrics endpoint and a Grafana dashboard"
+      ],
+      [
+        "9",
+        "Phase 8: Enterprise dashboard",
+        "Next.js lineage graph and SecureReveal retrieval portal"
+      ],
+      [
+        "10",
+        "Phase 9: Production readiness",
+        "Full 50,000-line benchmark, chaos testing and continuous-integration workflow"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "Figure 7.1: Ten-week implementation timeline (status at interim review: core built, phases scheduled)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ii. Longer-Term Research Directions",
+    "style": "Heading 3"
+  },
+  {
+    "type": "p",
+    "text": "eBPF kernel hook: moving detection to kernel space for zero-copy, sidecar-less overhead; the sidecar would no longer be needed.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Rust rewrite: a Rust implementation for memory safety and higher throughput, potentially compiled to WebAssembly for portability.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Central lineage aggregator: a cross-cluster secret-sprawl graph that aggregates fingerprint records from multiple nodes and clusters.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Online retraining pipeline: a feedback loop that learns continuously from false-positive and false-negative reports from operators.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Policy-as-code layer: a LogShieldPolicy custom resource expressed as OPA/Rego rules per namespace, replacing the fixed threshold configuration.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "Secrets manager integration: automated rotation of any credential found to be live via the Phase 4 Analyzer, using Vault or Sealed Secrets.",
+    "style": "List Paragraph"
+  },
+  {
+    "type": "p",
+    "text": "REFERENCES",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[1].  MITRE Corporation, “CWE-532: Insertion of Sensitive Information into Log File”, Common Weakness Enumeration, online resource, https://cwe.mitre.org/data/definitions/532.html, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[2].  OWASP Foundation, “Logging Cheat Sheet”, OWASP Cheat Sheet Series, online resource, https://cheatsheetseries.owasp.org, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[3].  Fluent Bit Project, “Fluent Bit Documentation”, online resource, https://docs.fluentbit.io, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[4].  M. Meli, M. R. McNiece, B. Reaves, “How Bad Can It Git? Characterizing Secret Leakage in Public GitHub Repositories”, Network and Distributed System Security Symposium (NDSS), 2019.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[5].  S. K. Basak, L. Neil, B. Reaves, L. Williams, “SecretBench: A Dataset of Software Secrets”, 20th IEEE/ACM International Conference on Mining Software Repositories (MSR), 2023, DOI: 10.1109/MSR59073.2023.00053.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[6].  Gitleaks Contributors, “Gitleaks”, software repository, https://github.com/gitleaks/gitleaks, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[7].  Truffle Security, “TruffleHog”, software repository, https://github.com/trufflesecurity/trufflehog, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[8].  Yelp, “detect-secrets: An Enterprise Friendly Way of Detecting and Preventing Secrets in Code”, software repository, https://github.com/Yelp/detect-secrets, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[9].  HashiCorp, “Vault Documentation”, online resource, https://developer.hashicorp.com/vault/docs, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[10].  Amazon Web Services, “AWS Secrets Manager User Guide”, online resource, https://docs.aws.amazon.com/secretsmanager, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[11].  The Falco Project (CNCF), “Falco: Cloud Native Runtime Security”, online resource, https://falco.org, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[12].  Datadog, “Sensitive Data Scanner”, Datadog Documentation, online resource, https://docs.datadoghq.com/sensitive_data_scanner/, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[13].  Amazon Web Services, “Amazon Macie User Guide”, online resource, https://docs.aws.amazon.com/macie, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[14].  Google Cloud, “Sensitive Data Protection Documentation”, online resource, https://cloud.google.com/sensitive-data-protection/docs, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[15].  Datadog, “Redact Sensitive Data From Your Logs On-Prem by Using Observability Pipelines”, Datadog Blog, online resource, https://www.datadoghq.com/blog/observability-pipelines-sensitive-data-redaction, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[16].  Amazon Web Services, “Help Protect Sensitive Log Data with Masking” (CloudWatch Logs data protection policies), Amazon CloudWatch Logs User Guide, online resource, https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[17].  GitGuardian, “Secrets Detection and Specific Detectors”, GitGuardian Documentation, online resource, https://docs.gitguardian.com, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[18].  C. E. Shannon, “A Mathematical Theory of Communication”, Bell System Technical Journal, 1948, Vol. 27, No. 3, Page No. 379–423.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[19].  A. V. Aho, M. J. Corasick, “Efficient String Matching: An Aid to Bibliographic Search”, Communications of the ACM, 1975, Vol. 18, No. 6, Page No. 333–340.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[20].  D. W. Hosmer, S. Lemeshow, R. X. Sturdivant, “Applied Logistic Regression”, 3rd Edition, Wiley, 2013.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[21].  A. Niculescu-Mizil, R. Caruana, “Predicting Good Probabilities with Supervised Learning”, 22nd International Conference on Machine Learning (ICML), 2005, Page No. 625–632.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[22].  C. L. Lawson, R. J. Hanson, “Solving Least Squares Problems”, Classics in Applied Mathematics, SIAM, 1995.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[23].  F. Pedregosa et al., “Scikit-learn: Machine Learning in Python”, Journal of Machine Learning Research, 2011, Vol. 12, Page No. 2825–2830.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[24].  D. M. W. Powers, “Evaluation: From Precision, Recall and F-Measure to ROC, Informedness, Markedness and Correlation”, Journal of Machine Learning Technologies, 2011, Vol. 2, No. 1, Page No. 37–63.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[25].  R. Kohavi, “A Study of Cross-Validation and Bootstrap for Accuracy Estimation and Model Selection”, 14th International Joint Conference on Artificial Intelligence (IJCAI), 1995, Page No. 1137–1143.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[26].  S. He, J. Zhu, P. He, M. R. Lyu, “Loghub: A Large Collection of System Log Datasets towards Automated Log Analytics”, arXiv:2008.06448, 2020.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[27].  Python Cryptographic Authority, “Fernet (Symmetric Encryption)”, cryptography documentation, online resource, https://cryptography.io/en/latest/fernet/, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[28].  National Institute of Standards and Technology, “Advanced Encryption Standard (AES)”, Federal Information Processing Standard (FIPS) 197, 2001 (updated 2023), DOI: 10.6028/NIST.FIPS.197-upd1.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[29].  M. Dworkin, “Recommendation for Block Cipher Modes of Operation: Methods and Techniques”, NIST Special Publication 800-38A, December 2001.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[30].  Fernet Project, “Fernet Specification”, online resource, https://github.com/fernet/spec, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[31].  SQLite Consortium, “SQLite Documentation”, online resource, https://www.sqlite.org/docs.html, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[32].  H. Krawczyk, M. Bellare, R. Canetti, “HMAC: Keyed-Hashing for Message Authentication”, RFC 2104, Internet Engineering Task Force, February 1997.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[33].  National Institute of Standards and Technology, “The Keyed-Hash Message Authentication Code (HMAC)”, Federal Information Processing Standard (FIPS) 198-1, July 2008.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[34].  B. Burns, D. Oppenheimer, “Design Patterns for Container-based Distributed Systems”, 8th USENIX Workshop on Hot Topics in Cloud Computing (HotCloud), 2016.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[35].  The Kubernetes Authors, “Volumes (emptyDir)”, Kubernetes Documentation, online resource, https://kubernetes.io/docs/concepts/storage/volumes/, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[36].  The Kubernetes Authors, “Dynamic Admission Control (Mutating Admission Webhooks)”, Kubernetes Documentation, online resource, https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "[37].  Prometheus Authors (CNCF), “Prometheus Client Libraries”, online resource, https://prometheus.io/docs/instrumenting/clientlibs/, accessed 2026.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "APPENDIX A: SAMPLE CODE",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "The listings below are representative excerpts from the project repository. Comments have been shortened and some lines omitted; the repository is the authoritative source.",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Sidecar entry point — tailing loop (sidecar/main.py)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "def tail_file(path: str, engine: SCSEngine, vault: VaultStore,",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "lineage: LineageTracker) -> None:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "with open(path, errors='replace') as f:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "f.seek(0, 2)          # start at end; avoid replaying old log",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "while True:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "raw = f.readline()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "if not raw:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "time.sleep(0.01); continue",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "process_line(raw.rstrip('\\n'), engine, vault, lineage)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "def process_line(line: str, engine, vault, lineage) -> None:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "if len(line) > MAX_LINE_LEN:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "line = line[:MAX_LINE_LEN] + ' [TRUNCATED]'",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "results = engine.score(line)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "for r in results:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "if r.decision == 'MASK':",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ref_id = vault.store(r.token, r.score, r.factors)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "lineage.record(r.token, current_pod_uid())",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "line = line.replace(r.token, f'[REDACTED:{ref_id}:SCS={r.score}]')",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "elif r.decision == 'FLAG':",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ref_id = vault.reserve_id()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "line = line.replace(r.token, f'[FLAGGED:{ref_id}:SCS={r.score}]')",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "print(line, flush=True)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Confidence model — feature construction (sidecar/logmask/scorer.py)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "def build_feature_vector(token: str, ctx: ContextResult,",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "regex: RegexResult) -> np.ndarray:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "return np.array([",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "regex.score,                       # pattern match quality",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "entropy(token),                    # Shannon entropy, normalised",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "varname_proximity(token, ctx.line),# distance to nearest key label",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "structural_score(token),           # length and charset check",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ctx.context_score,                 # Stage 3 output",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "encoding_signal(token),            # Base64 / URL / hex flag",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "length_norm(len(token)),            # 0-1 over typical key lengths",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "-dict_word_fraction(token),        # penalty for dictionary words",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "])",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "def score(self, token: str, ctx, regex) -> int:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "fv = build_feature_vector(token, ctx, regex)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "prob = self.model.predict_proba([fv])[0][1]",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "return int(round(calibrate(prob) * 100))",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Vault store — Fernet encrypt and persist (sidecar/securereveal/vault.py)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "def store(self, plaintext: str, score: int, factors: dict) -> str:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ref_id = self._make_ref_id()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "ciphertext = self.fernet.encrypt(plaintext.encode()).decode()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "expiry = time.time() + self.ttl_seconds",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "self.db.execute(",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "'INSERT INTO vault VALUES (?,?,?,?,?,?,?)',",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "(ref_id, ciphertext, score, json.dumps(factors),",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "time.time(), expiry, self.pod_uid))",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "self.db.commit()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "return ref_id",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "def retrieve(self, ref_id: str, actor: str) -> str:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "row = self.db.execute(",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "'SELECT ciphertext FROM vault WHERE ref_id=? AND expiry>?',",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "(ref_id, time.time())).fetchone()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "if not row: raise KeyError(f'{ref_id} not found or expired')",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "self._audit(actor, 'retrieve', ref_id)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "return self.fernet.decrypt(row[0].encode()).decode()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Lineage fingerprint — HMAC-SHA256 record (sidecar/secretlineage/fingerprint.py)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "def record(self, plaintext: str, pod_uid: str, namespace: str) -> None:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "digest = hmac.new(self.key, plaintext.encode(), 'sha256').hexdigest()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "existing = self.db.execute(",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "'SELECT occurrences, pod_uids FROM fingerprints WHERE hmac_hash=?',",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "(digest,)).fetchone()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "if existing:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "pods = json.loads(existing[1])",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "if pod_uid not in pods: pods.append(pod_uid)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "self.db.execute(",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "'UPDATE fingerprints SET occurrences=occurrences+1,",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "pod_uids=?, last_seen=? WHERE hmac_hash=?',",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "(json.dumps(pods), time.time(), digest))",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "else:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "self.db.execute(",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "'INSERT INTO fingerprints VALUES (?,?,?,?,?,?)',",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "(digest, 1, json.dumps([pod_uid]), json.dumps([namespace]),",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "time.time(), time.time()))",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "self.db.commit()",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "APPENDIX B: DATA SHEETS",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table B.1: Detection engine fixed size parameters",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Object or parameter",
+        "Value or range",
+        "Notes"
+      ],
+      [
+        "SCS range",
+        "0 to 100 (integer)",
+        "Scaled from calibrated logistic regression probability"
+      ],
+      [
+        "MASK threshold",
+        "80 (default, configurable)",
+        "Values at or above this score are redacted and vaulted"
+      ],
+      [
+        "FLAG threshold",
+        "50 (default, configurable)",
+        "Values at or above this score receive a reference marker"
+      ],
+      [
+        "Keyword automaton size",
+        "approximately 2,000 keywords",
+        "Aho–Corasick automaton built at startup"
+      ],
+      [
+        "Hand-crafted catalog patterns",
+        "600+",
+        "Across ten catalog files"
+      ],
+      [
+        "SecretBench patterns (Sheet 1)",
+        "755",
+        "Context-anchored; require vendor token within 40 characters"
+      ],
+      [
+        "SecretBench patterns (Sheet 2)",
+        "6",
+        "High-false-positive; context-gated at context_score > 0.5"
+      ],
+      [
+        "Maximum line length",
+        "65,536 bytes (64 KB)",
+        "Lines above this limit are truncated before scoring"
+      ],
+      [
+        "Feature vector dimension",
+        "8",
+        "Regex, entropy, varname, structural, context, encoding, length, dictionary"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "Table B.2: Vault entry schema (SQLite table: vault)",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Column",
+        "Type",
+        "Meaning"
+      ],
+      [
+        "ref_id",
+        "TEXT PRIMARY KEY",
+        "Reference identifier in the form SEC-YYYYMMDD-XXXX"
+      ],
+      [
+        "ciphertext",
+        "TEXT",
+        "Fernet-encrypted plaintext, base64-encoded"
+      ],
+      [
+        "score",
+        "INTEGER",
+        "SCS at detection time"
+      ],
+      [
+        "factors_json",
+        "TEXT",
+        "JSON object with the six individual factor scores"
+      ],
+      [
+        "timestamp",
+        "REAL",
+        "Unix timestamp of detection"
+      ],
+      [
+        "expiry",
+        "REAL",
+        "Unix timestamp after which the entry is considered expired"
+      ],
+      [
+        "pod_uid",
+        "TEXT",
+        "Kubernetes pod UID from which the secret was detected"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "Table B.3: Fingerprint record schema (SQLite table: fingerprints)",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Column",
+        "Type",
+        "Meaning"
+      ],
+      [
+        "hmac_hash",
+        "TEXT PRIMARY KEY",
+        "HMAC-SHA256 digest of the plaintext secret value; key never leaves the sidecar"
+      ],
+      [
+        "occurrences",
+        "INTEGER",
+        "Total number of times this fingerprint has been observed"
+      ],
+      [
+        "pod_uids",
+        "TEXT",
+        "JSON array of pod UIDs in which this fingerprint was seen"
+      ],
+      [
+        "namespaces",
+        "TEXT",
+        "JSON array of namespaces in which this fingerprint was seen"
+      ],
+      [
+        "first_seen",
+        "REAL",
+        "Unix timestamp of first observation"
+      ],
+      [
+        "last_seen",
+        "REAL",
+        "Unix timestamp of most recent observation"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "APPENDIX C: LIST OF COMPONENTS",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "Table C.1: Software components and versions",
+    "style": "Normal"
+  },
+  {
+    "type": "tbl",
+    "data": [
+      [
+        "Component",
+        "Version",
+        "Used for"
+      ],
+      [
+        "Python",
+        "3.11.9",
+        "Primary language for all sidecar, detection engine, vault and benchmark code"
+      ],
+      [
+        "cryptography (Fernet)",
+        "42.x",
+        "Fernet symmetric encryption for vault entries"
+      ],
+      [
+        "sqlite3",
+        "standard library",
+        "Local vault and fingerprint database"
+      ],
+      [
+        "scikit-learn",
+        "1.5.x",
+        "Logistic regression model and calibration"
+      ],
+      [
+        "scipy",
+        "1.13.x",
+        "NNLS weight optimisation"
+      ],
+      [
+        "pyahocorasick",
+        "2.x (Phase 3)",
+        "Aho–Corasick keyword prefilter automaton"
+      ],
+      [
+        "kubernetes (client)",
+        "29.x",
+        "Kubernetes API access for pod UID and namespace cross-checks"
+      ],
+      [
+        "fastapi",
+        "0.111.x",
+        "Demo application that intentionally leaks secrets"
+      ],
+      [
+        "uvicorn",
+        "0.29.x",
+        "ASGI server for the demo application"
+      ],
+      [
+        "prometheus_client",
+        "0.20.x (Phase 7)",
+        "Prometheus /metrics endpoint"
+      ],
+      [
+        "Minikube",
+        "1.33",
+        "Local Kubernetes cluster for demonstration deployment"
+      ],
+      [
+        "Next.js",
+        "14.x (Phase 8)",
+        "Enterprise dashboard: lineage graph and SecureReveal portal"
+      ],
+      [
+        "Node.js",
+        "20.x (Phase 8)",
+        "Runtime for the enterprise dashboard"
+      ]
+    ]
+  },
+  {
+    "type": "p",
+    "text": "Reproduction commands:",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "# Run unit tests",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "pytest tests/",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "# Run the benchmark",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "python benchmark/benchmark.py --logs logs.txt --ground-truth ground_truth.txt",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "# Start the demonstration deployment in Minikube",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "minikube start",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "kubectl apply -f k8s/rbac.yaml -f k8s/deployment.yaml",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "# Retrieve a vaulted secret",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "python -m sidecar.securereveal.cli retrieve SEC-20241115-A1B2 --actor $(whoami)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "# View lineage report",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "python -m sidecar.securereveal.cli sprawl-report",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "# Train confidence model weights (Phase 2)",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "python scripts/train_weights.py --corpus corpus_50k.jsonl --output optimal_weights.json",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "APPENDIX D: LIST OF PAPERS PRESENTED AND PUBLISHED",
+    "style": "Normal"
+  },
+  {
+    "type": "p",
+    "text": "At the time of submission of this report, no paper based on this work has been presented or published.",
+    "style": "Normal"
+  }
+]

@@ -1,0 +1,9 @@
+Benchmark_Name,Reported_Metric,Reproduction_Command,Reproduced_Metric,Status
+4-Way Ablation Study (Config A),"F1=0.9152, Prec=0.8437, Rec=1.0000",python research/scripts/run_detection_and_ablation.py -n 10000,"F1=0.9152, Prec=0.8437, Rec=1.0000",REPRODUCED
+4-Way Ablation Study (Config B),"F1=0.8895, Prec=0.8516, Rec=0.9309",python research/scripts/run_detection_and_ablation.py -n 10000,"F1=0.8895, Prec=0.8516, Rec=0.9309",REPRODUCED
+4-Way Ablation Study (Config C),"F1=0.9431, Prec=0.8944, Rec=0.9973",python research/scripts/run_detection_and_ablation.py -n 10000,"F1=0.9431, Prec=0.8944, Rec=0.9973",REPRODUCED
+4-Way Ablation Study (Config D),"F1=0.9997, Prec=1.0000, Rec=0.9993",python research/scripts/run_detection_and_ablation.py -n 10000,"F1=0.9997, Prec=1.0000, Rec=0.9993",REPRODUCED
+Hard-Negative Suppression,"100.0% across 8 types (UUID, commit, etc.)",python research/scripts/run_detection_and_ablation.py -n 10000,100.0% (433/433 true negatives),REPRODUCED
+Adversarial Stress Test,0.0% recall on 795 evasion cases,python research/scripts/run_detection_and_ablation.py -n 10000,0.0% recall on 795 evasion cases,REPRODUCED
+Threshold Calibration Sweep,"Optimal S in [50, 80]",python research/analysis/threshold_sweep.py,"Optimal S in [50, 80] (T_flag=50, T_mask=80)",REPRODUCED
+Cryptographic Audit Chain,Hash chain verify: 5.66 ms (176.6 ops/s),python research/scripts/run_performance_benchmarks.py,Hash chain verify: 5.66 ms (176.6 ops/s),REPRODUCED
