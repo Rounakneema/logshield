@@ -9,7 +9,7 @@ Usage:
   Provides interactive access to the LogShield Vault, Audit Log, and Lineage Tracking.
 """
 
-import sys, os
+import sys, os, json, time
 
 sys.path.insert(0, "/app")
 os.environ.setdefault("VAULT_DB_PATH",    "/data/vault.db")
@@ -142,6 +142,42 @@ def cmd_sprawl():
             print()
 
 
+def cmd_mode(set_mode=None):
+    mode_file = os.environ.get("MODE_FILE_PATH", "/data/mode.json")
+    if set_mode:
+        if set_mode not in ["protected", "bypass"]:
+            print(f"{RED}Error: Mode must be 'protected' or 'bypass'{RESET}")
+            sys.exit(1)
+        os.makedirs(os.path.dirname(mode_file) or ".", exist_ok=True)
+        import time
+        with open(mode_file, "w", encoding="utf-8") as f:
+            json.dump({"mode": set_mode, "timestamp": time.time()}, f)
+
+        banner(f"SHIELD MODE SWITCHED: {set_mode.upper()}", RED if set_mode == "bypass" else GREEN)
+        if set_mode == "bypass":
+            print(f"  {RED}[!] LOGSHIELD SHIELD DEACTIVATED (BYPASS MODE){RESET}")
+            print(f"  -> Incoming logs will PASS THROUGH UNMASKED directly.")
+            print(f"  -> Web Dashboard will reflect BYPASSED state in real-time.")
+        else:
+            print(f"  {GREEN}[+] LOGSHIELD SHIELD ACTIVATED (PROTECTED MODE){RESET}")
+            print(f"  -> Real-time multi-stage secret sanitization (LogMask SCS) is ACTIVE.")
+            print(f"  -> Web Dashboard will reflect PROTECTED state in real-time.")
+        return
+
+    current = "protected"
+    if os.path.exists(mode_file):
+        try:
+            with open(mode_file, "r", encoding="utf-8") as f:
+                current = json.load(f).get("mode", "protected")
+        except Exception:
+            pass
+    color = GREEN if current == "protected" else RED
+    banner("CURRENT LOGSHIELD PROTECTION STATUS", color)
+    print(f"  Current Mode: {BOLD}{color}{current.upper()}{RESET}")
+    status_msg = "All secrets sanitized & vaulted in real time." if current == "protected" else "SHIELD BYPASSED: Raw logs pass through unredacted!"
+    print(f"  Status      : {status_msg}")
+
+
 def main():
     parser = argparse.ArgumentParser(description="LogShield Vault Administration CLI")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -165,6 +201,10 @@ def main():
     # sprawl
     sub.add_parser("sprawl", help="View secret lineage sprawl report")
 
+    # mode
+    p_mode = sub.add_parser("mode", help="Query or switch LogShield protection mode (protected / bypass)")
+    p_mode.add_argument("--set", choices=["protected", "bypass"], help="Switch mode to protected or bypass")
+
     args = parser.parse_args()
 
     if args.cmd == "list":
@@ -175,6 +215,8 @@ def main():
         cmd_audit(verify=args.verify, actor=args.actor, outcome=args.outcome, export=args.export)
     elif args.cmd == "sprawl":
         cmd_sprawl()
+    elif args.cmd == "mode":
+        cmd_mode(set_mode=args.set)
 
 
 if __name__ == "__main__":
