@@ -23,6 +23,7 @@ fp.log
 scratch/
 datasets/
 data/
+documents1/
 CAPSTONE/
 gitguardian_specific_detectors/
 generate_ppt.js
