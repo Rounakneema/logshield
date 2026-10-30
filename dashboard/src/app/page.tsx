@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import Link from "next/link";
 import { 
   FileText, 
@@ -19,7 +19,12 @@ import {
   Layers,
   ArrowUpRight,
   CheckCircle2,
-  HardDrive
+  HardDrive,
+  Lock,
+  Unlock,
+  AlertTriangle,
+  ShieldCheck,
+  ArrowDown
 } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { fetchStats, fetchLogs, fetchMode } from "@/lib/api";
@@ -193,24 +198,52 @@ export default function OverviewPage() {
   const [logSearch, setLogSearch] = useState<string>("");
   const [timeRange, setTimeRange] = useState<string>("5m");
   const [viewMode, setViewMode] = useState<"live" | "topology" | "flow">("live");
+  const [mode, setModeState] = useState<string>("protected");
 
+  const prevServiceRef = useRef<string>(selectedService);
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+  const isProtected = mode === "protected";
   const currentWindow = TIME_WINDOWS[timeRange] || TIME_WINDOWS["5m"];
+  const [isAtBottom, setIsAtBottom] = useState<boolean>(true);
+
+  const handleScroll = () => {
+    if (!tableContainerRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = tableContainerRef.current;
+    const atBottom = scrollHeight - scrollTop - clientHeight < 60;
+    setIsAtBottom(atBottom);
+  };
+
+  const scrollToBottom = () => {
+    if (tableContainerRef.current) {
+      tableContainerRef.current.scrollTo({
+        top: tableContainerRef.current.scrollHeight,
+        behavior: "smooth"
+      });
+      setIsAtBottom(true);
+    }
+  };
 
   const loadData = async () => {
     try {
-      const [statsData, logsData] = await Promise.all([
+      const [modeData, statsData, logsData] = await Promise.all([
+        fetchMode(),
         fetchStats(timeRange),
         isPaused ? Promise.resolve(null) : fetchLogs(selectedService, timeRange)
       ]);
+      if (modeData?.mode) setModeState(modeData.mode);
       setStats(statsData);
       if (logsData) {
         setLogs((prev) => {
+          if (prevServiceRef.current !== selectedService) {
+            prevServiceRef.current = selectedService;
+            return logsData;
+          }
           if (!logsData || logsData.length === 0) return prev;
           if (prev.length === 0) return logsData;
           const existingSet = new Set(prev);
           const incomingNew = logsData.filter((line: string) => !existingSet.has(line));
           if (incomingNew.length === 0) return prev;
-          return [...prev, ...incomingNew].slice(-500);
+          return [...prev, ...incomingNew].slice(-3000);
         });
       }
     } catch (err) {
@@ -220,9 +253,35 @@ export default function OverviewPage() {
 
   useEffect(() => {
     loadData();
-    const interval = setInterval(loadData, 3000);
-    return () => clearInterval(interval);
-  }, [isPaused, selectedService, timeRange]);
+    const interval = setInterval(loadData, 1500);
+
+    const handleModeEvt = (e: any) => {
+      if (e.detail && e.detail !== mode) {
+        const nextMode = e.detail;
+        setModeState(nextMode);
+        const now = new Date();
+        const ts = now.toISOString().replace("T", " ").substring(0, 19);
+        const marker = `[${ts}] === SHIELD MODE SWITCHED: ${mode.toUpperCase()} ➔ ${nextMode.toUpperCase()} ===`;
+        setLogs((prev) => {
+          if (prev.length > 0 && prev[prev.length - 1].includes("=== SHIELD MODE")) return prev;
+          return [...prev, marker];
+        });
+        loadData();
+      }
+    };
+    window.addEventListener("logshield-mode-change", handleModeEvt);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("logshield-mode-change", handleModeEvt);
+    };
+  }, [isPaused, selectedService, timeRange, mode]);
+
+  useEffect(() => {
+    if (!isPaused && tableContainerRef.current && isAtBottom) {
+      tableContainerRef.current.scrollTop = tableContainerRef.current.scrollHeight;
+    }
+  }, [logs, isPaused, isAtBottom]);
 
   // Parse structured logs from strings like:
   // "2026-10-19 11:12:35,455 [INFO ] [auth-service] User login attempt user_id=usr_1801"
@@ -233,6 +292,7 @@ export default function OverviewPage() {
       let stream = "stdout";
       let level = "INFO";
       let message = raw;
+      const isModeMarker = raw.includes("=== SHIELD MODE");
 
       // Extract time
       const timeMatch = raw.match(/\d{4}-\d{2}-\d{2} (\d{2}:\d{2}:\d{2})/);
@@ -255,12 +315,24 @@ export default function OverviewPage() {
       else if (raw.includes("[notification-service]")) service = "notification-service";
 
       // Message cleaned
-      const parts = raw.split(/\[(?:auth|payment|inventory|user|notification)-service\]/);
+      let clean = raw.startsWith("[BYPASS] ") ? raw.replace("[BYPASS] ", "") : raw;
+      const parts = clean.split(/\[(?:auth|payment|inventory|user|notification)-service\]/);
       if (parts.length > 1) {
         message = parts[1].trim();
+      } else {
+        message = clean;
       }
 
-      return { id: idx, raw, time, service, stream, level, message };
+      const isRawExposedSecret = 
+        clean.includes("postgres://") || 
+        clean.includes("sk_test_") || 
+        clean.includes("AKIA") || 
+        clean.includes("eyJhbGci") || 
+        clean.includes("AWS_SECRET_ACCESS_KEY") ||
+        clean.includes("ghp_") ||
+        clean.includes("JWT123");
+
+      return { id: idx, raw, clean, time, service, stream, level, message, isModeMarker, isRawExposedSecret };
     });
   }, [logs]);
 
@@ -268,14 +340,35 @@ export default function OverviewPage() {
   const filteredLogs = useMemo(() => {
     let result = parsedLogs;
 
+    // Deduplicate mode markers for same direction within 10 seconds of each other across sidecars
+    const deduped: typeof result = [];
+    let lastMarkerTime = 0;
+    let lastMarkerMode = "";
+    for (const item of result) {
+      if (item.isModeMarker) {
+        const modeMatch = item.raw.match(/➔\s*(BYPASS|PROTECTED)/i);
+        const targetMode = modeMatch ? modeMatch[1].toUpperCase() : "";
+        const tsMatch = item.raw.match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/);
+        const itemTime = tsMatch ? new Date(tsMatch[0]).getTime() : Date.now();
+
+        if (targetMode === lastMarkerMode && Math.abs(itemTime - lastMarkerTime) < 10000) {
+          continue; // skip duplicate marker from other pods for same transition
+        }
+        lastMarkerTime = itemTime;
+        lastMarkerMode = targetMode;
+      }
+      deduped.push(item);
+    }
+    result = deduped;
+
     if (selectedService !== "all") {
-      result = result.filter(item => item.service === selectedService);
+      result = result.filter(item => item.isModeMarker || item.service === selectedService);
     }
 
     if (logSearch.trim()) {
       const q = logSearch.toLowerCase();
       result = result.filter(item => 
-        item.message.toLowerCase().includes(q) || item.service.toLowerCase().includes(q)
+        item.isModeMarker || item.message.toLowerCase().includes(q) || item.service.toLowerCase().includes(q)
       );
     }
 
@@ -291,21 +384,22 @@ export default function OverviewPage() {
         const cutoffTime = latestTime - (windowMinutes * 60 * 1000);
 
         const timeFiltered = result.filter(l => {
+          if (l.isModeMarker) return true;
           const match = l.raw.match(/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/);
           if (!match) return true;
           return new Date(match[1]).getTime() >= cutoffTime;
         });
 
-        if (timeFiltered.length >= 3) {
+        if (timeFiltered.length >= 10) {
           result = timeFiltered;
         } else {
-          const sliceSizes: Record<string, number> = { "5m": 15, "30m": 40, "1h": 80, "6h": 150, "24h": 300 };
-          const limit = sliceSizes[timeRange] || 15;
+          const sliceSizes: Record<string, number> = { "5m": 1500, "30m": 2000, "1h": 2500, "6h": 3000, "24h": 3500 };
+          const limit = sliceSizes[timeRange] || 1500;
           result = result.slice(-limit);
         }
       } else {
-        const sliceSizes: Record<string, number> = { "5m": 15, "30m": 40, "1h": 80, "6h": 150, "24h": 300 };
-        const limit = sliceSizes[timeRange] || 15;
+        const sliceSizes: Record<string, number> = { "5m": 1500, "30m": 2000, "1h": 2500, "6h": 3000, "24h": 3500 };
+        const limit = sliceSizes[timeRange] || 1500;
         result = result.slice(-limit);
       }
     }
@@ -683,9 +777,18 @@ export default function OverviewPage() {
               <Terminal className="w-4 h-4 text-blue-600" />
               <div className="flex items-center gap-2">
                 <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                  Live Logs (Sanitized Output)
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  Live Logs (Sanitized Stream)
+                  <span className={`w-2 h-2 rounded-full ${
+                    isProtected ? "bg-emerald-500 animate-pulse" : "bg-rose-500 animate-pulse"
+                  }`} />
                 </h3>
+                <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${
+                  isProtected 
+                    ? "text-emerald-700 bg-emerald-50 border-emerald-200" 
+                    : "text-rose-700 bg-rose-50 border-rose-200 animate-pulse"
+                }`}>
+                  {isProtected ? "Protected (Redacted)" : "Bypass (Raw Leaks)"}
+                </span>
                 <span className="text-[11px] font-medium text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">
                   Window: {currentWindow.label} ({filteredLogs.length} lines)
                 </span>
@@ -735,34 +838,77 @@ export default function OverviewPage() {
           </div>
 
           {/* Table Body */}
-          <div className="overflow-x-auto max-h-[380px] overflow-y-auto font-mono text-xs">
-            <table className="w-full text-left border-collapse">
-              <thead className="bg-slate-50 sticky top-0 z-10 text-[11px] uppercase tracking-wider text-slate-400 font-bold border-b border-slate-200">
-                <tr>
-                  <th className="py-2.5 px-4 w-20">Time</th>
-                  <th className="py-2.5 px-3 w-32">Service</th>
-                  <th className="py-2.5 px-3 w-20">Stream</th>
-                  <th className="py-2.5 px-3 w-20">Level</th>
-                  <th className="py-2.5 px-4">Message</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
-                {filteredLogs.slice(0, 15).map((log) => {
+          <div className="relative">
+            <div 
+              ref={tableContainerRef} 
+              onScroll={handleScroll}
+              className="overflow-x-auto max-h-[420px] overflow-y-auto font-mono text-xs"
+            >
+              <table className="w-full text-left border-collapse">
+                <thead className="bg-slate-50 sticky top-0 z-10 text-[11px] uppercase tracking-wider text-slate-400 font-bold border-b border-slate-200">
+                  <tr>
+                    <th className="py-2.5 px-4 w-20">Time</th>
+                    <th className="py-2.5 px-3 w-32">Service</th>
+                    <th className="py-2.5 px-3 w-20">Stream</th>
+                    <th className="py-2.5 px-3 w-20">Level</th>
+                    <th className="py-2.5 px-4">Message</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-slate-700">
+                  {filteredLogs.slice(-1500).map((log) => {
+                    if (log.isModeMarker) {
+                      const isBypass = log.raw.includes("➔ BYPASS");
+                      return (
+                        <tr key={log.id} className={isBypass ? "bg-amber-950/90 text-amber-300 border-y-2 border-amber-500/80" : "bg-emerald-950/90 text-emerald-300 border-y-2 border-emerald-500/80"}>
+                          <td colSpan={5} className="py-2.5 px-4 text-center font-bold text-xs tracking-wider">
+                            <span className="flex items-center justify-center gap-2">
+                              {isBypass ? (
+                                <>
+                                  <Unlock className="w-4 h-4 text-amber-400 shrink-0" />
+                                  <span>{log.raw}</span>
+                                  <span className="bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded text-[10px] uppercase font-bold border border-amber-500/40">Zero Redaction Active</span>
+                                </>
+                              ) : (
+                                <>
+                                  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                                  <span>{log.raw}</span>
+                                  <span className="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded text-[10px] uppercase font-bold border border-emerald-500/40">Active Protection Resumed</span>
+                                </>
+                              )}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    }
+
                   const isRedacted = log.message.includes("[REDACTED");
+                  const isExposed = log.isRawExposedSecret;
+
                   return (
-                    <tr key={log.id} className="hover:bg-slate-50/80 transition-colors">
+                    <tr 
+                      key={log.id} 
+                      className={`transition-colors ${
+                        isExposed 
+                          ? 'bg-rose-50/70 hover:bg-rose-100/70' 
+                          : isRedacted 
+                            ? 'bg-emerald-50/30 hover:bg-emerald-100/40' 
+                            : 'hover:bg-slate-50/80'
+                      }`}
+                    >
                       <td className="py-2 px-4 text-slate-400 text-[11px] whitespace-nowrap">{log.time}</td>
                       <td className="py-2 px-3 font-semibold text-slate-900 whitespace-nowrap">{log.service}</td>
                       <td className="py-2 px-3 text-slate-500 text-[11px]">{log.stream}</td>
                       <td className="py-2 px-3">
                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                          log.level === "ERROR"
-                            ? "bg-red-50 text-red-600"
-                            : log.level === "WARN"
-                            ? "bg-amber-50 text-amber-600"
-                            : "bg-blue-50 text-blue-600"
+                          isExposed
+                            ? "bg-rose-100 text-rose-700 border border-rose-300"
+                            : log.level === "ERROR"
+                              ? "bg-red-50 text-red-600"
+                              : log.level === "WARN"
+                                ? "bg-amber-50 text-amber-600"
+                                : "bg-blue-50 text-blue-600"
                         }`}>
-                          {log.level}
+                          {isExposed ? "LEAK" : log.level}
                         </span>
                       </td>
                       <td className="py-2 px-4 text-slate-800 break-all leading-relaxed">
@@ -771,13 +917,22 @@ export default function OverviewPage() {
                             {log.message.split(/(\[REDACTED:[^\]]+\])/).map((part, pIdx) => {
                               if (part.startsWith("[REDACTED")) {
                                 return (
-                                  <span key={pIdx} className="bg-red-50 text-red-600 font-bold px-1.5 py-0.5 rounded border border-red-200 text-[11px] mx-0.5">
+                                  <span key={pIdx} className="bg-emerald-50 text-emerald-700 font-bold px-1.5 py-0.5 rounded border border-emerald-200 text-[11px] mx-0.5 inline-flex items-center gap-1 shadow-xs">
+                                    <Lock className="w-3 h-3 text-emerald-600" />
                                     {part}
                                   </span>
                                 );
                               }
                               return <span key={pIdx}>{part}</span>;
                             })}
+                          </span>
+                        ) : isExposed ? (
+                          <span className="text-rose-900 font-semibold">
+                            <span className="bg-rose-100 text-rose-700 font-bold px-1.5 py-0.5 rounded border border-rose-300 text-[10px] mr-1.5 inline-flex items-center gap-1">
+                              <Unlock className="w-3 h-3 text-rose-600" />
+                              RAW_EXPOSURE
+                            </span>
+                            {log.message}
                           </span>
                         ) : (
                           log.message
@@ -789,7 +944,17 @@ export default function OverviewPage() {
               </tbody>
             </table>
           </div>
+          {!isAtBottom && (
+            <button 
+              onClick={scrollToBottom}
+              className="absolute bottom-4 right-6 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-md transition-all active:scale-95"
+            >
+              <ArrowDown className="w-3.5 h-3.5" />
+              <span>Jump to latest logs</span>
+            </button>
+          )}
         </div>
+      </div>
 
         {/* Right Column: Secret Detections Donut & Top Services (4 cols) */}
         <div className="lg:col-span-4 space-y-6">

@@ -298,18 +298,51 @@ def get_recent_logs(service: Optional[str] = None, window: Optional[str] = None)
 
     all_logs.sort(key=_extract_log_ts)
 
-    if window:
-        window_limit_map = {
-            "5m": 250,
-            "30m": 500,
-            "1h": 800,
-            "6h": 1200,
-            "24h": 1500
-        }
-        limit = window_limit_map.get(window, 1500)
-        return all_logs[-limit:]
+    deduped_logs = []
+    last_marker_time = 0
+    last_marker_type = ""
+    for l in all_logs:
+        if "=== SHIELD MODE" in l:
+            ts_str = _extract_log_ts(l)
+            try:
+                l_time = time.mktime(time.strptime(ts_str, "%Y-%m-%d %H:%M:%S"))
+            except Exception:
+                l_time = 0
+            mode_direction = "BYPASS" if "➔ BYPASS" in l else "PROTECTED"
+            if mode_direction == last_marker_type and abs(l_time - last_marker_time) < 10:
+                continue
+            last_marker_time = l_time
+            last_marker_type = mode_direction
+        deduped_logs.append(l)
+    all_logs = deduped_logs
 
-    return all_logs[-1500:]
+    if window:
+        window_minutes_map = {
+            "5m": 5,
+            "30m": 30,
+            "1h": 60,
+            "6h": 360,
+            "24h": 1440
+        }
+        mins = window_minutes_map.get(window, 5)
+        now = time.time()
+        cutoff = now - (mins * 60)
+        filtered = []
+        for l in all_logs:
+            if "=== SHIELD MODE" in l:
+                filtered.append(l)
+                continue
+            ts_str = _extract_log_ts(l)
+            try:
+                l_time = time.mktime(time.strptime(ts_str, "%Y-%m-%d %H:%M:%S"))
+                if l_time >= cutoff:
+                    filtered.append(l)
+            except Exception:
+                filtered.append(l)
+        if len(filtered) >= 15:
+            return filtered[-2000:]
+
+    return all_logs[-2000:]
 
 
 @app.get("/api/raw_logs")
