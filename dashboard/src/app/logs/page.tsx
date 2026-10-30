@@ -13,6 +13,7 @@ import {
   ArrowRight, 
   CheckCircle2, 
   Lock, 
+  Unlock,
   KeyRound,
   Search, 
   Pause, 
@@ -56,6 +57,8 @@ export default function LiveLogs() {
     { id: "notification-service", name: "notification-service" },
   ];
 
+  const prevServiceRef = useRef<string>(service);
+
   const loadLogs = async () => {
     if (isPaused) return;
     try {
@@ -65,8 +68,30 @@ export default function LiveLogs() {
         fetchRawLogs(service)
       ]);
       if (modeData?.mode) setModeState(modeData.mode);
-      setLogs(sanitizedData || []);
-      setRawLogs(rawData || []);
+      
+      setLogs((prevLogs) => {
+        if (prevServiceRef.current !== service) {
+          prevServiceRef.current = service;
+          return sanitizedData || [];
+        }
+        if (!sanitizedData || sanitizedData.length === 0) return prevLogs;
+        if (prevLogs.length === 0) return sanitizedData;
+
+        const existingSet = new Set(prevLogs);
+        const incomingNew = sanitizedData.filter((line: string) => !existingSet.has(line));
+        if (incomingNew.length === 0) return prevLogs;
+
+        return [...prevLogs, ...incomingNew].slice(-2000);
+      });
+
+      setRawLogs((prevRaw) => {
+        if (!rawData || rawData.length === 0) return prevRaw;
+        if (prevRaw.length === 0) return rawData;
+        const existingSet = new Set(prevRaw);
+        const incomingNew = rawData.filter((line: string) => !existingSet.has(line));
+        if (incomingNew.length === 0) return prevRaw;
+        return [...prevRaw, ...incomingNew].slice(-2000);
+      });
     } catch (err) {
       console.error("Error polling logs:", err);
     } finally {
@@ -79,8 +104,16 @@ export default function LiveLogs() {
     const interval = setInterval(loadLogs, 800);
 
     const handleModeEvt = (e: any) => {
-      if (e.detail) {
-        setModeState(e.detail);
+      if (e.detail && e.detail !== mode) {
+        const nextMode = e.detail;
+        setModeState(nextMode);
+        const now = new Date();
+        const ts = now.toISOString().replace("T", " ").substring(0, 19);
+        const marker = `[${ts}] === SHIELD MODE SWITCHED: ${mode.toUpperCase()} ➔ ${nextMode.toUpperCase()} ===`;
+        setLogs((prev) => {
+          if (prev.length > 0 && prev[prev.length - 1].includes("=== SHIELD MODE")) return prev;
+          return [...prev, marker];
+        });
         loadLogs();
       }
     };
@@ -90,7 +123,7 @@ export default function LiveLogs() {
       clearInterval(interval);
       window.removeEventListener("logshield-mode-change", handleModeEvt);
     };
-  }, [service, isPaused, timeWindow]);
+  }, [service, isPaused, timeWindow, mode]);
 
   useEffect(() => {
     if (autoScroll && !isPaused && containerRef.current) {
@@ -101,10 +134,17 @@ export default function LiveLogs() {
   const handleToggleMode = async () => {
     const newMode = mode === "protected" ? "bypass" : "protected";
     setModeState(newMode);
+    
+    // Inject marker immediately into local history stream
+    const now = new Date();
+    const ts = now.toISOString().replace("T", " ").substring(0, 19);
+    const marker = `[${ts}] === SHIELD MODE SWITCHED: ${mode.toUpperCase()} ➔ ${newMode.toUpperCase()} ===`;
+    setLogs((prev) => [...prev, marker]);
+
     window.dispatchEvent(new CustomEvent("logshield-mode-change", { detail: newMode }));
     try {
       await setMode(newMode);
-      loadLogs();
+      await loadLogs();
     } catch (e) {
       console.error(e);
     }
@@ -119,6 +159,15 @@ export default function LiveLogs() {
         return false;
       }
       if (levelFilter === "REDACTED" && !line.includes("[REDACTED")) return false;
+      if (levelFilter === "LEAKS" && !(
+        line.includes("postgres://") || 
+        line.includes("sk_test_") || 
+        line.includes("AKIA") || 
+        line.includes("eyJhbGci") || 
+        line.includes("AWS_SECRET_ACCESS_KEY") ||
+        line.includes("ghp_") ||
+        line.includes("JWT123")
+      )) return false;
       if (levelFilter === "ERROR" && !line.includes("ERROR")) return false;
       if (levelFilter === "WARN" && !line.includes("WARN")) return false;
       if (levelFilter === "INFO" && !line.includes("INFO")) return false;
@@ -158,7 +207,7 @@ export default function LiveLogs() {
   }, [displayLogs, filterQuery, levelFilter, timeWindow]);
 
   const openTokenInspector = (index: number) => {
-    const sanitizedLine = displayLogs[index] || "";
+    const sanitizedLine = filteredLogs[index] || displayLogs[index] || "";
     const match = sanitizedLine.match(/\[REDACTED:([^:]+):SCS=(\d+)\]/);
     const refId = match ? match[1] : undefined;
     const scsScore = match ? parseInt(match[2], 10) : undefined;
@@ -314,7 +363,7 @@ export default function LiveLogs() {
 
           {/* Level Filter */}
           <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-lg p-0.5 text-xs shadow-xs">
-            {["ALL", "REDACTED", "ERROR", "INFO"].map((lvl) => (
+            {["ALL", "REDACTED", "LEAKS", "ERROR", "INFO"].map((lvl) => (
               <button
                 key={lvl}
                 onClick={() => setLevelFilter(lvl)}
@@ -402,21 +451,25 @@ export default function LiveLogs() {
               const isModeMarker = log.includes("=== SHIELD MODE");
               const isRedacted = log.includes("[REDACTED");
               const isFlagged = log.includes("[FLAGGED");
-              const isBypass = log.includes("[BYPASS]") || (!isProtected && (
+              
+              const isRawExposedSecret = 
                 log.includes("postgres://") || 
                 log.includes("sk_test_") || 
                 log.includes("AKIA") || 
                 log.includes("eyJhbGci") || 
-                log.includes("AWS_SECRET_ACCESS_KEY")
-              ));
+                log.includes("AWS_SECRET_ACCESS_KEY") ||
+                log.includes("ghp_") ||
+                log.includes("JWT123");
+
+              const isBypass = log.startsWith("[BYPASS]") || (!isProtected && isRawExposedSecret);
 
               if (isModeMarker) {
                 return (
                   <div 
                     key={i} 
-                    className="my-2 py-1.5 px-3 rounded-lg bg-amber-950/80 border border-amber-500/80 text-amber-300 font-bold text-center text-xs tracking-wide shadow-xs flex items-center justify-center gap-2"
+                    className="my-3 py-2 px-4 rounded-xl bg-amber-950/90 border-2 border-amber-500 text-amber-300 font-bold text-center text-xs tracking-wide shadow-md flex items-center justify-center gap-2"
                   >
-                    <AlertTriangle className="w-4 h-4 text-amber-400" />
+                    <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
                     <span>{log}</span>
                   </div>
                 );
@@ -428,12 +481,12 @@ export default function LiveLogs() {
                 <div 
                   key={i} 
                   className={`group flex items-start gap-3 py-1 px-2.5 rounded transition-colors ${
-                    isBypass 
-                      ? 'bg-rose-950/40 hover:bg-rose-950/60 border-l-2 border-rose-500' 
-                      : isRedacted 
-                        ? 'bg-emerald-950/30 hover:bg-emerald-950/50 border-l-2 border-emerald-500' 
-                        : isFlagged
-                          ? 'bg-amber-950/30 hover:bg-amber-950/50 border-l-2 border-amber-500'
+                    isRedacted 
+                      ? 'bg-emerald-950/30 hover:bg-emerald-950/50 border-l-2 border-emerald-500' 
+                      : isFlagged
+                        ? 'bg-amber-950/30 hover:bg-amber-950/50 border-l-2 border-amber-500'
+                        : isRawExposedSecret
+                          ? 'bg-rose-950/40 hover:bg-rose-950/60 border-l-2 border-rose-500 animate-pulse'
                           : 'hover:bg-slate-800/60'
                   }`}
                 >
@@ -449,7 +502,9 @@ export default function LiveLogs() {
                             return (
                               <span 
                                 key={pIdx} 
-                                className="inline-flex items-center gap-1 bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold border border-emerald-500/40 mx-0.5 text-[11px]"
+                                onClick={() => openTokenInspector(i)}
+                                className="inline-flex items-center gap-1 bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold border border-emerald-500/40 mx-0.5 text-[11px] cursor-pointer hover:bg-emerald-500/30 transition-all shadow-xs"
+                                title="Click to inspect vaulted token"
                               >
                                 <Lock className="w-3 h-3 text-emerald-400" />
                                 {part}
@@ -459,16 +514,16 @@ export default function LiveLogs() {
                           return <span key={pIdx}>{part}</span>;
                         })}
                       </div>
-                    ) : isBypass ? (
-                      <div className="text-rose-300">
+                    ) : isRawExposedSecret ? (
+                      <div className="text-rose-300 font-mono">
                         <span className="inline-flex items-center gap-1 bg-rose-500/20 text-rose-400 px-1.5 py-0.5 rounded font-bold border border-rose-500/50 mr-1.5 text-[10px]">
-                          <AlertTriangle className="w-3 h-3 text-rose-400" />
-                          BYPASS (RAW EXPOSED SECRET)
+                          <Unlock className="w-3 h-3 text-rose-400" />
+                          RAW_EXPOSURE
                         </span>
                         {cleanLog}
                       </div>
                     ) : (
-                      <span className="text-slate-300">{cleanLog}</span>
+                      <span className="text-slate-300 font-mono">{cleanLog}</span>
                     )}
                   </div>
 

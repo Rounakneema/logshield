@@ -149,9 +149,23 @@ def cmd_mode(set_mode=None):
             print(f"{RED}Error: Mode must be 'protected' or 'bypass'{RESET}")
             sys.exit(1)
         os.makedirs(os.path.dirname(mode_file) or ".", exist_ok=True)
-        import time
+        import time, glob
         with open(mode_file, "w", encoding="utf-8") as f:
             json.dump({"mode": set_mode, "timestamp": time.time()}, f)
+
+        ts = time.strftime("%Y-%m-%d %H:%M:%S")
+        marker = f"[{ts}] === SHIELD MODE SWITCHED (CLI): ➔ {set_mode.upper()} ==="
+        for lf in glob.glob("/data/recent_logs*.json"):
+            try:
+                with open(lf, "r+", encoding="utf-8") as f:
+                    data = json.load(f)
+                    if not data or data[-1] != marker:
+                        data.append(marker)
+                    f.seek(0)
+                    json.dump(data[-1500:], f, indent=2)
+                    f.truncate()
+            except Exception:
+                pass
 
         banner(f"SHIELD MODE SWITCHED: {set_mode.upper()}", RED if set_mode == "bypass" else GREEN)
         if set_mode == "bypass":

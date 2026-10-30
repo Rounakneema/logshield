@@ -110,9 +110,10 @@ def set_mode(req: ModeRequest):
             try:
                 with open(lf, "r+", encoding="utf-8") as f:
                     data = json.load(f)
-                    data.append(marker)
+                    if not data or data[-1] != marker:
+                        data.append(marker)
                     f.seek(0)
-                    json.dump(data[-200:], f, indent=2)
+                    json.dump(data[-1500:], f, indent=2)
                     f.truncate()
             except Exception:
                 pass
@@ -299,16 +300,16 @@ def get_recent_logs(service: Optional[str] = None, window: Optional[str] = None)
 
     if window:
         window_limit_map = {
-            "5m": 25,
-            "30m": 60,
-            "1h": 120,
-            "6h": 200,
-            "24h": 300
+            "5m": 250,
+            "30m": 500,
+            "1h": 800,
+            "6h": 1200,
+            "24h": 1500
         }
-        limit = window_limit_map.get(window, 300)
+        limit = window_limit_map.get(window, 1500)
         return all_logs[-limit:]
 
-    return all_logs[-300:]
+    return all_logs[-1500:]
 
 
 @app.get("/api/raw_logs")
@@ -327,7 +328,7 @@ def get_raw_unredacted_logs(service: Optional[str] = None):
         try:
             with open(LOG_INPUT_PATH, "r", encoding="utf-8", errors="replace") as f:
                 lines = f.readlines()
-                all_raw = [l.rstrip("\r\n") for l in lines[-200:]]
+                all_raw = [l.rstrip("\r\n") for l in lines[-1000:]]
         except Exception:
             pass
 
@@ -335,7 +336,7 @@ def get_raw_unredacted_logs(service: Optional[str] = None):
         all_raw = [l for l in all_raw if service.lower() in l.lower()]
 
     all_raw.sort(key=_extract_log_ts)
-    return all_raw[-300:]
+    return all_raw[-1500:]
 
 
 @app.get("/api/vault")

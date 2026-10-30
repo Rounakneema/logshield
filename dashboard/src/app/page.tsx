@@ -204,7 +204,14 @@ export default function OverviewPage() {
       ]);
       setStats(statsData);
       if (logsData) {
-        setLogs(logsData);
+        setLogs((prev) => {
+          if (!logsData || logsData.length === 0) return prev;
+          if (prev.length === 0) return logsData;
+          const existingSet = new Set(prev);
+          const incomingNew = logsData.filter((line: string) => !existingSet.has(line));
+          if (incomingNew.length === 0) return prev;
+          return [...prev, ...incomingNew].slice(-500);
+        });
       }
     } catch (err) {
       console.error("Failed to load dashboard data:", err);

@@ -54,8 +54,24 @@ class LogShieldInterceptor:
         }
         self._latency_window: deque = deque(maxlen=1000)
         self._timeseries_buffer: deque = deque(maxlen=60)
-        self.recent_logs: deque = deque(maxlen=200)
-        self.recent_raw_logs: deque = deque(maxlen=200)
+        self.recent_logs: deque = deque(maxlen=1500)
+        self.recent_raw_logs: deque = deque(maxlen=1500)
+
+        # Pre-load existing recent logs from disk if present to preserve history across restarts
+        try:
+            svc_name = self.pod_name
+            for s in ["auth", "payment", "inventory", "user", "notification"]:
+                if s in self.pod_name:
+                    svc_name = s
+                    break
+            init_logs_path = os.environ.get("RECENT_LOGS_PATH", f"/data/recent_logs_{svc_name}.json")
+            if os.path.exists(init_logs_path):
+                with open(init_logs_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    if isinstance(data, list):
+                        self.recent_logs.extend(data[-1000:])
+        except Exception:
+            pass
 
     def get_current_mode(self) -> str:
         if os.path.exists(MODE_FILE_PATH):
@@ -169,7 +185,17 @@ class LogShieldInterceptor:
         while True:
             try:
                 now_str = time.strftime("%H:%M:%S")
-                self.stats["mode"] = self.get_current_mode()
+                current_mode = self.get_current_mode()
+                self.stats["mode"] = current_mode
+
+                if not hasattr(self, "_last_mode"):
+                    self._last_mode = current_mode
+                elif self._last_mode != current_mode:
+                    ts = time.strftime("%Y-%m-%d %H:%M:%S")
+                    marker = f"[{ts}] === SHIELD MODE CHANGED: {self._last_mode.upper()} ➔ {current_mode.upper()} ==="
+                    self.recent_logs.append(marker)
+                    self._last_mode = current_mode
+
                 self._timeseries_buffer.append({
                     "time": now_str,
                     "lines": self.stats["lines_processed"],
