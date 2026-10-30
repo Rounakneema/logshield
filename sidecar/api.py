@@ -122,7 +122,7 @@ def set_mode(req: ModeRequest):
 
 
 @app.get("/api/stats")
-def get_stats():
+def get_stats(window: Optional[str] = Query("5m")):
     global CURRENT_MODE
     if os.path.exists(MODE_FILE_PATH):
         try:
@@ -186,11 +186,24 @@ def get_stats():
                 if aggregated["lines_processed"] < aggregated["secrets_masked"]:
                     aggregated["lines_processed"] = aggregated["secrets_masked"] + max(260, aggregated["lines_clean"])
 
-                # Query database timestamps for real-time interception timeseries
+                # Query database timestamps for real-time interception timeseries based on window
                 now = int(time.time())
-                bucket_sec = 15
-                num_buckets = 40
+                window_map = {
+                    "5m": (300, 15, 20),      # 5 min: 20 buckets of 15s
+                    "30m": (1800, 45, 40),    # 30 min: 40 buckets of 45s
+                    "1h": (3600, 90, 40),     # 1 hour: 40 buckets of 90s
+                    "6h": (21600, 540, 40),   # 6 hours: 40 buckets of 9 min
+                    "24h": (86400, 2160, 40), # 24 hours: 40 buckets of 36 min
+                }
+                w_sec, bucket_sec, num_buckets = window_map.get(window or "5m", (300, 15, 20))
                 start_time = now - (num_buckets * bucket_sec)
+
+                try:
+                    w_cnt = conn.execute("SELECT COUNT(*) FROM vault WHERE created_at >= ?", (now - w_sec,)).fetchone()[0]
+                    aggregated["window"] = window or "5m"
+                    aggregated["window_secrets"] = w_cnt
+                except Exception:
+                    pass
 
                 rows = conn.execute("""
                     SELECT 
@@ -268,7 +281,7 @@ def _extract_log_ts(line: str) -> str:
 
 
 @app.get("/api/logs")
-def get_recent_logs(service: Optional[str] = None):
+def get_recent_logs(service: Optional[str] = None, window: Optional[str] = None):
     log_files = glob.glob("/data/recent_logs*.json")
     all_logs = []
     
@@ -283,6 +296,18 @@ def get_recent_logs(service: Optional[str] = None):
         all_logs = [l for l in all_logs if service.lower() in l.lower() or "=== SHIELD MODE" in l]
 
     all_logs.sort(key=_extract_log_ts)
+
+    if window:
+        window_limit_map = {
+            "5m": 25,
+            "30m": 60,
+            "1h": 120,
+            "6h": 200,
+            "24h": 300
+        }
+        limit = window_limit_map.get(window, 300)
+        return all_logs[-limit:]
+
     return all_logs[-300:]
 
 

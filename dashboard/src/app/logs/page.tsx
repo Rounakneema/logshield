@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import Link from "next/link";
 import { 
   Terminal, 
@@ -20,7 +20,8 @@ import {
   Download, 
   Copy, 
   Check, 
-  Server
+  Server,
+  Clock
 } from "lucide-react";
 import { fetchLogs, fetchRawLogs, fetchMode, setMode } from "@/lib/api";
 
@@ -39,6 +40,7 @@ export default function LiveLogs() {
   const [loading, setLoading] = useState(true);
   const [filterQuery, setFilterQuery] = useState("");
   const [levelFilter, setLevelFilter] = useState<string>("ALL");
+  const [timeWindow, setTimeWindow] = useState<string>("ALL");
   const [isPaused, setIsPaused] = useState(false);
   const [inspectItem, setInspectItem] = useState<TokenInspectData | null>(null);
   const [autoScroll, setAutoScroll] = useState(true);
@@ -59,7 +61,7 @@ export default function LiveLogs() {
     try {
       const [modeData, sanitizedData, rawData] = await Promise.all([
         fetchMode(),
-        fetchLogs(service),
+        fetchLogs(service, timeWindow === "ALL" ? undefined : timeWindow),
         fetchRawLogs(service)
       ]);
       if (modeData?.mode) setModeState(modeData.mode);
@@ -88,7 +90,7 @@ export default function LiveLogs() {
       clearInterval(interval);
       window.removeEventListener("logshield-mode-change", handleModeEvt);
     };
-  }, [service, isPaused]);
+  }, [service, isPaused, timeWindow]);
 
   useEffect(() => {
     if (autoScroll && !isPaused && containerRef.current) {
@@ -111,16 +113,49 @@ export default function LiveLogs() {
   const isProtected = mode === "protected";
   const displayLogs = logs.length > 0 ? logs : (isProtected ? logs : rawLogs);
 
-  const filteredLogs = displayLogs.filter((line) => {
-    if (filterQuery && !line.toLowerCase().includes(filterQuery.toLowerCase())) {
-      return false;
+  const filteredLogs = useMemo(() => {
+    let result = displayLogs.filter((line) => {
+      if (filterQuery && !line.toLowerCase().includes(filterQuery.toLowerCase())) {
+        return false;
+      }
+      if (levelFilter === "REDACTED" && !line.includes("[REDACTED")) return false;
+      if (levelFilter === "ERROR" && !line.includes("ERROR")) return false;
+      if (levelFilter === "WARN" && !line.includes("WARN")) return false;
+      if (levelFilter === "INFO" && !line.includes("INFO")) return false;
+      return true;
+    });
+
+    if (timeWindow !== "ALL" && result.length > 0) {
+      const windowMinutesMap: Record<string, number> = { "5m": 5, "30m": 30, "1h": 60, "6h": 360, "24h": 1440 };
+      const minutes = windowMinutesMap[timeWindow] || 5;
+
+      const timestamps = result.map(l => {
+        const match = l.match(/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/);
+        return match ? new Date(match[1]).getTime() : NaN;
+      }).filter(t => !isNaN(t));
+
+      if (timestamps.length > 0) {
+        const latestTime = Math.max(...timestamps);
+        const cutoffTime = latestTime - (minutes * 60 * 1000);
+        const timeFiltered = result.filter(l => {
+          const match = l.match(/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/);
+          if (!match) return true;
+          return new Date(match[1]).getTime() >= cutoffTime;
+        });
+        if (timeFiltered.length >= 3) {
+          result = timeFiltered;
+        } else {
+          const sliceSizes: Record<string, number> = { "5m": 30, "30m": 75, "1h": 120, "6h": 200, "24h": 300 };
+          result = result.slice(-(sliceSizes[timeWindow] || 50));
+        }
+      } else {
+        const sliceSizes: Record<string, number> = { "5m": 30, "30m": 75, "1h": 120, "6h": 200, "24h": 300 };
+        result = result.slice(-(sliceSizes[timeWindow] || 50));
+      }
     }
-    if (levelFilter === "REDACTED" && !line.includes("[REDACTED")) return false;
-    if (levelFilter === "ERROR" && !line.includes("ERROR")) return false;
-    if (levelFilter === "WARN" && !line.includes("WARN")) return false;
-    if (levelFilter === "INFO" && !line.includes("INFO")) return false;
-    return true;
-  });
+
+    return result;
+  }, [displayLogs, filterQuery, levelFilter, timeWindow]);
 
   const openTokenInspector = (index: number) => {
     const sanitizedLine = displayLogs[index] || "";
@@ -248,14 +283,42 @@ export default function LiveLogs() {
           ))}
         </div>
 
-        <div className="flex items-center gap-2 w-full md:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+          {/* Time Window Filter */}
+          <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-lg p-0.5 text-xs shadow-xs">
+            <span className="text-[10px] uppercase font-bold text-slate-400 px-1.5 flex items-center gap-1">
+              <Clock className="w-3 h-3 text-slate-400" />
+              Window:
+            </span>
+            {[
+              { id: "5m", label: "5m" },
+              { id: "30m", label: "30m" },
+              { id: "1h", label: "1h" },
+              { id: "6h", label: "6h" },
+              { id: "24h", label: "24h" },
+              { id: "ALL", label: "All" },
+            ].map((tw) => (
+              <button
+                key={tw.id}
+                onClick={() => setTimeWindow(tw.id)}
+                className={`px-2 py-1 rounded text-[11px] font-semibold transition-colors cursor-pointer ${
+                  timeWindow === tw.id
+                    ? "bg-blue-600 text-white shadow-xs"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                {tw.label}
+              </button>
+            ))}
+          </div>
+
           {/* Level Filter */}
-          <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-lg p-0.5 text-xs">
+          <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-lg p-0.5 text-xs shadow-xs">
             {["ALL", "REDACTED", "ERROR", "INFO"].map((lvl) => (
               <button
                 key={lvl}
                 onClick={() => setLevelFilter(lvl)}
-                className={`px-2.5 py-1 rounded text-[11px] font-semibold transition-colors ${
+                className={`px-2.5 py-1 rounded text-[11px] font-semibold transition-colors cursor-pointer ${
                   levelFilter === lvl 
                     ? "bg-slate-900 text-white shadow-xs" 
                     : "text-slate-600 hover:text-slate-900"

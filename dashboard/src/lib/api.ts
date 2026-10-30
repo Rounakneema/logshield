@@ -20,8 +20,9 @@ export async function setMode(mode: string) {
   return res.json();
 }
 
-export async function fetchStats() {
-  const res = await fetch(`${API_BASE}/stats`, { cache: 'no-store' });
+export async function fetchStats(window?: string) {
+  const url = window ? `${API_BASE}/stats?window=${encodeURIComponent(window)}` : `${API_BASE}/stats`;
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error("Failed to fetch stats");
   return res.json();
 }
@@ -79,10 +80,12 @@ export async function fetchSprawl() {
   return res.json();
 }
 
-export async function fetchLogs(service?: string) {
-  const url = service && service !== "all" 
-    ? `${API_BASE}/logs?service=${encodeURIComponent(service)}` 
-    : `${API_BASE}/logs`;
+export async function fetchLogs(service?: string, window?: string) {
+  const params = new URLSearchParams();
+  if (service && service !== "all") params.set("service", service);
+  if (window) params.set("window", window);
+  const qs = params.toString();
+  const url = qs ? `${API_BASE}/logs?${qs}` : `${API_BASE}/logs`;
   const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error("Failed to fetch logs");
   return res.json();

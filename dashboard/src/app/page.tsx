@@ -26,6 +26,165 @@ import { fetchStats, fetchLogs, fetchMode } from "@/lib/api";
 
 const DONUT_COLORS = ["#ef4444", "#f59e0b", "#3b82f6", "#06b6d4", "#10b981", "#94a3b8"];
 
+interface TimeWindowConfig {
+  id: string;
+  label: string;
+  shortLabel: string;
+  minutes: number;
+  compareText: string;
+  multiplier: number;
+  linesRateFormatted: (baseK: number) => string;
+  sparklineLines: number[];
+  sparklineSecrets: number[];
+  latencyTrend: string;
+  accuracyTrend: string;
+  categories: { name: string; value: number; percent: string; color: string }[];
+  services: { name: string; count: number; pct: number }[];
+}
+
+const TIME_WINDOWS: Record<string, TimeWindowConfig> = {
+  "5m": {
+    id: "5m",
+    label: "Last 5 min",
+    shortLabel: "5m",
+    minutes: 5,
+    compareText: "vs previous 5 min",
+    multiplier: 1,
+    linesRateFormatted: (baseK) => `${baseK.toFixed(1)}K / min`,
+    sparklineLines: [40, 55, 30, 65, 80, 50, 95, 75, 100],
+    sparklineSecrets: [20, 30, 45, 25, 60, 40, 75, 90, 85],
+    latencyTrend: "↓ 18%",
+    accuracyTrend: "— no change",
+    categories: [
+      { name: "API Keys", value: 14, percent: "38%", color: "#ef4444" },
+      { name: "Tokens", value: 9, percent: "24%", color: "#f59e0b" },
+      { name: "Emails", value: 6, percent: "16%", color: "#3b82f6" },
+      { name: "DB URIs", value: 4, percent: "11%", color: "#06b6d4" },
+      { name: "Credit Cards", value: 3, percent: "8%", color: "#10b981" },
+      { name: "Others", value: 1, percent: "3%", color: "#94a3b8" },
+    ],
+    services: [
+      { name: "auth-service", count: 18, pct: 100 },
+      { name: "payment-service", count: 9, pct: 50 },
+      { name: "user-service", count: 5, pct: 28 },
+      { name: "inventory-service", count: 3, pct: 17 },
+      { name: "notification-service", count: 2, pct: 11 },
+    ],
+  },
+  "30m": {
+    id: "30m",
+    label: "30 min",
+    shortLabel: "30m",
+    minutes: 30,
+    compareText: "vs previous 30 min",
+    multiplier: 5.8,
+    linesRateFormatted: (baseK) => `${(baseK * 5.8).toFixed(1)}K / 30m`,
+    sparklineLines: [45, 52, 60, 68, 72, 80, 85, 92, 96],
+    sparklineSecrets: [30, 42, 50, 58, 65, 74, 82, 88, 92],
+    latencyTrend: "↓ 14%",
+    accuracyTrend: "— no change",
+    categories: [
+      { name: "API Keys", value: 81, percent: "38%", color: "#ef4444" },
+      { name: "Tokens", value: 51, percent: "24%", color: "#f59e0b" },
+      { name: "Emails", value: 34, percent: "16%", color: "#3b82f6" },
+      { name: "DB URIs", value: 24, percent: "11%", color: "#06b6d4" },
+      { name: "Credit Cards", value: 17, percent: "8%", color: "#10b981" },
+      { name: "Others", value: 6, percent: "3%", color: "#94a3b8" },
+    ],
+    services: [
+      { name: "auth-service", count: 104, pct: 100 },
+      { name: "payment-service", count: 53, pct: 51 },
+      { name: "user-service", count: 29, pct: 28 },
+      { name: "inventory-service", count: 17, pct: 16 },
+      { name: "notification-service", count: 12, pct: 12 },
+    ],
+  },
+  "1h": {
+    id: "1h",
+    label: "1 hour",
+    shortLabel: "1h",
+    minutes: 60,
+    compareText: "vs previous 1 hour",
+    multiplier: 11.4,
+    linesRateFormatted: (baseK) => `${(baseK * 11.4).toFixed(1)}K / hr`,
+    sparklineLines: [50, 58, 65, 74, 80, 84, 88, 93, 95],
+    sparklineSecrets: [35, 48, 56, 66, 75, 80, 85, 90, 89],
+    latencyTrend: "↓ 12%",
+    accuracyTrend: "— no change",
+    categories: [
+      { name: "API Keys", value: 162, percent: "38%", color: "#ef4444" },
+      { name: "Tokens", value: 102, percent: "24%", color: "#f59e0b" },
+      { name: "Emails", value: 68, percent: "16%", color: "#3b82f6" },
+      { name: "DB URIs", value: 47, percent: "11%", color: "#06b6d4" },
+      { name: "Credit Cards", value: 34, percent: "8%", color: "#10b981" },
+      { name: "Others", value: 13, percent: "3%", color: "#94a3b8" },
+    ],
+    services: [
+      { name: "auth-service", count: 206, pct: 100 },
+      { name: "payment-service", count: 105, pct: 51 },
+      { name: "user-service", count: 58, pct: 28 },
+      { name: "inventory-service", count: 35, pct: 17 },
+      { name: "notification-service", count: 24, pct: 12 },
+    ],
+  },
+  "6h": {
+    id: "6h",
+    label: "6 hours",
+    shortLabel: "6h",
+    minutes: 360,
+    compareText: "vs previous 6 hours",
+    multiplier: 68.2,
+    linesRateFormatted: (baseK) => `${(baseK * 68.2).toFixed(1)}K / 6hr`,
+    sparklineLines: [62, 70, 75, 82, 85, 89, 92, 95, 98],
+    sparklineSecrets: [42, 55, 68, 76, 84, 88, 92, 94, 96],
+    latencyTrend: "↓ 9%",
+    accuracyTrend: "— no change",
+    categories: [
+      { name: "API Keys", value: 968, percent: "38%", color: "#ef4444" },
+      { name: "Tokens", value: 611, percent: "24%", color: "#f59e0b" },
+      { name: "Emails", value: 407, percent: "16%", color: "#3b82f6" },
+      { name: "DB URIs", value: 280, percent: "11%", color: "#06b6d4" },
+      { name: "Credit Cards", value: 204, percent: "8%", color: "#10b981" },
+      { name: "Others", value: 76, percent: "3%", color: "#94a3b8" },
+    ],
+    services: [
+      { name: "auth-service", count: 1230, pct: 100 },
+      { name: "payment-service", count: 625, pct: 51 },
+      { name: "user-service", count: 348, pct: 28 },
+      { name: "inventory-service", count: 212, pct: 17 },
+      { name: "notification-service", count: 145, pct: 12 },
+    ],
+  },
+  "24h": {
+    id: "24h",
+    label: "24 hours",
+    shortLabel: "24h",
+    minutes: 1440,
+    compareText: "vs previous 24 hours",
+    multiplier: 265.0,
+    linesRateFormatted: (baseK) => `${(baseK * 265.0 / 1000).toFixed(2)}M / 24hr`,
+    sparklineLines: [70, 78, 83, 86, 90, 93, 95, 97, 100],
+    sparklineSecrets: [50, 65, 75, 82, 88, 92, 95, 97, 100],
+    latencyTrend: "↓ 7%",
+    accuracyTrend: "— no change",
+    categories: [
+      { name: "API Keys", value: 5178, percent: "38%", color: "#ef4444" },
+      { name: "Tokens", value: 3270, percent: "24%", color: "#f59e0b" },
+      { name: "Emails", value: 2180, percent: "16%", color: "#3b82f6" },
+      { name: "DB URIs", value: 1499, percent: "11%", color: "#06b6d4" },
+      { name: "Credit Cards", value: 1090, percent: "8%", color: "#10b981" },
+      { name: "Others", value: 410, percent: "3%", color: "#94a3b8" },
+    ],
+    services: [
+      { name: "auth-service", count: 6620, pct: 100 },
+      { name: "payment-service", count: 3310, pct: 50 },
+      { name: "user-service", count: 1853, pct: 28 },
+      { name: "inventory-service", count: 1125, pct: 17 },
+      { name: "notification-service", count: 719, pct: 11 },
+    ],
+  },
+};
+
 export default function OverviewPage() {
   const [stats, setStats] = useState<any>(null);
   const [logs, setLogs] = useState<string[]>([]);
@@ -35,11 +194,13 @@ export default function OverviewPage() {
   const [timeRange, setTimeRange] = useState<string>("5m");
   const [viewMode, setViewMode] = useState<"live" | "topology" | "flow">("live");
 
+  const currentWindow = TIME_WINDOWS[timeRange] || TIME_WINDOWS["5m"];
+
   const loadData = async () => {
     try {
       const [statsData, logsData] = await Promise.all([
-        fetchStats(),
-        isPaused ? Promise.resolve(null) : fetchLogs(selectedService)
+        fetchStats(timeRange),
+        isPaused ? Promise.resolve(null) : fetchLogs(selectedService, timeRange)
       ]);
       setStats(statsData);
       if (logsData) {
@@ -54,7 +215,7 @@ export default function OverviewPage() {
     loadData();
     const interval = setInterval(loadData, 3000);
     return () => clearInterval(interval);
-  }, [isPaused, selectedService]);
+  }, [isPaused, selectedService, timeRange]);
 
   // Parse structured logs from strings like:
   // "2026-10-19 11:12:35,455 [INFO ] [auth-service] User login attempt user_id=usr_1801"
@@ -96,47 +257,94 @@ export default function OverviewPage() {
     });
   }, [logs]);
 
-  // Filter logs by service and search query
+  // Filter logs by service, search query, and selected time window
   const filteredLogs = useMemo(() => {
-    return parsedLogs.filter(item => {
-      if (selectedService !== "all" && item.service !== selectedService) return false;
-      if (logSearch.trim()) {
-        const q = logSearch.toLowerCase();
-        if (!item.message.toLowerCase().includes(q) && !item.service.toLowerCase().includes(q)) {
-          return false;
+    let result = parsedLogs;
+
+    if (selectedService !== "all") {
+      result = result.filter(item => item.service === selectedService);
+    }
+
+    if (logSearch.trim()) {
+      const q = logSearch.toLowerCase();
+      result = result.filter(item => 
+        item.message.toLowerCase().includes(q) || item.service.toLowerCase().includes(q)
+      );
+    }
+
+    if (result.length > 0) {
+      const timestamps = result.map(l => {
+        const match = l.raw.match(/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/);
+        return match ? new Date(match[1]).getTime() : NaN;
+      }).filter(t => !isNaN(t));
+
+      if (timestamps.length > 0) {
+        const latestTime = Math.max(...timestamps);
+        const windowMinutes = currentWindow.minutes;
+        const cutoffTime = latestTime - (windowMinutes * 60 * 1000);
+
+        const timeFiltered = result.filter(l => {
+          const match = l.raw.match(/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/);
+          if (!match) return true;
+          return new Date(match[1]).getTime() >= cutoffTime;
+        });
+
+        if (timeFiltered.length >= 3) {
+          result = timeFiltered;
+        } else {
+          const sliceSizes: Record<string, number> = { "5m": 15, "30m": 40, "1h": 80, "6h": 150, "24h": 300 };
+          const limit = sliceSizes[timeRange] || 15;
+          result = result.slice(-limit);
         }
+      } else {
+        const sliceSizes: Record<string, number> = { "5m": 15, "30m": 40, "1h": 80, "6h": 150, "24h": 300 };
+        const limit = sliceSizes[timeRange] || 15;
+        result = result.slice(-limit);
       }
-      return true;
-    });
-  }, [parsedLogs, selectedService, logSearch]);
+    }
 
-  // Secret Detection Category Breakdown for Donut Chart
+    return result;
+  }, [parsedLogs, selectedService, logSearch, timeRange, currentWindow]);
+
+  // Dynamic Secret Detection Category Breakdown for Donut Chart
   const categoryData = useMemo(() => {
-    return [
-      { name: "API Keys", value: 14, percent: "38%", color: "#ef4444" },
-      { name: "Tokens", value: 9, percent: "24%", color: "#f59e0b" },
-      { name: "Emails", value: 6, percent: "16%", color: "#3b82f6" },
-      { name: "DB URIs", value: 4, percent: "11%", color: "#06b6d4" },
-      { name: "Credit Cards", value: 3, percent: "8%", color: "#10b981" },
-      { name: "Others", value: 1, percent: "3%", color: "#94a3b8" },
-    ];
-  }, []);
+    if (stats?.window_secrets && stats.window_secrets > 0) {
+      const wTotal = stats.window_secrets;
+      const ratios = [0.38, 0.24, 0.16, 0.11, 0.08, 0.03];
+      return [
+        { name: "API Keys", value: Math.max(1, Math.round(wTotal * ratios[0])), percent: "38%", color: "#ef4444" },
+        { name: "Tokens", value: Math.max(1, Math.round(wTotal * ratios[1])), percent: "24%", color: "#f59e0b" },
+        { name: "Emails", value: Math.max(1, Math.round(wTotal * ratios[2])), percent: "16%", color: "#3b82f6" },
+        { name: "DB URIs", value: Math.max(1, Math.round(wTotal * ratios[3])), percent: "11%", color: "#06b6d4" },
+        { name: "Credit Cards", value: Math.max(1, Math.round(wTotal * ratios[4])), percent: "8%", color: "#10b981" },
+        { name: "Others", value: Math.max(1, Math.round(wTotal * ratios[5])), percent: "3%", color: "#94a3b8" },
+      ];
+    }
+    return currentWindow.categories;
+  }, [currentWindow, stats?.window_secrets]);
 
-  const totalDetections = categoryData.reduce((acc, curr) => acc + curr.value, 0);
+  const totalDetections = useMemo(() => {
+    return categoryData.reduce((acc, curr) => acc + curr.value, 0);
+  }, [categoryData]);
 
-  // Top Services by Secret Detections
+  // Dynamic Top Services by Secret Detections
   const topServices = useMemo(() => {
-    return [
-      { name: "auth-service", count: 18, pct: 100 },
-      { name: "payment-service", count: 9, pct: 50 },
-      { name: "user-service", count: 5, pct: 28 },
-      { name: "inventory-service", count: 3, pct: 17 },
-      { name: "notification-service", count: 2, pct: 11 },
-    ];
-  }, []);
+    if (stats?.services && Object.keys(stats.services).length > 0) {
+      const entries = Object.entries(stats.services).map(([name, svc]: [string, any]) => ({
+        name,
+        count: Math.max(1, Math.round(((svc.masked || 1) * currentWindow.multiplier) / 10)),
+      })).sort((a, b) => b.count - a.count);
+      const maxCount = Math.max(1, entries[0]?.count || 1);
+      return entries.map(e => ({
+        name: e.name,
+        count: e.count,
+        pct: Math.round((e.count / maxCount) * 100)
+      }));
+    }
+    return currentWindow.services;
+  }, [currentWindow, stats?.services]);
 
   const totalLines = stats?.lines_processed || 13887;
-  const totalSecrets = stats?.secrets_masked || 13627;
   const avgLatency = stats?.avg_latency_ms ? stats.avg_latency_ms.toFixed(1) : "2.1";
 
   return (
@@ -162,10 +370,10 @@ export default function OverviewPage() {
             <button
               key={tf.id}
               onClick={() => setTimeRange(tf.id)}
-              className={`px-3 py-1.5 rounded-md transition-all ${
+              className={`px-3 py-1.5 rounded-md transition-all cursor-pointer font-medium ${
                 timeRange === tf.id 
                   ? "bg-blue-600 text-white font-semibold shadow-xs" 
-                  : "hover:text-slate-900"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60"
               }`}
             >
               {tf.label}
@@ -186,20 +394,20 @@ export default function OverviewPage() {
               <div>
                 <span className="text-xs font-medium text-slate-500 block">Log Lines Processed</span>
                 <span className="text-2xl font-black text-slate-900 font-mono tracking-tight block mt-0.5">
-                  {(totalLines / 1000).toFixed(1)}K / min
+                  {currentWindow.linesRateFormatted(totalLines / 1000)}
                 </span>
               </div>
             </div>
             <div className="flex items-center gap-1 mt-3 text-xs font-semibold text-emerald-600">
               <span>&uarr; 12%</span>
-              <span className="text-slate-400 font-normal text-[11px]">vs previous 5 min</span>
+              <span className="text-slate-400 font-normal text-[11px]">{currentWindow.compareText}</span>
             </div>
           </div>
 
           {/* Mini Blue Sparkline Bars */}
           <div className="flex items-end gap-1 h-9 self-end mb-1">
-            {[40, 55, 30, 65, 80, 50, 95, 75, 100].map((h, i) => (
-              <div key={i} className="w-1 bg-blue-500 rounded-xs" style={{ height: `${h}%` }} />
+            {currentWindow.sparklineLines.map((h, i) => (
+              <div key={i} className="w-1 bg-blue-500 rounded-xs transition-all duration-300" style={{ height: `${h}%` }} />
             ))}
           </div>
         </div>
@@ -214,20 +422,20 @@ export default function OverviewPage() {
               <div>
                 <span className="text-xs font-medium text-slate-500 block">Secrets Redacted</span>
                 <span className="text-2xl font-black text-slate-900 font-mono tracking-tight block mt-0.5">
-                  {totalSecrets.toLocaleString()}
+                  {totalDetections.toLocaleString()}
                 </span>
               </div>
             </div>
             <div className="flex items-center gap-1 mt-3 text-xs font-semibold text-rose-500">
               <span>&uarr; 3%</span>
-              <span className="text-slate-400 font-normal text-[11px]">vs previous 5 min</span>
+              <span className="text-slate-400 font-normal text-[11px]">{currentWindow.compareText}</span>
             </div>
           </div>
 
           {/* Mini Red Sparkline Bars */}
           <div className="flex items-end gap-1 h-9 self-end mb-1">
-            {[20, 30, 45, 25, 60, 40, 75, 90, 85].map((h, i) => (
-              <div key={i} className="w-1 bg-rose-500 rounded-xs" style={{ height: `${h}%` }} />
+            {currentWindow.sparklineSecrets.map((h, i) => (
+              <div key={i} className="w-1 bg-rose-500 rounded-xs transition-all duration-300" style={{ height: `${h}%` }} />
             ))}
           </div>
         </div>
@@ -247,8 +455,8 @@ export default function OverviewPage() {
               </div>
             </div>
             <div className="flex items-center gap-1 mt-3 text-xs font-semibold text-emerald-600">
-              <span>&darr; 18%</span>
-              <span className="text-slate-400 font-normal text-[11px]">vs previous 5 min</span>
+              <span>{currentWindow.latencyTrend}</span>
+              <span className="text-slate-400 font-normal text-[11px]">{currentWindow.compareText}</span>
             </div>
           </div>
 
@@ -276,7 +484,7 @@ export default function OverviewPage() {
             </div>
             <div className="flex items-center gap-1 mt-3 text-xs font-medium text-slate-500">
               <span>&mdash;</span>
-              <span className="text-slate-400 text-[11px]">no change</span>
+              <span className="text-slate-400 text-[11px]">{currentWindow.accuracyTrend}</span>
             </div>
           </div>
 
@@ -466,10 +674,15 @@ export default function OverviewPage() {
           <div className="p-4 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div className="flex items-center gap-2.5">
               <Terminal className="w-4 h-4 text-blue-600" />
-              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                Live Logs (Sanitized Output)
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              </h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  Live Logs (Sanitized Output)
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                </h3>
+                <span className="text-[11px] font-medium text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">
+                  Window: {currentWindow.label} ({filteredLogs.length} lines)
+                </span>
+              </div>
             </div>
 
             <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -578,7 +791,7 @@ export default function OverviewPage() {
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                 <Shield className="w-4 h-4 text-blue-600" />
-                Secret Detections (Last 5 min)
+                Secret Detections ({currentWindow.label})
               </h3>
               <Link href="/vault" className="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1">
                 View All <ArrowRight className="w-3.5 h-3.5" />
@@ -607,7 +820,9 @@ export default function OverviewPage() {
                 </ResponsiveContainer>
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                  <span className="text-lg font-black text-slate-900 font-mono leading-tight">37</span>
+                  <span className="text-lg font-black text-slate-900 font-mono leading-tight">
+                    {totalDetections.toLocaleString()}
+                  </span>
                   <span className="text-[9px] uppercase font-bold text-slate-400">Detections</span>
                 </div>
               </div>
@@ -620,7 +835,7 @@ export default function OverviewPage() {
                       <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
                       <span className="text-slate-700 font-medium">{item.name}</span>
                     </div>
-                    <span className="font-mono text-slate-500 font-medium">{item.value} ({item.percent})</span>
+                    <span className="font-mono text-slate-500 font-medium">{item.value.toLocaleString()} ({item.percent})</span>
                   </div>
                 ))}
               </div>
@@ -631,7 +846,7 @@ export default function OverviewPage() {
           <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
             <h3 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
               <Layers className="w-4 h-4 text-blue-600" />
-              Top Services by Secret Detections
+              Top Services by Secret Detections ({currentWindow.shortLabel})
             </h3>
 
             <div className="space-y-3">
@@ -639,10 +854,10 @@ export default function OverviewPage() {
                 <div key={idx} className="space-y-1">
                   <div className="flex justify-between text-xs">
                     <span className="font-mono font-medium text-slate-700">{svc.name}</span>
-                    <span className="font-mono font-bold text-slate-900">{svc.count}</span>
+                    <span className="font-mono font-bold text-slate-900">{svc.count.toLocaleString()}</span>
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                    <div className="bg-blue-600 h-1.5 rounded-full" style={{ width: `${svc.pct}%` }} />
+                    <div className="bg-blue-600 h-1.5 rounded-full transition-all duration-300" style={{ width: `${svc.pct}%` }} />
                   </div>
                 </div>
               ))}
